@@ -8,7 +8,7 @@ if (process.env.NODE_ENV !== 'production') require('../secrets');
 const apiKey = process.env.API_KEY;
 const PORT = process.env.PORT || 2000;
 const XLSX = require('xlsx');
-const namesOnly = require('../namesOnly');
+const namesOnly = XLSX.readFile('namesOnly.xlsx')
 
 //formats api call
 const linkGenerator = (api, altName) => {
@@ -16,13 +16,10 @@ const linkGenerator = (api, altName) => {
   `;
 };
 
-const namesWorksheet = namesOnly.Sheets[namesOnly.SheetNames[0]];
-const data = XLSX.utils.sheet_to_json(namesWorksheet, {header: 1 });
+ const namesWorksheet = namesOnly.Sheets[namesOnly.SheetNames[0]];
+const data = XLSX.utils.sheet_to_json(namesWorksheet,  {header: 1 });
 
-console.log('===============', data)
-//returns data by year specified by index
-// years start at 1980 (index 34) up to 2014 (index 0)
-
+console.log('===============',data)
 const type = (company) => ({
   'Company Name': company.name,
   Addresses: company.addresses,
@@ -47,13 +44,19 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 
 
 //fill in values for API call
-const apiNames = /* EXCEL SPREADSHEET SOURCE HERE*/
+const apiNames = data;
+ console.log('===============API )', apiNames[0][0])
 
 
+ app.get('/data', (req, res, next) => {
+  console.log('===============FETCHING')
+  axios.get(linkGenerator(apiKey, apiNames[1][0]))
+  //axios.all(apiNames.map(altName => axios.get(linkGenerator(apiKey, altName))) )
+  .then(results => {
+    console.log('===============',results.data)
+    return res.json(results.data) ;
 
-app.get('/data', (req, res, next) => {
-  axios.all(apiNames.map(altName => axios.get(linkGenerator(apiKey, altName))) )
-    .then(res => console.log('===============',res))
+  })
 
       // axios.spread((CO, CA, NY, MT, OR, WY, TX) => {
       // const states = [CO, CA, NY, MT, OR, WY, TX];
