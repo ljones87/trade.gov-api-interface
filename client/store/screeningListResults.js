@@ -25,7 +25,7 @@ const getScreeningListResultError = (err) => (
 /* ------------       THUNK CREATORS     ------------------ */
 
 
-export const fetchStateData = () => {
+export const fetchScreeningResults = () => {
    return dispatch => {
     dispatch(getScreeningListResult());
     axios.get('/data')
@@ -44,11 +44,15 @@ const initialState = {
 export default function (state = initialState, action) {
   switch (action.type) {
     case GET_SCREENING_LIST_RESULT: {
-       return {...state, loading: true};
+       return Object.assign({}, state, {loading: true});
     }
-    case GET_SCREENING_LIST_RESULT_SUCCESS:
-      return  [...state.searchedCompanies, action.companyResult]
+    case GET_SCREENING_LIST_RESULT_SUCCESS:{
+      return  [...state.searchedCompanies, action.companyResult];
+    }
+    case GET_SCREENING_LIST_RESULT_ERROR: {
+      return  Object.assign({}, state, {error: action.err});
+    }
     default:
-      return stateData
+      return state;
   }
 }
