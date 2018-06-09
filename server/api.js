@@ -7,6 +7,7 @@ const axios = require('axios');
 if (process.env.NODE_ENV !== 'production') require('../secrets');
 const apiKey = process.env.API_KEY;
 const PORT = process.env.PORT || 2000;
+const XLSX = require('xlsx');
 
 //formats api call
 const linkGenerator = (api, altName) => {
@@ -37,6 +38,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // Static middleware
 app.use(express.static(path.join(__dirname, '..', 'public')));
+
+
 
 //fill in values for API call
 const apiNames = /* EXCEL SPREADSHEET SOURCE HERE*/
