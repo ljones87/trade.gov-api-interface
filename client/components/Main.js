@@ -28,7 +28,12 @@ const mapState = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     loadResults() {
-      dispatch(fetchScreeningResults());
+      Promise.all([
+      dispatch(fetchScreeningResults())
+      ])
+      .then(() => {
+        console.log('===============COMPLETED RETURN')
+      });
     }
   }
 }

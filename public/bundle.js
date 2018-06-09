@@ -27424,7 +27424,11 @@ exports.default = function () {
       }
     case GET_SCREENING_LIST_RESULT_SUCCESS:
       {
-        return [].concat(_toConsumableArray(state.searchedCompanies), [action.companyResult]);
+        return {
+          loading: false,
+          searchedCompanies: [].concat(_toConsumableArray(state.searchedCompanies), [action.companyResult]),
+          error: null
+        };
       }
     case GET_SCREENING_LIST_RESULT_ERROR:
       {
@@ -27466,14 +27470,15 @@ var getScreeningListResultError = function getScreeningListResultError(err) {
 /* ------------       THUNK CREATORS     ------------------ */
 
 var fetchScreeningResults = exports.fetchScreeningResults = function fetchScreeningResults() {
+  var companies = [];
   return function (dispatch) {
     dispatch(getScreeningListResult());
     _axios2.default.get('/data').then(function (res) {
-      return console.log('===============response', res)
-      // res.data.forEach(company => (
-      //   console.log('===============store compay return',company),
-      //   dispatch(getScreeningListResultSuccess(company.data)) )
-      ;
+      return console.log('===============', res.data), res.data.forEach(function (company) {
+        return console.log('===============store compay return', company), dispatch(getScreeningListResultSuccess(company))
+        //companies.push(company)
+        ;
+      });
     }).catch(function (err) {
       return getScreeningListResultError(err);
     });
@@ -30352,7 +30357,9 @@ var mapState = function mapState(state) {
 var mapDispatch = function mapDispatch(dispatch) {
   return {
     loadResults: function loadResults() {
-      dispatch((0, _store.fetchScreeningResults)());
+      Promise.all([dispatch((0, _store.fetchScreeningResults)())]).then(function () {
+        console.log('===============COMPLETED RETURN');
+      });
     }
   };
 };
