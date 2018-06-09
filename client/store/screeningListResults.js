@@ -15,8 +15,8 @@ const getScreeningListResult = () => (
   { type: GET_SCREENING_LIST_RESULT }
 );
 
-const getScreeningListResultSuccess = (companyResult) => (
-  { type: GET_SCREENING_LIST_RESULT_SUCCESS, companyResult }
+const getScreeningListResultSuccess = (companyResults) => (
+  { type: GET_SCREENING_LIST_RESULT_SUCCESS, companyResults }
 );
 
 const getScreeningListResultError = (err) => (
@@ -31,13 +31,14 @@ export const fetchScreeningResults = () => {
     dispatch(getScreeningListResult());
     axios.get('/data')
       .then(res => (
-        console.log('===============',res.data),
        res.data.forEach(company => (
-        console.log('===============store compay return', company),
-          dispatch(getScreeningListResultSuccess(company))
-          //companies.push(company)
+         console.log('===============',company),
+          companies.push(company)
       ))
     ))
+    .then(() =>
+      dispatch(getScreeningListResultSuccess(companies))
+    )
       .catch(err => getScreeningListResultError(err))
     }
 };
@@ -56,7 +57,7 @@ export default function (state = initialState, action) {
     case GET_SCREENING_LIST_RESULT_SUCCESS:{
       return  {
        loading: false,
-       searchedCompanies: [...state.searchedCompanies, action.companyResult],
+       searchedCompanies: action.companyResults,
        error: null
     };
   }

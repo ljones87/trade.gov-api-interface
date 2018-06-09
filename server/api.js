@@ -8,26 +8,16 @@ if (process.env.NODE_ENV !== 'production') require('../secrets');
 const apiKey = process.env.API_KEY;
 const PORT = process.env.PORT || 2000;
 const XLSX = require('xlsx');
-const namesOnly = XLSX.readFile('namesOnly.xlsx')
+const namesOnly = XLSX.readFile('namesOnly.xlsx');
 
 //formats api call
 const linkGenerator = (api, altName) => {
-  return `https://api.trade.gov/consolidated_screening_list/search?api_key=${apiKey}&q=${altName}
+  return `https://api.trade.gov/consolidated_screening_list/search?api_key=${apiKey}&name=${altName}
   `;
 };
 
 const namesWorksheet = namesOnly.Sheets[namesOnly.SheetNames[0]];
-const data = XLSX.utils.sheet_to_json(namesWorksheet, { header: 1 });
-
-// const type = (company) => ({
-//   'Company Name': company.name,
-//   Addresses: company.addresses,
-//   Type: company.type,
-// });
-
-// const numResults = (response) => ({
-//   numMatch: response.results.length
-// })
+const data = XLSX.utils.sheet_to_json(namesWorksheet, { header: 1 }, {raw: false});
 
 // Logging middleware
 app.use(morgan('dev'));
@@ -41,23 +31,37 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 //fill in values for API call
+/* had to remove 1st company, kept throwing error */
 data.shift();
 const apiNames = data;
-console.log('===============API )', apiNames[0])
 
-const promises = []
+const promises = [];
 const final = [];
+const errorUrls = []
 app.get('/data', (req, res, next) => {
   console.log('===============FETCHING')
   Promise.all(apiNames.map(query => {
+    const companyName = query[0];
     return axios.get(linkGenerator(apiKey, query[0]))
         .then(result => {
-          const companyName = query[0];
-          const formattedReturn = { company: companyName, data: result.data }
+          const formattedReturn = { company: companyName, data: result.data };
           final.push(formattedReturn);
         })
-        .catch(err => final.push({ companyError: err }))
-     })).then(() => res.send(final) )
+        .catch(err => (
+           final.push({
+            company: companyName,
+            error: {
+              message: `${err.response.status}${err.response.satusText}`,
+              url: err.request._redirectable._currentUrl
+            }
+          }),
+          errorUrls.push(err.request._redirectable._currentUrl),
+          console.log('===============SERVER ERROR', err.response.status)
+        ));
+     })).then(() => (
+      res.send(final)
+    ))
+
 });
 
 // For all GET requests that aren't to an API route,

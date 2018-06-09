@@ -27426,7 +27426,7 @@ exports.default = function () {
       {
         return {
           loading: false,
-          searchedCompanies: [].concat(_toConsumableArray(state.searchedCompanies), [action.companyResult]),
+          searchedCompanies: action.companyResults,
           error: null
         };
       }
@@ -27445,12 +27445,11 @@ var _axios2 = _interopRequireDefault(_axios);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-/* -----------------    IMPORTS     ------------------ */
-
 /* -----------------    ACTION TYPES     ------------------ */
 
 var GET_SCREENING_LIST_RESULT = 'GET_SCREENING_LIST_RESULT';
+/* -----------------    IMPORTS     ------------------ */
+
 var GET_SCREENING_LIST_RESULT_SUCCESS = "GET_SCREENING_LIST_RESULT_SUCCESS";
 var GET_SCREENING_LIST_RESULT_ERROR = "GET_SCREENING_LIST_RESULT_ERROR";
 
@@ -27460,8 +27459,8 @@ var getScreeningListResult = function getScreeningListResult() {
   return { type: GET_SCREENING_LIST_RESULT };
 };
 
-var getScreeningListResultSuccess = function getScreeningListResultSuccess(companyResult) {
-  return { type: GET_SCREENING_LIST_RESULT_SUCCESS, companyResult: companyResult };
+var getScreeningListResultSuccess = function getScreeningListResultSuccess(companyResults) {
+  return { type: GET_SCREENING_LIST_RESULT_SUCCESS, companyResults: companyResults };
 };
 
 var getScreeningListResultError = function getScreeningListResultError(err) {
@@ -27474,11 +27473,11 @@ var fetchScreeningResults = exports.fetchScreeningResults = function fetchScreen
   return function (dispatch) {
     dispatch(getScreeningListResult());
     _axios2.default.get('/data').then(function (res) {
-      return console.log('===============', res.data), res.data.forEach(function (company) {
-        return console.log('===============store compay return', company), dispatch(getScreeningListResultSuccess(company))
-        //companies.push(company)
-        ;
+      return res.data.forEach(function (company) {
+        return console.log('===============', company), companies.push(company);
       });
+    }).then(function () {
+      return dispatch(getScreeningListResultSuccess(companies));
     }).catch(function (err) {
       return getScreeningListResultError(err);
     });
