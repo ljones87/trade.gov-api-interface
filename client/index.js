@@ -2,7 +2,6 @@
 import './index.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import * as d3 from 'd3';
 import { Provider } from 'react-redux'
 import store from './store'
 import { BrowserRouter as Router } from 'react-router-dom'
