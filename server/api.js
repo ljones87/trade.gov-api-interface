@@ -8,6 +8,7 @@ if (process.env.NODE_ENV !== 'production') require('../secrets');
 const apiKey = process.env.API_KEY;
 const PORT = process.env.PORT || 2000;
 const XLSX = require('xlsx');
+const namesOnly = require('../namesOnly');
 
 //formats api call
 const linkGenerator = (api, altName) => {
@@ -15,6 +16,10 @@ const linkGenerator = (api, altName) => {
   `;
 };
 
+const namesWorksheet = namesOnly.Sheets[namesOnly.SheetNames[0]];
+const data = XLSX.utils.sheet_to_json(namesWorksheet, {header: 1 });
+
+console.log('===============', data)
 //returns data by year specified by index
 // years start at 1980 (index 34) up to 2014 (index 0)
 
@@ -43,6 +48,7 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 
 //fill in values for API call
 const apiNames = /* EXCEL SPREADSHEET SOURCE HERE*/
+
 
 
 app.get('/data', (req, res, next) => {
