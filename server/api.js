@@ -19,7 +19,6 @@ const linkGenerator = (api, altName) => {
  const namesWorksheet = namesOnly.Sheets[namesOnly.SheetNames[0]];
 const data = XLSX.utils.sheet_to_json(namesWorksheet,  {header: 1 });
 
-console.log('===============',data)
 const type = (company) => ({
   'Company Name': company.name,
   Addresses: company.addresses,
@@ -41,29 +40,24 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Static middleware
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
-
-
 //fill in values for API call
+data.shift();
 const apiNames = data;
- console.log('===============API )', apiNames[0][0])
+ console.log('===============API )', apiNames)
 
-
+ const final = [];
  app.get('/data', (req, res, next) => {
   console.log('===============FETCHING')
-  axios.get(linkGenerator(apiKey, apiNames[1][0]))
-  //axios.all(apiNames.map(altName => axios.get(linkGenerator(apiKey, altName))) )
-  .then(results => {
-    console.log('===============',results.data)
-    return res.json(results.data) ;
 
-  })
-
-      // axios.spread((CO, CA, NY, MT, OR, WY, TX) => {
-      // const states = [CO, CA, NY, MT, OR, WY, TX];
-      // return states.map(state => info(state));
-    //}))
-    //.then(formattedStates => res.json(formattedStates))
-    .catch(err => console.log(err));
+  apiNames.forEach(altName => axios.get(linkGenerator(apiKey, altName[0]))
+    .then(result => {
+      const companyName = altName[0]
+      final.push({company: companyName, data: result.data });
+      return res.json({company: companyName, data: result.data  })
+    })
+    .catch(err => final.push({companyName: err}))
+  )
+  console.log('===============',final)
 });
 
 

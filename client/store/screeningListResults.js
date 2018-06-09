@@ -29,9 +29,11 @@ export const fetchScreeningResults = () => {
    return dispatch => {
     dispatch(getScreeningListResult());
     axios.get('/data')
-      .then(res => res.data.forEach(companyResult =>
-        dispatch(getScreeningListResultSuccess(companyResult))))
-      .catch(err => console.log(err));
+      .then(res => (
+        console.log('===============STORE DATA', res.data),
+        dispatch(getScreeningListResultSuccess(res.data.companyResult))
+      ))
+      .catch(err => getScreeningListResultError(err));
   }
 }
 
