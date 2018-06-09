@@ -19,15 +19,15 @@ const linkGenerator = (api, altName) => {
  const namesWorksheet = namesOnly.Sheets[namesOnly.SheetNames[0]];
 const data = XLSX.utils.sheet_to_json(namesWorksheet,  {header: 1 });
 
-const type = (company) => ({
-  'Company Name': company.name,
-  Addresses: company.addresses,
-  Type: company.type,
-});
+// const type = (company) => ({
+//   'Company Name': company.name,
+//   Addresses: company.addresses,
+//   Type: company.type,
+// });
 
-const numResults = (response) => ({
-  numMatch: response.results.length
-})
+// const numResults = (response) => ({
+//   numMatch: response.results.length
+// })
 
 // Logging middleware
 app.use(morgan('dev'));
@@ -43,23 +43,49 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 //fill in values for API call
 data.shift();
 const apiNames = data;
- console.log('===============API )', apiNames)
+console.log('===============API )', apiNames[0])
 
+ const promises = []
  const final = [];
- app.get('/data', (req, res, next) => {
-  console.log('===============FETCHING')
+//  app.get('/data', (req, res, next) => {
+//   console.log('===============FETCHING')
+//   apiNames.forEach(query => {
+//       axios.get(linkGenerator(apiKey, query[0]))
+//       .then(result => {
+//         //debugger;
+//         //console.log(`===============${apiNames[i][0]}`,result.data)
+//         const companyName = query[0];
+//         final.push({company: companyName, data: result.data });
+//         return {company: companyName, data: result.data  }
+//       })
+//       .then(formattedData =>  (
+//         console.log(`===============formatted data`, formattedData),
+//         res.send(formattedData)
+//       ))
+//       .catch(err => final.push({companyError: err}))
+//   })
+//   console.log('===============FINAL',final)
+// });
 
-  apiNames.forEach(altName => axios.get(linkGenerator(apiKey, altName[0]))
+  apiNames.forEach(query => {
+   let companyUrl = linkGenerator(apiKey, query[0]);
+    promises.push(axios.get(companyUrl, {params: query[0]}));
+  })
+  app.get('/data', (req, res, next) => {
+  axios.all(promises)
     .then(result => {
-      const companyName = altName[0]
-      final.push({company: companyName, data: result.data });
-      return res.json({company: companyName, data: result.data  })
+      console.log('===============result',result)
+      result.forEach(query => {
+        console.log('=============== quesry.data',query.data)
+//        console.log(`===============${query}`,query.data)
+        const companyName = query[0];
+        final.push({company: companyName, data: query.data });
+      return {company: companyName, data: query.data  }
+      })
     })
-    .catch(err => final.push({companyName: err}))
-  )
-  console.log('===============',final)
-});
-
+    .then(formattedData => console.log('===============',formattedData))
+    .catch(err => final.push({[companyName]: err}));
+  })
 
 // For all GET requests that aren't to an API route,
 // we will send the index.html!

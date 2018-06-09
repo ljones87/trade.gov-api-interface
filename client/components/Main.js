@@ -8,9 +8,9 @@ class Main extends React.Component {
   this.props.loadResults()
  }
   render () {
-    console.log('===============',this.props)
+    console.log('=============== MAIN THIS.PROPS',this.props)
     const companyResults = this.props.companyResults;
-    console.log('===============',companyResults)
+    console.log('=============== Company Resulsts',companyResults)
     return (
       <div className="input-container">
         <h1>I live!</h1>

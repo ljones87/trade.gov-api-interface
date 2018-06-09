@@ -27469,7 +27469,11 @@ var fetchScreeningResults = exports.fetchScreeningResults = function fetchScreen
   return function (dispatch) {
     dispatch(getScreeningListResult());
     _axios2.default.get('/data').then(function (res) {
-      return console.log('===============STORE DATA', res.data), dispatch(getScreeningListResultSuccess(res.data.companyResult));
+      return console.log('===============response', res)
+      // res.data.forEach(company => (
+      //   console.log('===============store compay return',company),
+      //   dispatch(getScreeningListResultSuccess(company.data)) )
+      ;
     }).catch(function (err) {
       return getScreeningListResultError(err);
     });
@@ -30321,9 +30325,9 @@ var Main = function (_React$Component) {
   }, {
     key: 'render',
     value: function render() {
-      console.log('===============', this.props);
+      console.log('=============== MAIN THIS.PROPS', this.props);
       var companyResults = this.props.companyResults;
-      console.log('===============', companyResults);
+      console.log('=============== Company Resulsts', companyResults);
       return _react2.default.createElement(
         'div',
         { className: 'input-container' },
