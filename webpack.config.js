@@ -5,6 +5,11 @@ module.exports = {
     filename: './public/bundle.js'
   },
   context: __dirname,
+  node: {fs: 'empty'},
+  externals: [
+    {'./cptable': 'var cptable'},
+    {'./jszip': 'jszip'}
+  ],
   module: {
     rules: [
       {
