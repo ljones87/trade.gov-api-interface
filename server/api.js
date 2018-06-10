@@ -14,12 +14,12 @@ const namesOnly = XLSX.readFile('namesOnly.xlsx');
 
 //formats api call
 const linkGenerator = (api, altName) => {
-  return `https://api.trade.gov/consolidated_screening_list/search?api_key=${apiKey}&name=${altName}
+  return `https://api.trade.gov/consolidated_screening_list/search?api_key=${apiKey}&q=${altName}
   `;
 };
 
 const namesWorksheet = namesOnly.Sheets[namesOnly.SheetNames[0]];
-const data = XLSX.utils.sheet_to_json(namesWorksheet, { header: 1 }, {raw: false});
+const data = XLSX.utils.sheet_to_json(namesWorksheet, { header: 1 }, {raw: true});
 
 // Logging middleware
 app.use(morgan('dev'));
@@ -33,10 +33,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 //fill in values for API call
-/* had to remove 1st company, kept throwing error */
-//data.shift();
-const apiNames = data;
-
+/* removes company header */
+data.shift();
+const apiNames = data.slice(0, 1500);
 const final = [];
 const errorUrls = [];
 

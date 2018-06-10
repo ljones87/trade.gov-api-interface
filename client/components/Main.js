@@ -28,8 +28,14 @@ class Main extends React.Component {
               <ExcelFile>
                 <ExcelSheet data={companyResults} name="Company Name Results">
                   <ExcelColumn label="Name" value="company" />
-                  <ExcelColumn label="Query result" value={(col) => col.error ? col.error.status : col.data.total} />
-                  <ExcelColumn label="Error url" value={(col) => col.error ? col.error.url : null} />
+                  <ExcelColumn
+                  label="Query result"
+                  value={(col) => col.error ? col.error.status : col.data.total}
+                  />
+                  <ExcelColumn
+                  label="Error url"
+                  value={(col) => col.error ? col.error.url : null}
+                   />
 
                 </ExcelSheet>
               </ExcelFile>
@@ -51,12 +57,12 @@ const mapState = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     loadResults() {
-      //Promise.all([
-      dispatch(fetchScreeningResults());
-      // ])
-      // .then(() => {
-      // console.log('===============COMPLETED RETURN')
-      // });
+      Promise.all([
+      dispatch(fetchScreeningResults())
+      ])
+      .then(() => {
+      console.log('===============COMPLETED RETURN')
+      });
     }
   };
 };

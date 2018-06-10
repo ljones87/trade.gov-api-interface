@@ -54965,7 +54965,7 @@ exports.default = function () {
       {
         return {
           loading: false,
-          searchedCompanies: action.companyResults,
+          searchedCompanies: [].concat(_toConsumableArray(state.searchedCompanies), [action.companyResults]),
           error: null
         };
       }
@@ -54984,11 +54984,12 @@ var _axios2 = _interopRequireDefault(_axios);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+/* -----------------    IMPORTS     ------------------ */
+
 /* -----------------    ACTION TYPES     ------------------ */
 
 var GET_SCREENING_LIST_RESULT = 'GET_SCREENING_LIST_RESULT';
-/* -----------------    IMPORTS     ------------------ */
-
 var GET_SCREENING_LIST_RESULT_SUCCESS = "GET_SCREENING_LIST_RESULT_SUCCESS";
 var GET_SCREENING_LIST_RESULT_ERROR = "GET_SCREENING_LIST_RESULT_ERROR";
 
@@ -55013,7 +55014,7 @@ var fetchScreeningResults = exports.fetchScreeningResults = function fetchScreen
     dispatch(getScreeningListResult());
     _axios2.default.get('/data').then(function (res) {
       return res.data.forEach(function (company) {
-        return console.log('===============', company), companies.push(company);
+        return companies.push(company);
       });
     }).then(function () {
       return dispatch(getScreeningListResultSuccess(companies));
@@ -57904,12 +57905,18 @@ var Main = function (_React$Component) {
               ExcelSheet,
               { data: companyResults, name: 'Company Name Results' },
               _react2.default.createElement(ExcelColumn, { label: 'Name', value: 'company' }),
-              _react2.default.createElement(ExcelColumn, { label: 'Query result', value: function value(col) {
+              _react2.default.createElement(ExcelColumn, {
+                label: 'Query result',
+                value: function value(col) {
                   return col.error ? col.error.status : col.data.total;
-                } }),
-              _react2.default.createElement(ExcelColumn, { label: 'Error url', value: function value(col) {
+                }
+              }),
+              _react2.default.createElement(ExcelColumn, {
+                label: 'Error url',
+                value: function value(col) {
                   return col.error ? col.error.url : null;
-                } })
+                }
+              })
             )
           )
         )
@@ -57930,12 +57937,9 @@ var mapState = function mapState(state) {
 var mapDispatch = function mapDispatch(dispatch) {
   return {
     loadResults: function loadResults() {
-      //Promise.all([
-      dispatch((0, _store.fetchScreeningResults)());
-      // ])
-      // .then(() => {
-      // console.log('===============COMPLETED RETURN')
-      // });
+      Promise.all([dispatch((0, _store.fetchScreeningResults)())]).then(function () {
+        console.log('===============COMPLETED RETURN');
+      });
     }
   };
 };
