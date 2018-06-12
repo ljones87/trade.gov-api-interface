@@ -14,12 +14,13 @@ const namesOnly = XLSX.readFile('namesOnly.xlsx');
 
 //formats api call
 const linkGenerator = (api, altName) => {
-  return `https://api.trade.gov/consolidated_screening_list/search?api_key=${apiKey}&name=${altName}
+  return `https://api.trade.gov/consolidated_screening_list/search?api_key=${apiKey}&q=${altName}
   `;
 };
 
 const namesWorksheet = namesOnly.Sheets[namesOnly.SheetNames[0]];
-const data = XLSX.utils.sheet_to_json(namesWorksheet, { header: 1 }, {raw: false});
+let data = XLSX.utils.sheet_to_json(namesWorksheet, { header: 1 }, {raw: false});
+
 
 // Logging middleware
 app.use(morgan('dev'));
@@ -34,7 +35,8 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 
 //fill in values for API call
 /* had to remove 1st company, kept throwing error */
-//data.shift();
+data = data.filter(company => company.length)
+data.shift();
 const apiNames = data;
 
 const final = [];
@@ -51,12 +53,13 @@ app.get('/data', (req, res, next) => {
       .then(result => {
         const formattedReturn = {
           company: companyName,
-          data: result.data
+          data: result.data,
+          api: linkGenerator(apiKey, query[0])
         };
         final.push(formattedReturn);
       })
       .catch(err => (
-        console.log('===============SERVER ERROR RESPONSE', err.response || '800'),
+         console.log('===============SERVER ERROR RESPONSE', err.response || '800'),
           final.push({
           company: companyName,
           error: {
