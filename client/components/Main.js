@@ -30,7 +30,7 @@ class Main extends React.Component {
                   <ExcelColumn label="Name" value="company" />
                   <ExcelColumn
                   label="Query result"
-                  value={(col) => col.error ? col.error.status : col.data.total}
+                  value={(col) => col.error ? col.error.message : col.data.total}
                   />
                   <ExcelColumn
                   label="Error url"

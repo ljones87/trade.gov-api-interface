@@ -13,8 +13,8 @@ const XLSX = require('xlsx');
 const namesOnly = XLSX.readFile('namesOnly.xlsx');
 
 //formats api call
-const linkGenerator = (api, altName) => {
-  return `https://api.trade.gov/consolidated_screening_list/search?api_key=${apiKey}&q=${altName}
+const linkGenerator = (api, name) => {
+  return `https://api.trade.gov/consolidated_screening_list/search?api_key=${api}&name=${name}&fuzzy_name=true
   `;
 };
 
@@ -35,9 +35,9 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 
 //fill in values for API call
 /* had to remove 1st company, kept throwing error */
-data = data.filter(company => company.length)
+data = data.filter(company => company.length);
 data.shift();
-const apiNames = data;
+const apiNames = data.slice(0, 30);
 
 const final = [];
 const errorUrls = [];

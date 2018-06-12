@@ -57908,22 +57908,18 @@ var Main = function (_React$Component) {
               _react2.default.createElement(ExcelColumn, {
                 label: 'Query result',
                 value: function value(col) {
-                  return col.error ? col.error.status : col.data.total;
+                  return col.error ? col.error.message : col.data.total;
                 }
               }),
               _react2.default.createElement(ExcelColumn, {
                 label: 'Error url',
                 value: function value(col) {
                   return col.error ? col.error.url : null;
-<<<<<<< HEAD
                 }
-              })
-=======
-                } }),
+              }),
               _react2.default.createElement(ExcelColumn, { label: 'Results Api', value: function value(col) {
                   return col.api;
                 } })
->>>>>>> namesOnly
             )
           )
         )
