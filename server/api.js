@@ -19,7 +19,8 @@ const linkGenerator = (api, altName) => {
 };
 
 const namesWorksheet = namesOnly.Sheets[namesOnly.SheetNames[0]];
-const data = XLSX.utils.sheet_to_json(namesWorksheet, { header: 1 }, {raw: true});
+let data = XLSX.utils.sheet_to_json(namesWorksheet, { header: 1 }, {raw: false});
+
 
 // Logging middleware
 app.use(morgan('dev'));
@@ -33,9 +34,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 //fill in values for API call
-/* removes company header */
+/* had to remove 1st company, kept throwing error */
+data = data.filter(company => company.length)
 data.shift();
-const apiNames = data.slice(0, 1500);
+const apiNames = data;
+
 const final = [];
 const errorUrls = [];
 
@@ -50,12 +53,13 @@ app.get('/data', (req, res, next) => {
       .then(result => {
         const formattedReturn = {
           company: companyName,
-          data: result.data
+          data: result.data,
+          api: linkGenerator(apiKey, query[0])
         };
         final.push(formattedReturn);
       })
       .catch(err => (
-        console.log('===============SERVER ERROR RESPONSE', err.response || '800'),
+         console.log('===============SERVER ERROR RESPONSE', err.response || '800'),
           final.push({
           company: companyName,
           error: {

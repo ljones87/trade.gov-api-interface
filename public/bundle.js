@@ -57915,8 +57915,15 @@ var Main = function (_React$Component) {
                 label: 'Error url',
                 value: function value(col) {
                   return col.error ? col.error.url : null;
+<<<<<<< HEAD
                 }
               })
+=======
+                } }),
+              _react2.default.createElement(ExcelColumn, { label: 'Results Api', value: function value(col) {
+                  return col.api;
+                } })
+>>>>>>> namesOnly
             )
           )
         )
