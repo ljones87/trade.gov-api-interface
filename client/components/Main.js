@@ -37,7 +37,7 @@ class Main extends React.Component {
                   value={(col) => col.error ? col.error.url : null}
                    />
 
-                  <ExcelColumn label="Results Api" value={(col) => col.api} />
+                  <ExcelColumn label="Results Api" value={(col) => col.data && col.data.total > 0 ? col.api : null} />
                 </ExcelSheet>
               </ExcelFile>
             </div>
