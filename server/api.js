@@ -13,8 +13,8 @@ const XLSX = require('xlsx');
 const namesOnly = XLSX.readFile('namesOnly.xlsx');
 
 //formats api call
-const linkGenerator = (api, altName) => {
-  return `https://api.trade.gov/consolidated_screening_list/search?api_key=${apiKey}&q=${altName}
+const linkGenerator = (key, altName) => {
+  return `https://api.trade.gov/consolidated_screening_list/search?api_key=${key}&q=${altName}
   `;
 };
 
@@ -34,13 +34,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 //fill in values for API call
-/* had to remove 1st company, kept throwing error */
+
 data = data.filter(company => company.length)
 data.shift();
-const apiNames = data;
+const apiNames = data.slice(0, 200);
 
 const final = [];
-const errorUrls = [];
 
 app.get('/data', (req, res, next) => {
   console.log('===============FETCHING');
@@ -63,15 +62,13 @@ app.get('/data', (req, res, next) => {
           final.push({
           company: companyName,
           error: {
-            message: err.response ? `${
-               err.response.status }, ${err.response.satusText}`
-               :
-               'error response malformed',
-              url: linkGenerator(apiKey, query[0])//err.request._redirectable._currentUrl
+            message: err.response ?
+            `${err.response.status}, ${err.response.satusText}`
+             :
+            `error response malformed`,
+            url: linkGenerator(apiKey, query[0])//err.request._redirectable._currentUrl
           }
-        }),
-        errorUrls.push(linkGenerator(apiKey, query[0]))
-        //err.request._redirectable._currentUrl
+        })
       ));
   }))
   .then(() => (
@@ -79,8 +76,6 @@ app.get('/data', (req, res, next) => {
   ));
 });
 
-// For all GET requests that aren't to an API route,
-// we will send the index.html!
 app.get('/*', function (req, res, next) {
 res.sendFile(path.join(__dirname, '..', '/public/index.html'));
 });

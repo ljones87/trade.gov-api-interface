@@ -57911,7 +57911,7 @@ var Main = function (_React$Component) {
                   return col.error ? col.error.url : null;
                 } }),
               _react2.default.createElement(ExcelColumn, { label: 'Results Api', value: function value(col) {
-                  return col.api;
+                  return col.data && col.data.total > 0 ? col.api : null;
                 } })
             )
           )
