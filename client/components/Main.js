@@ -28,7 +28,6 @@ class Main extends React.Component {
               <ExcelFile>
                 <ExcelSheet data={companyResults} name="Company Name Results">
                   <ExcelColumn label="Name" value="company" />
-<<<<<<< HEAD
                   <ExcelColumn
                   label="Query result"
                   value={(col) => col.error ? col.error.message : col.data.total}
@@ -38,10 +37,6 @@ class Main extends React.Component {
                   value={(col) => col.error ? col.error.url : null}
                    />
 
-=======
-                  <ExcelColumn label="Query result" value={(col) => col.error ? col.error.status : col.data.total} />
-                  <ExcelColumn label="Error url" value={(col) => col.error ? col.error.url : null} />
->>>>>>> fuzzy
                   <ExcelColumn label="Results Api" value={(col) => col.data && col.data.total > 0 ? col.api : null} />
                 </ExcelSheet>
               </ExcelFile>

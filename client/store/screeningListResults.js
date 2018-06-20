@@ -50,7 +50,7 @@ export default function (state = initialState, action) {
     case GET_SCREENING_LIST_RESULT_SUCCESS:{
       return  {
        loading: false,
-       searchedCompanies: [...state.searchedCompanies, action.companyResults],
+       searchedCompanies: action.companyResults,
        error: null
     };
   }

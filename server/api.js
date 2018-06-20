@@ -36,45 +36,46 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 data = data.filter(company => company.length);
 data.shift();
 
-const i = 0
+//currently, increment 200 at a time (0, 200, 400 etc);
+const i = 0;
 const apiNames = data.slice(i, i+200);
 
-    const final = [];
+const final = [];
 
-    app.get('/data', (req, res, next) => {
-      console.log('===============FETCHING');
+app.get('/data', (req, res, next) => {
+  console.log('===============FETCHING');
 
-     return Promise.all(apiNames.map(query => {
-        const companyName = query[0];
-        return axios.get(
-          linkGenerator(apiKey, query[0])
-        )
-          .then(result => {
-            const formattedReturn = {
-              company: companyName,
-              data: result.data,
-              api: linkGenerator(apiKey, query[0])
-            };
-            final.push(formattedReturn);
-          })
-          .catch(err => (
-            console.log('===============SERVER ERROR RESPONSE', err.response || '800'),
-              final.push({
-              company: companyName,
-              error: {
-                message: err.response ?
-                `${err.response.status}, ${err.response.satusText}`
-                :
-                `error response malformed`,
-                url: linkGenerator(apiKey, query[0])
-              }
-            })
-          ));
-      }))
-      .then(() => (
-        res.send(final)
+  return Promise.all(apiNames.map(query => {
+    const companyName = query[0];
+    return axios.get(
+      linkGenerator(apiKey, query[0])
+    )
+      .then(result => {
+        const formattedReturn = {
+          company: companyName,
+          data: result.data,
+          api: linkGenerator(apiKey, query[0])
+        };
+        final.push(formattedReturn);
+      })
+      .catch(err => (
+        console.log('===============SERVER ERROR RESPONSE', err.response || '800'),
+          final.push({
+          company: companyName,
+          error: {
+            message: err.response ?
+            `${err.response.status}, ${err.response.satusText}`
+            :
+            `error response malformed`,
+            url: linkGenerator(apiKey, query[0])
+          }
+        })
       ));
-    });
+  }))
+  .then(() => (
+    res.send(final)
+  ));
+});
 
 app.get('/*', function (req, res, next) {
 res.sendFile(path.join(__dirname, '..', '/public/index.html'));
