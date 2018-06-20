@@ -13,9 +13,8 @@ const XLSX = require('xlsx');
 const namesOnly = XLSX.readFile('namesOnly.xlsx');
 
 //formats api call
-const linkGenerator = (key, altName) => {
-  return `https://api.trade.gov/consolidated_screening_list/search?api_key=${key}&q=${altName}
-  `;
+const linkGenerator = (key, name) => {
+  return `https://api.trade.gov/consolidated_screening_list/search?api_key=${key}&q=${name}`;
 };
 
 const namesWorksheet = namesOnly.Sheets[namesOnly.SheetNames[0]];
@@ -33,48 +32,49 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // Static middleware
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
-//fill in values for API call
-
-data = data.filter(company => company.length)
+//for some reason lots of empty cells come in w/spreadsheet
+data = data.filter(company => company.length);
 data.shift();
-const apiNames = data.slice(0, 200);
 
-const final = [];
+const i = 0
+const apiNames = data.slice(i, i+200);
 
-app.get('/data', (req, res, next) => {
-  console.log('===============FETCHING');
+    const final = [];
 
-  Promise.all(apiNames.map(query => {
-    const companyName = query[0];
-    return axios.get(
-      linkGenerator(apiKey, query[0])
-    )
-      .then(result => {
-        const formattedReturn = {
-          company: companyName,
-          data: result.data,
-          api: linkGenerator(apiKey, query[0])
-        };
-        final.push(formattedReturn);
-      })
-      .catch(err => (
-         console.log('===============SERVER ERROR RESPONSE', err.response || '800'),
-          final.push({
-          company: companyName,
-          error: {
-            message: err.response ?
-            `${err.response.status}, ${err.response.satusText}`
-             :
-            `error response malformed`,
-            url: linkGenerator(apiKey, query[0])//err.request._redirectable._currentUrl
-          }
-        })
+    app.get('/data', (req, res, next) => {
+      console.log('===============FETCHING');
+
+     return Promise.all(apiNames.map(query => {
+        const companyName = query[0];
+        return axios.get(
+          linkGenerator(apiKey, query[0])
+        )
+          .then(result => {
+            const formattedReturn = {
+              company: companyName,
+              data: result.data,
+              api: linkGenerator(apiKey, query[0])
+            };
+            final.push(formattedReturn);
+          })
+          .catch(err => (
+            console.log('===============SERVER ERROR RESPONSE', err.response || '800'),
+              final.push({
+              company: companyName,
+              error: {
+                message: err.response ?
+                `${err.response.status}, ${err.response.satusText}`
+                :
+                `error response malformed`,
+                url: linkGenerator(apiKey, query[0])
+              }
+            })
+          ));
+      }))
+      .then(() => (
+        res.send(final)
       ));
-  }))
-  .then(() => (
-    res.send(final)
-  ));
-});
+    });
 
 app.get('/*', function (req, res, next) {
 res.sendFile(path.join(__dirname, '..', '/public/index.html'));
