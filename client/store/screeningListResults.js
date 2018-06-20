@@ -26,20 +26,14 @@ const getScreeningListResultError = (err) => (
 
 
 export const fetchScreeningResults = () => {
-  const companies = [];
    return dispatch => {
     dispatch(getScreeningListResult());
     axios.get('/data')
       .then(res => (
-       res.data.forEach(company => (
-          companies.push(company)
+        dispatch(getScreeningListResultSuccess(res.data))
       ))
-    ))
-    .then(() =>
-      dispatch(getScreeningListResultSuccess(companies))
-    )
       .catch(err => getScreeningListResultError(err));
-    }
+    };
 };
 
 /* ------------       REDUCERS     ------------------ */

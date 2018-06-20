@@ -55009,15 +55009,18 @@ var getScreeningListResultError = function getScreeningListResultError(err) {
 /* ------------       THUNK CREATORS     ------------------ */
 
 var fetchScreeningResults = exports.fetchScreeningResults = function fetchScreeningResults() {
-  var companies = [];
   return function (dispatch) {
     dispatch(getScreeningListResult());
     _axios2.default.get('/data').then(function (res) {
+<<<<<<< HEAD
       return res.data.forEach(function (company) {
         return companies.push(company);
       });
     }).then(function () {
       return dispatch(getScreeningListResultSuccess(companies));
+=======
+      return dispatch(getScreeningListResultSuccess(res.data));
+>>>>>>> fuzzy
     }).catch(function (err) {
       return getScreeningListResultError(err);
     });
