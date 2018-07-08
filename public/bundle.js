@@ -54980,7 +54980,7 @@ exports.default = function () {
       }
     case SUBMIT_SCREENING_LIST_SUCCESS:
       {
-        return Object.assign({}, state, { loading: false });
+        return Object.assign({}, state, { loading: false, spreadSheetReady: true });
       }
     case GET_SCREENING_LIST_RESULT_SUCCESS:
       {
@@ -54991,6 +54991,7 @@ exports.default = function () {
         };
       }
     case GET_SCREENING_LIST_RESULT_ERROR:
+    case SUBMIT_SCREENING_LIST_ERROR:
       {
         return Object.assign({}, state, { error: action.err });
       }
@@ -55012,6 +55013,7 @@ var SUBMIT_SCREENING_LIST = 'SUBMIT_SCREENING_LIST';
 var SUBMIT_SCREENING_LIST_SUCCESS = 'SUBMIT_SCREENING_LIST_SUCCESS';
 var GET_SCREENING_LIST_RESULT = 'GET_SCREENING_LIST_RESULT';
 var GET_SCREENING_LIST_RESULT_SUCCESS = "GET_SCREENING_LIST_RESULT_SUCCESS";
+var SUBMIT_SCREENING_LIST_ERROR = 'SUBMIT_SCREENING_LIST_ERROR';
 var GET_SCREENING_LIST_RESULT_ERROR = "GET_SCREENING_LIST_RESULT_ERROR";
 
 /* ------------   ACTION CREATORS     ------------------ */
@@ -55024,12 +55026,16 @@ var submitScreeningListSuccess = function submitScreeningListSuccess(message) {
   return { type: SUBMIT_SCREENING_LIST_SUCCESS, message: message };
 };
 
+var submitScreeningListError = function submitScreeningListError(err) {
+  return { type: SUBMIT_SCREENING_LIST_ERROR, err: err };
+};
+
 var getScreeningListResult = function getScreeningListResult() {
   return { type: GET_SCREENING_LIST_RESULT };
 };
 
 var getScreeningListResultSuccess = function getScreeningListResultSuccess(companyResults) {
-  return console.log('API RESULT', companyResults), { type: GET_SCREENING_LIST_RESULT_SUCCESS, companyResults: companyResults };
+  return { type: GET_SCREENING_LIST_RESULT_SUCCESS, companyResults: companyResults };
 };
 
 var getScreeningListResultError = function getScreeningListResultError(err) {
@@ -55044,6 +55050,8 @@ var submitScreeningListThunk = exports.submitScreeningListThunk = function submi
     _axios2.default.post('/spreadsheet', spreadsheet).then(function (res) {
       dispatch(submitScreeningListSuccess());
       console.log('===============thunk put', res);
+    }).catch(function (err) {
+      return submitScreeningListError(err);
     });
   };
 };
@@ -55062,6 +55070,7 @@ var fetchScreeningResultsThunk = exports.fetchScreeningResultsThunk = function f
 
 /* ------------       REDUCERS     ------------------ */
 var initialState = {
+  spreadSheetReady: false,
   loading: false,
   searchedCompanies: [],
   error: null

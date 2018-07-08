@@ -8,6 +8,7 @@ const SUBMIT_SCREENING_LIST = 'SUBMIT_SCREENING_LIST';
 const SUBMIT_SCREENING_LIST_SUCCESS = 'SUBMIT_SCREENING_LIST_SUCCESS';
 const GET_SCREENING_LIST_RESULT = 'GET_SCREENING_LIST_RESULT';
 const GET_SCREENING_LIST_RESULT_SUCCESS = "GET_SCREENING_LIST_RESULT_SUCCESS";
+const SUBMIT_SCREENING_LIST_ERROR = 'SUBMIT_SCREENING_LIST_ERROR';
 const GET_SCREENING_LIST_RESULT_ERROR = "GET_SCREENING_LIST_RESULT_ERROR";
 
 /* ------------   ACTION CREATORS     ------------------ */
@@ -20,12 +21,15 @@ const submitScreeningListSuccess = (message) => (
   { type: SUBMIT_SCREENING_LIST_SUCCESS, message }
 );
 
+const submitScreeningListError = (err) => (
+  { type: SUBMIT_SCREENING_LIST_ERROR, err }
+);
+
 const getScreeningListResult = () => (
   { type: GET_SCREENING_LIST_RESULT }
 );
 
 const getScreeningListResultSuccess = (companyResults) => (
-  console.log('API RESULT', companyResults),
   { type: GET_SCREENING_LIST_RESULT_SUCCESS, companyResults }
 );
 
@@ -42,7 +46,8 @@ export const submitScreeningListThunk = (spreadsheet) => {
       .then(res => {
         dispatch(submitScreeningListSuccess());
         console.log('===============thunk put', res);
-      });
+      })
+      .catch(err => submitScreeningListError(err));
   };
 };
 
@@ -60,6 +65,7 @@ export const fetchScreeningResultsThunk = (currListLength) => {
 
 /* ------------       REDUCERS     ------------------ */
 const initialState = {
+  spreadSheetReady: false,
   loading: false,
   searchedCompanies: [],
   error: null
@@ -71,7 +77,7 @@ export default function (state = initialState, action) {
        return Object.assign({}, state, {loading: true});
     }
     case SUBMIT_SCREENING_LIST_SUCCESS: {
-      return Object.assign({}, state, {loading: false});
+      return Object.assign({}, state, {loading: false, spreadSheetReady: true});
     }
     case GET_SCREENING_LIST_RESULT_SUCCESS:{
       return  {
@@ -80,7 +86,8 @@ export default function (state = initialState, action) {
        error: null
     };
   }
-    case GET_SCREENING_LIST_RESULT_ERROR: {
+    case GET_SCREENING_LIST_RESULT_ERROR:
+    case SUBMIT_SCREENING_LIST_ERROR: {
       return  Object.assign({}, state, {error: action.err});
     }
     default:
