@@ -2,14 +2,16 @@
 /* -----------------    IMPORTS     ------------------ */
 
 import axios from 'axios';
+import { success } from './stateFunctions';
 
 /* -----------------    ACTION TYPES     ------------------ */
 const SUBMIT_SCREENING_LIST = 'SUBMIT_SCREENING_LIST';
 const SUBMIT_SCREENING_LIST_SUCCESS = 'SUBMIT_SCREENING_LIST_SUCCESS';
 const GET_SCREENING_LIST_RESULT = 'GET_SCREENING_LIST_RESULT';
-const GET_SCREENING_LIST_RESULT_SUCCESS = "GET_SCREENING_LIST_RESULT_SUCCESS";
+const GET_SCREENING_LIST_RESULT_SUCCESS = 'GET_SCREENING_LIST_RESULT_SUCCESS';
 const SUBMIT_SCREENING_LIST_ERROR = 'SUBMIT_SCREENING_LIST_ERROR';
-const GET_SCREENING_LIST_RESULT_ERROR = "GET_SCREENING_LIST_RESULT_ERROR";
+const GET_SCREENING_LIST_RESULT_ERROR = 'GET_SCREENING_LIST_RESULT_ERROR';
+const FETCH_STATE = 'FETCH_STATE';
 
 /* ------------   ACTION CREATORS     ------------------ */
 
@@ -36,6 +38,11 @@ const getScreeningListResultSuccess = (companyResults) => (
 const getScreeningListResultError = (err) => (
   { type: GET_SCREENING_LIST_RESULT_ERROR, err}
 );
+
+export const fetchState = () => (
+  { type: FETCH_STATE }
+);
+
 /* ------------       THUNK CREATORS     ------------------ */
 
 export const submitScreeningListThunk = (spreadsheet) => {
@@ -65,7 +72,7 @@ export const fetchScreeningResultsThunk = (currListLength) => {
 
 /* ------------       REDUCERS     ------------------ */
 const initialState = {
-  spreadSheetReady: false,
+  spreadsheetReady: false,
   loading: false,
   searchedCompanies: [],
   error: null
@@ -77,14 +84,10 @@ export default function (state = initialState, action) {
        return Object.assign({}, state, {loading: true});
     }
     case SUBMIT_SCREENING_LIST_SUCCESS: {
-      return Object.assign({}, state, {loading: false, spreadSheetReady: true});
+      return success(state, 'spreadsheetReady', true);
     }
     case GET_SCREENING_LIST_RESULT_SUCCESS:{
-      return  {
-       loading: false,
-       searchedCompanies: action.companyResults,
-       error: null
-    };
+      return success(state, 'searchedCompanies', action.companyResults)
   }
     case GET_SCREENING_LIST_RESULT_ERROR:
     case SUBMIT_SCREENING_LIST_ERROR: {

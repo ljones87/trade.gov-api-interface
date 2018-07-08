@@ -1,18 +1,22 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchScreeningResultsThunk, submitScreeningListThunk } from '../store';
+import { fetchScreeningResultsThunk, submitScreeningListThunk, fetchState } from '../store';
 import ExcelExport from './ExcelExport';
+import SpreadsheetEntry from './SpreadsheetEntry';
 
 class Main extends React.Component {
 
   render() {
     const {
       companyResults,
+      spreadsheetReady,
       loading,
       loadResults,
       submitSpreadsheet
     } = this.props;
+
     console.log('===============',companyResults)
+    console.log('===============',spreadsheetReady)
     return (
       <div className="excel-container">
         {
@@ -21,22 +25,18 @@ class Main extends React.Component {
             :
             <div>
               <h1>Company Query Results</h1>
-            <form onSubmit={submitSpreadsheet}>
-              <input
-                type="file"
-                accept=".xls,.xlsx,.ods"
-                name="spreadsheet"
-//                fileread opts="vm.gridOptions"
-                multiple="false"
-              />
+              {
+                !spreadsheetReady ?
+                  <SpreadsheetEntry
+                    submitSpreadsheet={submitSpreadsheet}
+                  />
+                : null
+              }
               <button
-                type="submit"
-              >
-              Submit Spreadsheet
-              </button>
-              </form>
-              <button
-                onClick={() => loadResults(companyResults.length)}
+                onClick={
+                  () => loadResults(companyResults.length)
+                }
+                disabled={!spreadsheetReady}
               >Run list</button>
               <h3>{`Current list length: ${companyResults.length}`}
               </h3>
@@ -53,6 +53,7 @@ class Main extends React.Component {
 
 const mapState = (state) => {
   return {
+    spreadsheetReady: state.screeningListResults.spreadsheetReady,
     companyResults: state.screeningListResults.searchedCompanies,
     loading: state.screeningListResults.loading
   };
@@ -60,6 +61,9 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
+    fetchState() {
+      dispatch(fetchState());
+    },
     loadResults(currListLength) {
       dispatch(fetchScreeningResultsThunk({count: currListLength}));
     },
@@ -73,4 +77,5 @@ const mapDispatch = (dispatch) => {
     }
   };
 };
+
 export default connect(mapState, mapDispatch)(Main);

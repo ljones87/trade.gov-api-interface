@@ -41,7 +41,7 @@ app.post('/spreadsheet', (req, res, next) => {
   data = data.filter(cellContent => cellContent.length);
   data.shift();
   console.log('===============', data.length)
-  res.sendStatus(200);
+  res.send({'listlength': data.length})
 });
 
 app.post('/data', (req, res, next) => {
