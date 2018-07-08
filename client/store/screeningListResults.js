@@ -19,8 +19,8 @@ const submitScreeningList = () => (
   { type: SUBMIT_SCREENING_LIST }
 );
 
-const submitScreeningListSuccess = (message) => (
-  { type: SUBMIT_SCREENING_LIST_SUCCESS, message }
+const submitScreeningListSuccess = (listlength) => (
+  { type: SUBMIT_SCREENING_LIST_SUCCESS, listlength }
 );
 
 const submitScreeningListError = (err) => (
@@ -51,8 +51,7 @@ export const submitScreeningListThunk = (spreadsheet) => {
     dispatch(submitScreeningList());
     axios.post('/spreadsheet', spreadsheet)
       .then(res => {
-        dispatch(submitScreeningListSuccess());
-        console.log('===============thunk put', res);
+        dispatch(submitScreeningListSuccess(res.data.listlength));
       })
       .catch(err => submitScreeningListError(err));
   };
@@ -73,6 +72,7 @@ export const fetchScreeningResultsThunk = (currListLength) => {
 /* ------------       REDUCERS     ------------------ */
 const initialState = {
   spreadsheetReady: false,
+  spreadsheetEntries: null,
   loading: false,
   searchedCompanies: [],
   error: null
@@ -84,7 +84,13 @@ export default function (state = initialState, action) {
        return Object.assign({}, state, {loading: true});
     }
     case SUBMIT_SCREENING_LIST_SUCCESS: {
-      return success(state, 'spreadsheetReady', true);
+      return {
+        ...state,
+        spreadsheetReady: true,
+        spreadsheetEntries: action.listlength,
+        loading: false,
+        error: null
+      };
     }
     case GET_SCREENING_LIST_RESULT_SUCCESS:{
       return success(state, 'searchedCompanies', action.companyResults)

@@ -10,13 +10,14 @@ class Main extends React.Component {
     const {
       companyResults,
       spreadsheetReady,
+      spreadsheetEntries,
       loading,
       loadResults,
       submitSpreadsheet
     } = this.props;
 
     console.log('===============',companyResults)
-    console.log('===============',spreadsheetReady)
+    console.log('===============',spreadsheetEntries)
     return (
       <div className="excel-container">
         {
@@ -38,7 +39,7 @@ class Main extends React.Component {
                 }
                 disabled={!spreadsheetReady}
               >Run list</button>
-              <h3>{`Current list length: ${companyResults.length}`}
+              <h3>{`Current list length: ${companyResults.length} out of: ${spreadsheetEntries}`}
               </h3>
              <ExcelExport
               companyResults={companyResults}
@@ -54,6 +55,7 @@ class Main extends React.Component {
 const mapState = (state) => {
   return {
     spreadsheetReady: state.screeningListResults.spreadsheetReady,
+    spreadsheetEntries: state.screeningListResults.spreadsheetEntries,
     companyResults: state.screeningListResults.searchedCompanies,
     loading: state.screeningListResults.loading
   };

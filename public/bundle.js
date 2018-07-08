@@ -54968,6 +54968,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.fetchScreeningResultsThunk = exports.submitScreeningListThunk = exports.fetchState = undefined;
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+/* -----------------    IMPORTS     ------------------ */
+
 exports.default = function () {
   var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
   var action = arguments[1];
@@ -54980,7 +54983,12 @@ exports.default = function () {
       }
     case SUBMIT_SCREENING_LIST_SUCCESS:
       {
-        return (0, _stateFunctions.success)(state, 'spreadsheetReady', true);
+        return _extends({}, state, {
+          spreadsheetReady: true,
+          spreadsheetEntries: action.listlength,
+          loading: false,
+          error: null
+        });
       }
     case GET_SCREENING_LIST_RESULT_SUCCESS:
       {
@@ -55005,9 +55013,6 @@ var _stateFunctions = __webpack_require__(368);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /* -----------------    ACTION TYPES     ------------------ */
-
-/* -----------------    IMPORTS     ------------------ */
-
 var SUBMIT_SCREENING_LIST = 'SUBMIT_SCREENING_LIST';
 var SUBMIT_SCREENING_LIST_SUCCESS = 'SUBMIT_SCREENING_LIST_SUCCESS';
 var GET_SCREENING_LIST_RESULT = 'GET_SCREENING_LIST_RESULT';
@@ -55022,8 +55027,8 @@ var submitScreeningList = function submitScreeningList() {
   return { type: SUBMIT_SCREENING_LIST };
 };
 
-var submitScreeningListSuccess = function submitScreeningListSuccess(message) {
-  return { type: SUBMIT_SCREENING_LIST_SUCCESS, message: message };
+var submitScreeningListSuccess = function submitScreeningListSuccess(listlength) {
+  return { type: SUBMIT_SCREENING_LIST_SUCCESS, listlength: listlength };
 };
 
 var submitScreeningListError = function submitScreeningListError(err) {
@@ -55053,8 +55058,7 @@ var submitScreeningListThunk = exports.submitScreeningListThunk = function submi
   return function (dispatch) {
     dispatch(submitScreeningList());
     _axios2.default.post('/spreadsheet', spreadsheet).then(function (res) {
-      dispatch(submitScreeningListSuccess());
-      console.log('===============thunk put', res);
+      dispatch(submitScreeningListSuccess(res.data.listlength));
     }).catch(function (err) {
       return submitScreeningListError(err);
     });
@@ -55076,6 +55080,7 @@ var fetchScreeningResultsThunk = exports.fetchScreeningResultsThunk = function f
 /* ------------       REDUCERS     ------------------ */
 var initialState = {
   spreadsheetReady: false,
+  spreadsheetEntries: null,
   loading: false,
   searchedCompanies: [],
   error: null
@@ -57954,13 +57959,14 @@ var Main = function (_React$Component) {
       var _props = this.props,
           companyResults = _props.companyResults,
           spreadsheetReady = _props.spreadsheetReady,
+          spreadsheetEntries = _props.spreadsheetEntries,
           loading = _props.loading,
           loadResults = _props.loadResults,
           submitSpreadsheet = _props.submitSpreadsheet;
 
 
       console.log('===============', companyResults);
-      console.log('===============', spreadsheetReady);
+      console.log('===============', spreadsheetEntries);
       return _react2.default.createElement(
         'div',
         { className: 'excel-container' },
@@ -57992,7 +57998,7 @@ var Main = function (_React$Component) {
           _react2.default.createElement(
             'h3',
             null,
-            'Current list length: ' + companyResults.length
+            'Current list length: ' + companyResults.length + ' out of: ' + spreadsheetEntries
           ),
           _react2.default.createElement(_ExcelExport2.default, {
             companyResults: companyResults
@@ -58008,6 +58014,7 @@ var Main = function (_React$Component) {
 var mapState = function mapState(state) {
   return {
     spreadsheetReady: state.screeningListResults.spreadsheetReady,
+    spreadsheetEntries: state.screeningListResults.spreadsheetEntries,
     companyResults: state.screeningListResults.searchedCompanies,
     loading: state.screeningListResults.loading
   };
