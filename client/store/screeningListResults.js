@@ -4,12 +4,21 @@
 import axios from 'axios';
 
 /* -----------------    ACTION TYPES     ------------------ */
-
+const SUBMIT_SCREENING_LIST = 'SUBMIT_SCREENING_LIST';
+const SUBMIT_SCREENING_LIST_SUCCESS = 'SUBMIT_SCREENING_LIST_SUCCESS';
 const GET_SCREENING_LIST_RESULT = 'GET_SCREENING_LIST_RESULT';
 const GET_SCREENING_LIST_RESULT_SUCCESS = "GET_SCREENING_LIST_RESULT_SUCCESS";
 const GET_SCREENING_LIST_RESULT_ERROR = "GET_SCREENING_LIST_RESULT_ERROR";
 
 /* ------------   ACTION CREATORS     ------------------ */
+
+const submitScreeningList = () => (
+  { type: SUBMIT_SCREENING_LIST }
+);
+
+const submitScreeningListSuccess = (message) => (
+  { type: SUBMIT_SCREENING_LIST_SUCCESS, message }
+);
 
 const getScreeningListResult = () => (
   { type: GET_SCREENING_LIST_RESULT }
@@ -24,8 +33,17 @@ const getScreeningListResultError = (err) => (
 );
 /* ------------       THUNK CREATORS     ------------------ */
 
+export const submitScreeningListThunk = (spreadsheet) => {
+  return dispatch => {
+    axios.post('/spreadsheet', spreadsheet)
+      .then(res => {
+        dispatch(submitScreeningListSuccess);
+        console.log('===============thunk put', res);
+      });
+  };
+};
 
-export const fetchScreeningResults = () => {
+export const fetchScreeningResultsThunk = () => {
    return dispatch => {
     dispatch(getScreeningListResult());
     axios.get('/data')
@@ -44,7 +62,9 @@ const initialState = {
 };
 export default function (state = initialState, action) {
   switch (action.type) {
-    case GET_SCREENING_LIST_RESULT: {
+    case
+    SUBMIT_SCREENING_LIST,
+    GET_SCREENING_LIST_RESULT: {
        return Object.assign({}, state, {loading: true});
     }
     case GET_SCREENING_LIST_RESULT_SUCCESS:{

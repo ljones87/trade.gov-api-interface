@@ -1,21 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchScreeningResults } from '../store';
-import ReactExport from 'react-data-export';
-
-const ExcelFile = ReactExport.ExcelFile;
-const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
-const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
-
+import { fetchScreeningResultsThunk, submitScreeningListThunk } from '../store';
+import ExcelExport from './ExcelExport';
 
 class Main extends React.Component {
 
-  componentDidMount() {
-    this.props.loadResults();
-  }
   render() {
-    const { companyResults, loading } = this.props;
-    console.log('=============== Company Resulsts', companyResults);
+    const {
+      companyResults,
+      loading,
+      loadResults,
+      submitSpreadsheet
+    } = this.props;
 
     return (
       <div className="excel-container">
@@ -25,21 +21,29 @@ class Main extends React.Component {
             :
             <div>
               <h1>Company Query Results</h1>
-              <ExcelFile>
-                <ExcelSheet data={companyResults} name="Company Name Results">
-                  <ExcelColumn label="Name" value="company" />
-                  <ExcelColumn
-                  label="Query result"
-                  value={(col) => col.error ? col.error.message : col.data.total}
-                  />
-                  <ExcelColumn
-                  label="Error url"
-                  value={(col) => col.error ? col.error.url : null}
-                   />
+            <form onSubmit={submitSpreadsheet}>
+              <input
+                type="file"
+                accept=".xls,.xlsx,.ods"
+                name="spreadsheet"
+//                fileread opts="vm.gridOptions"
+                multiple="false"
+              />
 
-                  <ExcelColumn label="Results Api" value={(col) => col.data && col.data.total > 0 ? col.api : null} />
-                </ExcelSheet>
-              </ExcelFile>
+              <button
+                type="submit"
+              >
+              Submit Spreadsheet
+              </button>
+              </form>
+              <button
+                onClick={loadResults}
+              >Run list</button>
+              <h3>{`Current list length: ${companyResults.length}`}
+              </h3>
+             <ExcelExport
+              companyResults={companyResults}
+             />
             </div>
         }
       </div>
@@ -59,12 +63,21 @@ const mapDispatch = (dispatch) => {
   return {
     loadResults() {
       Promise.all([
-      dispatch(fetchScreeningResults())
+        dispatch(fetchScreeningResultsThunk())
       ])
       .then(() => {
-      console.log('===============COMPLETED RETURN')
+      console.log('===============COMPLETED RETURN');
       });
+    },
+    submitSpreadsheet(event) {
+      event.preventDefault();
+      const e = event.target;
+      const spreadsheet = e.spreadsheet.value;
+      //debugger;
+      console.log('===============input values ', spreadsheet);
+      dispatch(submitScreeningListThunk({spreadsheet}));
     }
   };
+
 };
 export default connect(mapState, mapDispatch)(Main);

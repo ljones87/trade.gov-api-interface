@@ -4,22 +4,19 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const app = express();
 var server = app.listen();
-server.setTimeout(50000000000);
+server.setTimeout(5000000);
 const axios = require('axios');
 if (process.env.NODE_ENV !== 'production') require('../secrets');
 const apiKey = process.env.API_KEY;
 const PORT = process.env.PORT || 2000;
 const XLSX = require('xlsx');
-const namesOnly = XLSX.readFile('namesOnly.xlsx');
+let spreadsheetInput, spreadsheetForAnalysis, data, worksheet, apiInput;
+//const namesOnly = XLSX.readFile('namesOnly.xlsx');
 
 //formats api call
 const linkGenerator = (key, name) => {
   return `https://api.trade.gov/consolidated_screening_list/search?api_key=${key}&q=${name}`;
 };
-
-const namesWorksheet = namesOnly.Sheets[namesOnly.SheetNames[0]];
-let data = XLSX.utils.sheet_to_json(namesWorksheet, { header: 1 }, {raw: false});
-
 
 // Logging middleware
 app.use(morgan('dev'));
@@ -33,19 +30,30 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 //for some reason lots of empty cells come in w/spreadsheet
-data = data.filter(company => company.length);
-data.shift();
-
-//currently, increment 200 at a time (0, 200, 400 etc);
-const i = 0;
-const apiNames = data.slice(i, i+200);
+if (data) {
+  data = data.filter(company => company.length);
+  data.shift();
+  //currently, increment 200 at a time (0, 200, 400 etc);
+  const i = 0;
+  apiInput = data.slice(i, i + 100);
+}
 
 const final = [];
+
+app.post('/spreadsheet', (req, res, next) => {
+  console.log('=============== server app.post', req.body.spreadsheet);
+  spreadsheetInput = req.body.spreadsheet;
+  spreadsheetForAnalysis = XLSX.readFile(spreadsheetInput);
+  worksheet = spreadsheetForAnalysis.Sheets[spreadsheetForAnalysis.SheetNames[0]];
+  data = XLSX.utils.sheet_to_json(worksheet, { header: 1 }, {raw: false});
+  console.log('===============data', data)
+  return res.sendStatus(200).message('spreadsheet received');
+});
 
 app.get('/data', (req, res, next) => {
   console.log('===============FETCHING');
 
-  return Promise.all(apiNames.map(query => {
+  return Promise.all(apiInput.map(query => {
     const companyName = query[0];
     return axios.get(
       linkGenerator(apiKey, query[0])
