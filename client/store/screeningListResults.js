@@ -25,6 +25,7 @@ const getScreeningListResult = () => (
 );
 
 const getScreeningListResultSuccess = (companyResults) => (
+  console.log('API RESULT', companyResults),
   { type: GET_SCREENING_LIST_RESULT_SUCCESS, companyResults }
 );
 
@@ -34,24 +35,27 @@ const getScreeningListResultError = (err) => (
 /* ------------       THUNK CREATORS     ------------------ */
 
 export const submitScreeningListThunk = (spreadsheet) => {
+
   return dispatch => {
+    dispatch(submitScreeningList());
     axios.post('/spreadsheet', spreadsheet)
       .then(res => {
-        dispatch(submitScreeningListSuccess);
+        dispatch(submitScreeningListSuccess());
         console.log('===============thunk put', res);
       });
   };
 };
 
-export const fetchScreeningResultsThunk = () => {
+export const fetchScreeningResultsThunk = (currListLength) => {
    return dispatch => {
     dispatch(getScreeningListResult());
-    axios.get('/data')
+    console.log('===============',currListLength)
+    axios.post('/data', currListLength)
       .then(res => (
         dispatch(getScreeningListResultSuccess(res.data))
       ))
       .catch(err => getScreeningListResultError(err));
-    };
+     };
 };
 
 /* ------------       REDUCERS     ------------------ */
@@ -62,10 +66,12 @@ const initialState = {
 };
 export default function (state = initialState, action) {
   switch (action.type) {
-    case
-    SUBMIT_SCREENING_LIST,
-    GET_SCREENING_LIST_RESULT: {
+    case SUBMIT_SCREENING_LIST:
+    case GET_SCREENING_LIST_RESULT: {
        return Object.assign({}, state, {loading: true});
+    }
+    case SUBMIT_SCREENING_LIST_SUCCESS: {
+      return Object.assign({}, state, {loading: false});
     }
     case GET_SCREENING_LIST_RESULT_SUCCESS:{
       return  {

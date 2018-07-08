@@ -12,7 +12,7 @@ class Main extends React.Component {
       loadResults,
       submitSpreadsheet
     } = this.props;
-
+    console.log('===============',companyResults)
     return (
       <div className="excel-container">
         {
@@ -29,7 +29,6 @@ class Main extends React.Component {
 //                fileread opts="vm.gridOptions"
                 multiple="false"
               />
-
               <button
                 type="submit"
               >
@@ -37,7 +36,7 @@ class Main extends React.Component {
               </button>
               </form>
               <button
-                onClick={loadResults}
+                onClick={() => loadResults(companyResults.length)}
               >Run list</button>
               <h3>{`Current list length: ${companyResults.length}`}
               </h3>
@@ -61,13 +60,8 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    loadResults() {
-      // Promise.all([
-        dispatch(fetchScreeningResultsThunk())
-      // ])
-      // .then(() => {
-      // console.log('===============COMPLETED RETURN');
-      // });
+    loadResults(currListLength) {
+      dispatch(fetchScreeningResultsThunk({count: currListLength}));
     },
     submitSpreadsheet(event) {
       event.preventDefault();
@@ -78,6 +72,5 @@ const mapDispatch = (dispatch) => {
       dispatch(submitScreeningListThunk({spreadsheet}));
     }
   };
-
 };
 export default connect(mapState, mapDispatch)(Main);

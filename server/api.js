@@ -30,29 +30,25 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 //for some reason lots of empty cells come in w/spreadsheet
-if (data) {
-
-
-  //currently, increment 200 at a time (0, 200, 400 etc);
-
-}
 
 const final = [];
 
 app.post('/spreadsheet', (req, res, next) => {
   spreadsheet = req.body.spreadsheet;
   spreadsheetForAnalysis = XLSX.readFile(spreadsheet);
-  // console.log('===============sp4anaysis', spreadsheetForAnalysis)
   worksheet = spreadsheetForAnalysis.Sheets[spreadsheetForAnalysis.SheetNames[0]];
   data = XLSX.utils.sheet_to_json(worksheet, { header: 1 }, {raw: false});
+  data = data.filter(cellContent => cellContent.length);
+  data.shift();
   console.log('===============', data.length)
+  res.sendStatus(200);
 });
 
-app.get('/data', (req, res, next) => {
-  data = data.filter(company => company.length);
-  data.shift();
-  const i = 0;
+app.post('/data', (req, res, next) => {
+  let i = Number(req.body.count);
+  console.log('===============i', req.body.count);
   apiInput = data.slice(i, i + 100);
+  console.log('===============api input', apiInput)
   return Promise.all(apiInput.map(query => {
     const companyName = query[0];
     return axios.get(
@@ -67,7 +63,7 @@ app.get('/data', (req, res, next) => {
         final.push(formattedReturn);
       })
       .catch(err => (
-        console.log('===============SERVER ERROR RESPONSE', err.response || '800'),
+       //console.log('===============SERVER ERROR RESPONSE', err.response || '800'),
           final.push({
           company: companyName,
           error: {

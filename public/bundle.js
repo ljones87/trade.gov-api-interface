@@ -54973,9 +54973,14 @@ exports.default = function () {
   var action = arguments[1];
 
   switch (action.type) {
-    case (SUBMIT_SCREENING_LIST, GET_SCREENING_LIST_RESULT):
+    case SUBMIT_SCREENING_LIST:
+    case GET_SCREENING_LIST_RESULT:
       {
         return Object.assign({}, state, { loading: true });
+      }
+    case SUBMIT_SCREENING_LIST_SUCCESS:
+      {
+        return Object.assign({}, state, { loading: false });
       }
     case GET_SCREENING_LIST_RESULT_SUCCESS:
       {
@@ -55024,7 +55029,7 @@ var getScreeningListResult = function getScreeningListResult() {
 };
 
 var getScreeningListResultSuccess = function getScreeningListResultSuccess(companyResults) {
-  return { type: GET_SCREENING_LIST_RESULT_SUCCESS, companyResults: companyResults };
+  return console.log('API RESULT', companyResults), { type: GET_SCREENING_LIST_RESULT_SUCCESS, companyResults: companyResults };
 };
 
 var getScreeningListResultError = function getScreeningListResultError(err) {
@@ -55033,18 +55038,21 @@ var getScreeningListResultError = function getScreeningListResultError(err) {
 /* ------------       THUNK CREATORS     ------------------ */
 
 var submitScreeningListThunk = exports.submitScreeningListThunk = function submitScreeningListThunk(spreadsheet) {
+
   return function (dispatch) {
+    dispatch(submitScreeningList());
     _axios2.default.post('/spreadsheet', spreadsheet).then(function (res) {
-      dispatch(submitScreeningListSuccess);
+      dispatch(submitScreeningListSuccess());
       console.log('===============thunk put', res);
     });
   };
 };
 
-var fetchScreeningResultsThunk = exports.fetchScreeningResultsThunk = function fetchScreeningResultsThunk() {
+var fetchScreeningResultsThunk = exports.fetchScreeningResultsThunk = function fetchScreeningResultsThunk(currListLength) {
   return function (dispatch) {
     dispatch(getScreeningListResult());
-    _axios2.default.get('/data').then(function (res) {
+    console.log('===============', currListLength);
+    _axios2.default.post('/data', currListLength).then(function (res) {
       return dispatch(getScreeningListResultSuccess(res.data));
     }).catch(function (err) {
       return getScreeningListResultError(err);
@@ -57909,7 +57917,7 @@ var Main = function (_React$Component) {
           loadResults = _props.loadResults,
           submitSpreadsheet = _props.submitSpreadsheet;
 
-
+      console.log('===============', companyResults);
       return _react2.default.createElement(
         'div',
         { className: 'excel-container' },
@@ -57946,7 +57954,9 @@ var Main = function (_React$Component) {
           _react2.default.createElement(
             'button',
             {
-              onClick: loadResults
+              onClick: function onClick() {
+                return loadResults(companyResults.length);
+              }
             },
             'Run list'
           ),
@@ -57975,13 +57985,8 @@ var mapState = function mapState(state) {
 
 var mapDispatch = function mapDispatch(dispatch) {
   return {
-    loadResults: function loadResults() {
-      // Promise.all([
-      dispatch((0, _store.fetchScreeningResultsThunk)());
-      // ])
-      // .then(() => {
-      // console.log('===============COMPLETED RETURN');
-      // });
+    loadResults: function loadResults(currListLength) {
+      dispatch((0, _store.fetchScreeningResultsThunk)({ count: currListLength }));
     },
     submitSpreadsheet: function submitSpreadsheet(event) {
       event.preventDefault();
