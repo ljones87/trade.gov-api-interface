@@ -1,22 +1,22 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchScreeningResults } from '../store';
-import ReactExport from 'react-data-export';
-
-const ExcelFile = ReactExport.ExcelFile;
-const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
-const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
-
+import { fetchScreeningResultsThunk, submitScreeningListThunk, fetchState } from '../store';
+import ExcelExport from './ExcelExport';
+import SpreadsheetEntry from './SpreadsheetEntry';
 
 class Main extends React.Component {
 
-  componentDidMount() {
-    this.props.loadResults();
-  }
   render() {
-    const { companyResults, loading } = this.props;
-    console.log('=============== Company Resulsts', companyResults);
+    const {
+      companyResults,
+      spreadsheetReady,
+      loading,
+      loadResults,
+      submitSpreadsheet
+    } = this.props;
 
+    console.log('===============',companyResults)
+    console.log('===============',spreadsheetReady)
     return (
       <div className="excel-container">
         {
@@ -25,21 +25,24 @@ class Main extends React.Component {
             :
             <div>
               <h1>Company Query Results</h1>
-              <ExcelFile>
-                <ExcelSheet data={companyResults} name="Company Name Results">
-                  <ExcelColumn label="Name" value="company" />
-                  <ExcelColumn
-                  label="Query result"
-                  value={(col) => col.error ? col.error.message : col.data.total}
+              {
+                !spreadsheetReady ?
+                  <SpreadsheetEntry
+                    submitSpreadsheet={submitSpreadsheet}
                   />
-                  <ExcelColumn
-                  label="Error url"
-                  value={(col) => col.error ? col.error.url : null}
-                   />
-
-                  <ExcelColumn label="Results Api" value={(col) => col.data && col.data.total > 0 ? col.api : null} />
-                </ExcelSheet>
-              </ExcelFile>
+                : null
+              }
+              <button
+                onClick={
+                  () => loadResults(companyResults.length)
+                }
+                disabled={!spreadsheetReady}
+              >Run list</button>
+              <h3>{`Current list length: ${companyResults.length}`}
+              </h3>
+             <ExcelExport
+              companyResults={companyResults}
+             />
             </div>
         }
       </div>
@@ -50,6 +53,7 @@ class Main extends React.Component {
 
 const mapState = (state) => {
   return {
+    spreadsheetReady: state.screeningListResults.spreadsheetReady,
     companyResults: state.screeningListResults.searchedCompanies,
     loading: state.screeningListResults.loading
   };
@@ -57,14 +61,21 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    loadResults() {
-      Promise.all([
-      dispatch(fetchScreeningResults())
-      ])
-      .then(() => {
-      console.log('===============COMPLETED RETURN')
-      });
+    fetchState() {
+      dispatch(fetchState());
+    },
+    loadResults(currListLength) {
+      dispatch(fetchScreeningResultsThunk({count: currListLength}));
+    },
+    submitSpreadsheet(event) {
+      event.preventDefault();
+      const e = event.target;
+      let spreadsheet = e.spreadsheet.value;
+      spreadsheet = spreadsheet.replace("C:\\fakepath\\", "");
+      //debugger;
+      dispatch(submitScreeningListThunk({spreadsheet}));
     }
   };
 };
+
 export default connect(mapState, mapDispatch)(Main);
