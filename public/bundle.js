@@ -57976,9 +57976,12 @@ var mapState = function mapState(state) {
 var mapDispatch = function mapDispatch(dispatch) {
   return {
     loadResults: function loadResults() {
-      Promise.all([dispatch((0, _store.fetchScreeningResultsThunk)())]).then(function () {
-        console.log('===============COMPLETED RETURN');
-      });
+      // Promise.all([
+      dispatch((0, _store.fetchScreeningResultsThunk)());
+      // ])
+      // .then(() => {
+      // console.log('===============COMPLETED RETURN');
+      // });
     },
     submitSpreadsheet: function submitSpreadsheet(event) {
       event.preventDefault();
@@ -57986,7 +57989,6 @@ var mapDispatch = function mapDispatch(dispatch) {
       var spreadsheet = e.spreadsheet.value;
       spreadsheet = spreadsheet.replace("C:\\fakepath\\", "");
       //debugger;
-      console.log('===============input values ', spreadsheet);
       dispatch((0, _store.submitScreeningListThunk)({ spreadsheet: spreadsheet }));
     }
   };

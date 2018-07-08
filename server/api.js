@@ -10,8 +10,8 @@ if (process.env.NODE_ENV !== 'production') require('../secrets');
 const apiKey = process.env.API_KEY;
 const PORT = process.env.PORT || 2000;
 const XLSX = require('xlsx');
-let spreadsheet, spreadsheetForAnalysis, data, worksheet, apiInput;
-//const namesOnly = XLSX.readFile('namesOnly.xlsx');
+let spreadsheet, spreadsheetForAnalysis, data, worksheet;
+let apiInput = [];
 
 //formats api call
 const linkGenerator = (key, name) => {
@@ -31,30 +31,28 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 
 //for some reason lots of empty cells come in w/spreadsheet
 if (data) {
-  data = data.filter(company => company.length);
-  data.shift();
+
+
   //currently, increment 200 at a time (0, 200, 400 etc);
-  const i = 0;
-  apiInput = data.slice(i, i + 100);
+
 }
 
 const final = [];
 
 app.post('/spreadsheet', (req, res, next) => {
-  console.log('=============== server app.post', req.body.spreadsheet);
   spreadsheet = req.body.spreadsheet;
-   console.log('=============== spreadsheet',spreadsheet)
   spreadsheetForAnalysis = XLSX.readFile(spreadsheet);
-  console.log('===============sp4anaysis', spreadsheetForAnalysis)
-  worksheet = spreadsheetForAnalysis.Sheets[spreadsheet.SheetNames[0]];
+  // console.log('===============sp4anaysis', spreadsheetForAnalysis)
+  worksheet = spreadsheetForAnalysis.Sheets[spreadsheetForAnalysis.SheetNames[0]];
   data = XLSX.utils.sheet_to_json(worksheet, { header: 1 }, {raw: false});
-  console.log('===============data', data)
-  return res.sendStatus(200).message('spreadsheet received');
+  console.log('===============', data.length)
 });
 
 app.get('/data', (req, res, next) => {
-  console.log('===============FETCHING');
-
+  data = data.filter(company => company.length);
+  data.shift();
+  const i = 0;
+  apiInput = data.slice(i, i + 100);
   return Promise.all(apiInput.map(query => {
     const companyName = query[0];
     return axios.get(
@@ -84,7 +82,10 @@ app.get('/data', (req, res, next) => {
   }))
   .then(() => (
     res.send(final)
-  ));
+  ))
+  .catch(err => {
+    console.log('=============== fetch data error', err)
+  })
 });
 
 app.get('/*', function (req, res, next) {

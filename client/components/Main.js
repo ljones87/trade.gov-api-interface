@@ -62,12 +62,12 @@ const mapState = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     loadResults() {
-      Promise.all([
+      // Promise.all([
         dispatch(fetchScreeningResultsThunk())
-      ])
-      .then(() => {
-      console.log('===============COMPLETED RETURN');
-      });
+      // ])
+      // .then(() => {
+      // console.log('===============COMPLETED RETURN');
+      // });
     },
     submitSpreadsheet(event) {
       event.preventDefault();
@@ -75,7 +75,6 @@ const mapDispatch = (dispatch) => {
       let spreadsheet = e.spreadsheet.value;
       spreadsheet = spreadsheet.replace("C:\\fakepath\\", "");
       //debugger;
-      console.log('===============input values ', spreadsheet);
       dispatch(submitScreeningListThunk({spreadsheet}));
     }
   };
