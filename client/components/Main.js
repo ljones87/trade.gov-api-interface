@@ -72,7 +72,8 @@ const mapDispatch = (dispatch) => {
     submitSpreadsheet(event) {
       event.preventDefault();
       const e = event.target;
-      const spreadsheet = e.spreadsheet.value;
+      let spreadsheet = e.spreadsheet.value;
+      spreadsheet = spreadsheet.replace("C:\\fakepath\\", "");
       //debugger;
       console.log('===============input values ', spreadsheet);
       dispatch(submitScreeningListThunk({spreadsheet}));

@@ -10,7 +10,7 @@ if (process.env.NODE_ENV !== 'production') require('../secrets');
 const apiKey = process.env.API_KEY;
 const PORT = process.env.PORT || 2000;
 const XLSX = require('xlsx');
-let spreadsheetInput, spreadsheetForAnalysis, data, worksheet, apiInput;
+let spreadsheet, spreadsheetForAnalysis, data, worksheet, apiInput;
 //const namesOnly = XLSX.readFile('namesOnly.xlsx');
 
 //formats api call
@@ -42,9 +42,11 @@ const final = [];
 
 app.post('/spreadsheet', (req, res, next) => {
   console.log('=============== server app.post', req.body.spreadsheet);
-  spreadsheetInput = req.body.spreadsheet;
-  spreadsheetForAnalysis = XLSX.readFile(spreadsheetInput);
-  worksheet = spreadsheetForAnalysis.Sheets[spreadsheetForAnalysis.SheetNames[0]];
+  spreadsheet = req.body.spreadsheet;
+   console.log('=============== spreadsheet',spreadsheet)
+  spreadsheetForAnalysis = XLSX.readFile(spreadsheet);
+  console.log('===============sp4anaysis', spreadsheetForAnalysis)
+  worksheet = spreadsheetForAnalysis.Sheets[spreadsheet.SheetNames[0]];
   data = XLSX.utils.sheet_to_json(worksheet, { header: 1 }, {raw: false});
   console.log('===============data', data)
   return res.sendStatus(200).message('spreadsheet received');
