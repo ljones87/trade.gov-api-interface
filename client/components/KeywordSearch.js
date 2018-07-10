@@ -4,7 +4,7 @@ import { fetchScreeningResultsThunk, submitScreeningListThunk, fetchState } from
 import ExcelExport from './ExcelExport';
 import SpreadsheetEntry from './SpreadsheetEntry';
 
-class Main extends React.Component {
+class KeywordSearch extends React.Component {
 
   render() {
     const {
@@ -16,8 +16,8 @@ class Main extends React.Component {
       submitSpreadsheet
     } = this.props;
 
-    console.log('===============',companyResults)
-    console.log('===============',spreadsheetEntries)
+    // console.log('===============',companyResults)
+    // console.log('===============',spreadsheetEntries)
     return (
       <div className="excel-container">
         {
@@ -25,7 +25,7 @@ class Main extends React.Component {
             <h1>Loading results</h1>
             :
             <div>
-              <h1>Company Query Results</h1>
+              <h1>Keyword Query Results</h1>
               {
                 !spreadsheetReady ?
                   <SpreadsheetEntry
@@ -80,4 +80,4 @@ const mapDispatch = (dispatch) => {
   };
 };
 
-export default connect(mapState, mapDispatch)(Main);
+export default connect(mapState, mapDispatch)(KeywordSearch);

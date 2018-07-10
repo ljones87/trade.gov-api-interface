@@ -49,7 +49,7 @@ export const submitScreeningListThunk = (spreadsheet) => {
 
   return dispatch => {
     dispatch(submitScreeningList());
-    axios.post('/spreadsheet', spreadsheet)
+    axios.post('/api/keyword/spreadsheet', spreadsheet)
       .then(res => {
         dispatch(submitScreeningListSuccess(res.data.listlength));
       })
@@ -61,7 +61,7 @@ export const fetchScreeningResultsThunk = (currListLength) => {
    return dispatch => {
     dispatch(getScreeningListResult());
     console.log('===============',currListLength)
-    axios.post('/data', currListLength)
+    axios.post('/api/keyword', currListLength)
       .then(res => (
         dispatch(getScreeningListResultSuccess(res.data))
       ))

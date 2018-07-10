@@ -1,10 +1,11 @@
-const express = require('express');
-const path = require('path');
-const morgan = require('morgan');
-const bodyParser = require('body-parser');
-const app = express();
-var server = app.listen();
-server.setTimeout(5000000);
+ const express = require('express');
+ const app = express();
+// const path = require('path');
+// const morgan = require('morgan');
+// const bodyParser = require('body-parser');
+
+// var server = app.listen();
+// server.setTimeout(5000000);
 const axios = require('axios');
 if (process.env.NODE_ENV !== 'production') require('../secrets');
 const apiKey = process.env.API_KEY;
@@ -18,35 +19,33 @@ const linkGenerator = (key, name) => {
   return `https://api.trade.gov/consolidated_screening_list/search?api_key=${key}&q=${name}`;
 };
 
-// Logging middleware
-app.use(morgan('dev'));
+// // Logging middleware
+// app.use(morgan('dev'));
 
 
-// Body parsing middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// // Body parsing middleware
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
 
-// Static middleware
-app.use(express.static(path.join(__dirname, '..', 'public')));
-
-//for some reason lots of empty cells come in w/spreadsheet
+// // Static middleware
+// app.use(express.static(path.join(__dirname, '..', 'public')));
 
 const final = [];
 
-app.post('/spreadsheet', (req, res, next) => {
+app.post('/keyword/spreadsheet', (req, res, next) => {
   spreadsheet = req.body.spreadsheet;
   spreadsheetForAnalysis = XLSX.readFile(spreadsheet);
   worksheet = spreadsheetForAnalysis.Sheets[spreadsheetForAnalysis.SheetNames[0]];
   data = XLSX.utils.sheet_to_json(worksheet, { header: 1 }, {raw: false});
   data = data.filter(cellContent => cellContent.length);
   data.shift();
-  console.log('===============', data.length)
-  res.send({'listlength': data.length})
+  console.log('===============', data.length);
+  res.send({listlength: data.length});
 });
 
-app.post('/data', (req, res, next) => {
+app.post('/keyword', (req, res, next) => {
   let i = Number(req.body.count);
-  let j = i + 100
+  let j = i + 100;
   apiInput = data.slice(i, j);
   while (i < data.length) {
     return Promise.all(apiInput.map(query => {
@@ -77,11 +76,11 @@ app.post('/data', (req, res, next) => {
         ));
     }))
     .then(() => (
-      j = i+100,
+      j = i + 100,
       res.send(final)
     ))
     .catch(err => {
-      res.sendStatus(500)
+      res.sendStatus(500);
       console.log('=============== fetch data error', err);
 
     });

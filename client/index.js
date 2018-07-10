@@ -5,12 +5,12 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux'
 import store from './store'
 import { BrowserRouter as Router } from 'react-router-dom'
-import Main from './components/Main'
+import Routes from './components/Routes'
 
 ReactDOM.render(
   <Provider store={store}>
     <Router>
-      <Main />
+      <Routes />
     </Router>
   </Provider>,
   document.getElementById('app')
