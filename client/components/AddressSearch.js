@@ -1,14 +1,13 @@
-import React from 'react';
+import React from 'react'
 import { connect } from 'react-redux';
-import { fetchScreeningResultsThunk, submitScreeningListThunk, fetchState } from '../store';
+import { fetchAddressResultsThunk, submitAddressListThunk, fetchState } from '../store';
 import ExcelExport from './ExcelExport';
 import SpreadsheetEntry from './SpreadsheetEntry';
 
-class Main extends React.Component {
-
+class AddressSearch extends React.Component {
   render() {
     const {
-      companyResults,
+      addressResults,
       spreadsheetReady,
       spreadsheetEntries,
       loading,
@@ -16,8 +15,6 @@ class Main extends React.Component {
       submitSpreadsheet
     } = this.props;
 
-    console.log('===============',companyResults)
-    console.log('===============',spreadsheetEntries)
     return (
       <div className="excel-container">
         {
@@ -25,49 +22,47 @@ class Main extends React.Component {
             <h1>Loading results</h1>
             :
             <div>
-              <h1>Company Query Results</h1>
+              <h1>Address Query</h1>
               {
                 !spreadsheetReady ?
                   <SpreadsheetEntry
                     submitSpreadsheet={submitSpreadsheet}
                   />
-                : null
+                  : null
               }
               <button
                 onClick={
-                  () => loadResults(companyResults.length)
+                  () => loadResults(addressResults.length)
                 }
                 disabled={!spreadsheetReady}
-              >Run list</button>
-              <h3>{`Current list length: ${companyResults.length} out of: ${spreadsheetEntries}`}
+              >Run list
+              </button>
+              <h3>
+                {`Current list length: ${addressResults.length} out of: ${spreadsheetEntries}`}
               </h3>
-             <ExcelExport
-              companyResults={companyResults}
-             />
+              <ExcelExport
+                addressResults={addressResults}
+              />
             </div>
         }
       </div>
-
-    );
+    )
   }
 }
 
 const mapState = (state) => {
   return {
-    spreadsheetReady: state.screeningListResults.spreadsheetReady,
-    spreadsheetEntries: state.screeningListResults.spreadsheetEntries,
-    companyResults: state.screeningListResults.searchedCompanies,
-    loading: state.screeningListResults.loading
+    spreadsheetReady: state.addressSearch.spreadsheetReady,
+    spreadsheetEntries: state.addressSearch.spreadsheetEntries,
+    addressResults: state.addressSearch.results,
+    loading: state.addressSearch.loading
   };
 };
 
 const mapDispatch = (dispatch) => {
   return {
-    fetchState() {
-      dispatch(fetchState());
-    },
     loadResults(currListLength) {
-      dispatch(fetchScreeningResultsThunk({count: currListLength}));
+      dispatch(fetchAddressResultsThunk({ count: currListLength }));
     },
     submitSpreadsheet(event) {
       event.preventDefault();
@@ -75,9 +70,9 @@ const mapDispatch = (dispatch) => {
       let spreadsheet = e.spreadsheet.value;
       spreadsheet = spreadsheet.replace("C:\\fakepath\\", "");
       //debugger;
-      dispatch(submitScreeningListThunk({spreadsheet}));
+      dispatch(submitAddressListThunk({ spreadsheet }));
     }
   };
 };
 
-export default connect(mapState, mapDispatch)(Main);
+export default connect(mapState, mapDispatch)(AddressSearch);

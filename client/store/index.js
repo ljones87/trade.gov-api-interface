@@ -1,13 +1,13 @@
 
-import screeningListResults from './screeningListResults';
-import spreadshetInput from './spreadsheetInput';
+import keywordSearch from './keywordSearch';
+import addressSearch from './addressSearch';
 import { createStore, applyMiddleware, combineReducers } from 'redux';
 import { createLogger } from 'redux-logger';
 import thunkMiddleware from 'redux-thunk';
 
 const reducer = combineReducers({
-  screeningListResults,
-  spreadshetInput
+  keywordSearch,
+  addressSearch
 });
 
 const middleware = applyMiddleware(
@@ -19,5 +19,5 @@ const store = createStore(reducer, middleware);
 
 export default store;
 
-export * from './screeningListResults';
-export * from './spreadsheetInput';
+export * from './keywordSearch';
+export * from './addressSearch';
