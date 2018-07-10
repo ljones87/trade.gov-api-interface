@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux';
-import { fetchAddressResultsThunk, submitAddressListThunk, fetchState } from '../store';
+import { fetchAddressResultsThunk, submitAddressListThunk } from '../store';
 import ExcelExport from './ExcelExport';
 import SpreadsheetEntry from './SpreadsheetEntry';
 
@@ -23,6 +23,7 @@ class AddressSearch extends React.Component {
             :
             <div>
               <h1>Address Query</h1>
+              <h3>Searches against fields in the addresses array.</h3>
               {
                 !spreadsheetReady ?
                   <SpreadsheetEntry

@@ -6,6 +6,16 @@ import SpreadsheetEntry from './SpreadsheetEntry';
 
 class KeywordSearch extends React.Component {
 
+   componentDidUpdate(){
+    const listNotComplete = this.props.keywordResults.length !== this.props.spreadsheetEntries
+    const runListButton = document.querySelector('.btn-run-list')
+    if(this.props.spreadsheetReady && listNotComplete) {
+      setTimeout(() => (
+        runListButton.click()
+      ), 500)
+    } else return;
+  }
+
   render() {
     const {
       keywordResults,
@@ -26,6 +36,7 @@ class KeywordSearch extends React.Component {
             :
             <div>
               <h1>Keyword Query</h1>
+              <h3> Searches for a match within the name, alt_names, remarks, and title fields from all eleven lists.</h3>
               {
                 !spreadsheetReady ?
                   <SpreadsheetEntry
@@ -34,11 +45,13 @@ class KeywordSearch extends React.Component {
                 : null
               }
               <button
+                className="btn-run-list"
                 onClick={
                   () => loadResults(keywordResults.length)
                 }
                 disabled={!spreadsheetReady}
-              >Run list</button>
+              >Run list
+              </button>
               <h3>{`Current list length: ${keywordResults.length} out of: ${spreadsheetEntries}`}
               </h3>
              <ExcelExport

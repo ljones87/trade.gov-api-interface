@@ -6,12 +6,24 @@ const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
 const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 const ExcelExport = (props) => {
-  const { companyResults } = props;
+  const { keywordResults, addressResults } = props;
+  let results, searchTerm, firstColumn, firstColumnValue
+  if(keywordResults) {
+    results = keywordResults
+    searchTerm = "Keyword"
+    firstColumn = "Keyword"
+    firstColumnValue = "keywordSearched"
+  } else if(addressResults) {
+    results = addressResults
+    searchTerm = "Address"
+    firstColumn = "Address"
+    firstColumnValue = "addressSearched"
+  }
 
   return (
     <ExcelFile>
-      <ExcelSheet data={companyResults} name="Company Name Results">
-        <ExcelColumn label="Name" value="company" />
+      <ExcelSheet data={results} name={`${searchTerm} Query Results`}>
+        <ExcelColumn label={firstColumn} value={firstColumnValue} />
         <ExcelColumn
           label="Query result"
           value={

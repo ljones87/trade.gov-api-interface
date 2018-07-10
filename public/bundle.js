@@ -55068,7 +55068,7 @@ var submitKeywordListThunk = exports.submitKeywordListThunk = function submitKey
 var fetchKeywordResultsThunk = exports.fetchKeywordResultsThunk = function fetchKeywordResultsThunk(currListLength) {
   return function (dispatch) {
     dispatch(getKeywordListResult());
-    console.log('===============', currListLength);
+    //console.log('===============',currListLength)
     _axios2.default.post('/api/keyword', currListLength).then(function (res) {
       return dispatch(getKeywordListResultSuccess(res.data));
     }).catch(function (err) {
@@ -57927,16 +57927,32 @@ var ExcelSheet = _reactDataExport2.default.ExcelFile.ExcelSheet;
 var ExcelColumn = _reactDataExport2.default.ExcelFile.ExcelColumn;
 
 var ExcelExport = function ExcelExport(props) {
-  var companyResults = props.companyResults;
+  var keywordResults = props.keywordResults,
+      addressResults = props.addressResults;
 
+  var results = void 0,
+      searchTerm = void 0,
+      firstColumn = void 0,
+      firstColumnValue = void 0;
+  if (keywordResults) {
+    results = keywordResults;
+    searchTerm = "Keyword";
+    firstColumn = "Keyword";
+    firstColumnValue = "keywordSearched";
+  } else if (addressResults) {
+    results = addressResults;
+    searchTerm = "Address";
+    firstColumn = "Address";
+    firstColumnValue = "addressSearched";
+  }
 
   return _react2.default.createElement(
     ExcelFile,
     null,
     _react2.default.createElement(
       ExcelSheet,
-      { data: companyResults, name: 'Company Name Results' },
-      _react2.default.createElement(ExcelColumn, { label: 'Name', value: 'company' }),
+      { data: results, name: searchTerm + ' Query Results' },
+      _react2.default.createElement(ExcelColumn, { label: firstColumn, value: firstColumnValue }),
       _react2.default.createElement(ExcelColumn, {
         label: 'Query result',
         value: function value(col) {
@@ -77355,7 +77371,7 @@ var Sidebar = function Sidebar() {
     'div',
     { className: 'col-3' },
     _react2.default.createElement(
-      'h2',
+      'h3',
       null,
       'Search Consolodated Screening List By: '
     ),
@@ -77481,6 +77497,17 @@ var KeywordSearch = function (_React$Component) {
   }
 
   _createClass(KeywordSearch, [{
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate() {
+      var listNotComplete = this.props.keywordResults.length !== this.props.spreadsheetEntries;
+      var runListButton = document.querySelector('.btn-run-list');
+      if (this.props.spreadsheetReady && listNotComplete) {
+        setTimeout(function () {
+          return runListButton.click();
+        }, 500);
+      } else return;
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _props = this.props,
@@ -77509,12 +77536,18 @@ var KeywordSearch = function (_React$Component) {
             null,
             'Keyword Query'
           ),
+          _react2.default.createElement(
+            'h3',
+            null,
+            ' Searches for a match within the name, alt_names, remarks, and title fields from all eleven lists.'
+          ),
           !spreadsheetReady ? _react2.default.createElement(_SpreadsheetEntry2.default, {
             submitSpreadsheet: submitSpreadsheet
           }) : null,
           _react2.default.createElement(
             'button',
             {
+              className: 'btn-run-list',
               onClick: function onClick() {
                 return loadResults(keywordResults.length);
               },
@@ -77640,6 +77673,11 @@ var AddressSearch = function (_React$Component) {
             'h1',
             null,
             'Address Query'
+          ),
+          _react2.default.createElement(
+            'h3',
+            null,
+            'Searches against fields in the addresses array.'
           ),
           !spreadsheetReady ? _react2.default.createElement(_SpreadsheetEntry2.default, {
             submitSpreadsheet: submitSpreadsheet
@@ -77836,7 +77874,6 @@ var submitAddressListThunk = exports.submitAddressListThunk = function submitAdd
 var fetchAddressResultsThunk = exports.fetchAddressResultsThunk = function fetchAddressResultsThunk(currListLength) {
   return function (dispatch) {
     dispatch(getAddressListResult());
-    console.log('===============', currListLength);
     _axios2.default.post('/api/address', currListLength).then(function (res) {
       return dispatch(getAddressListResultSuccess(res.data));
     }).catch(function (err) {
