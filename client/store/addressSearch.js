@@ -56,7 +56,6 @@ export const submitAddressListThunk = (spreadsheet) => {
 export const fetchAddressResultsThunk = (currListLength) => {
    return dispatch => {
     dispatch(getAddressListResult());
-    console.log('===============',currListLength)
     axios.post('/api/address', currListLength)
       .then(res => (
         dispatch(getAddressListResultSuccess(res.data))

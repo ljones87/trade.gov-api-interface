@@ -49,13 +49,13 @@ app.post('/keyword', (req, res, next) => {
   apiInput = data.slice(i, j);
   while (i < data.length) {
     return Promise.all(apiInput.map(query => {
-      const companyName = query[0];
+      const keyword = query[0];
       return axios.get(
         linkGenerator(apiKey, query[0])
       )
         .then(result => {
           const formattedReturn = {
-            company: companyName,
+            keyword: keyword,
             data: result.data,
             api: linkGenerator(apiKey, query[0])
           };

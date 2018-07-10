@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const Sidebar = () => {
   return (
     <div className="col-3">
-      <h2>Search Consolodated Screening List By: </h2>
+      <h3>Search Consolodated Screening List By: </h3>
         <div className="link">
           <Link to={'/keyword'}>Keyword</Link>
         </div>

@@ -8,7 +8,7 @@ let spreadsheet, spreadsheetForAnalysis, data, worksheet;
 let apiInput = [];
 
 //formats api call
-const linkGenerator = (key, name) => {
+const keywordlinkGenerator = (key, name) => {
  return `https://api.trade.gov/consolidated_screening_list/search?api_key=${key}&q=${name}`;
 };
 const final = [];
@@ -30,28 +30,29 @@ router.post('/', (req, res, next) => {
  apiInput = data.slice(i, j);
  while (i < data.length) {
    return Promise.all(apiInput.map(query => {
-     const companyName = query[0];
+     const keyword = query[0];
      return axios.get(
-       linkGenerator(apiKey, query[0])
+       keywordlinkGenerator(apiKey, keyword)
      )
        .then(result => {
          const formattedReturn = {
-           company: companyName,
+           keywordSearched: keyword,
            data: result.data,
-           api: linkGenerator(apiKey, query[0])
+           api: keywordlinkGenerator(apiKey, keyword)
          };
          final.push(formattedReturn);
        })
        .catch(err => (
-       //console.log('===============SERVER ERROR RESPONSE', err.response || '800'),
+         console.log('++++ orig response', err.response)
+       console.log('===============SERVER ERROR RESPONSE', err.response.request.res.responseURL || '800'),
            final.push({
-           company: companyName,
+           keywordSearched: keyword,
            error: {
              message: err.response ?
              `${err.response.status}, ${err.response.satusText}`
              :
              `error response malformed`,
-             url: linkGenerator(apiKey, query[0])
+             url: keywordlinkGenerator(apiKey, query[0])
            }
          })
        ));

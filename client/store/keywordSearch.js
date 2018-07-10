@@ -60,7 +60,7 @@ export const submitKeywordListThunk = (spreadsheet) => {
 export const fetchKeywordResultsThunk = (currListLength) => {
    return dispatch => {
     dispatch(getKeywordListResult());
-    console.log('===============',currListLength)
+    //console.log('===============',currListLength)
     axios.post('/api/keyword', currListLength)
       .then(res => (
         dispatch(getKeywordListResultSuccess(res.data))
