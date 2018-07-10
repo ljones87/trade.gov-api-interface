@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchScreeningResultsThunk, submitScreeningListThunk, fetchState } from '../store';
+import { fetchKeywordResultsThunk, submitKeywordListThunk, fetchState } from '../store';
 import ExcelExport from './ExcelExport';
 import SpreadsheetEntry from './SpreadsheetEntry';
 
@@ -8,7 +8,7 @@ class KeywordSearch extends React.Component {
 
   render() {
     const {
-      companyResults,
+      keywordResults,
       spreadsheetReady,
       spreadsheetEntries,
       loading,
@@ -16,7 +16,7 @@ class KeywordSearch extends React.Component {
       submitSpreadsheet
     } = this.props;
 
-    // console.log('===============',companyResults)
+    // console.log('===============',keywordResults)
     // console.log('===============',spreadsheetEntries)
     return (
       <div className="excel-container">
@@ -25,7 +25,7 @@ class KeywordSearch extends React.Component {
             <h1>Loading results</h1>
             :
             <div>
-              <h1>Keyword Query Results</h1>
+              <h1>Keyword Query</h1>
               {
                 !spreadsheetReady ?
                   <SpreadsheetEntry
@@ -35,14 +35,14 @@ class KeywordSearch extends React.Component {
               }
               <button
                 onClick={
-                  () => loadResults(companyResults.length)
+                  () => loadResults(keywordResults.length)
                 }
                 disabled={!spreadsheetReady}
               >Run list</button>
-              <h3>{`Current list length: ${companyResults.length} out of: ${spreadsheetEntries}`}
+              <h3>{`Current list length: ${keywordResults.length} out of: ${spreadsheetEntries}`}
               </h3>
              <ExcelExport
-              companyResults={companyResults}
+              keywordResults={keywordResults}
              />
             </div>
         }
@@ -56,7 +56,7 @@ const mapState = (state) => {
   return {
     spreadsheetReady: state.keywordSearch.spreadsheetReady,
     spreadsheetEntries: state.keywordSearch.spreadsheetEntries,
-    companyResults: state.keywordSearch.searchedCompanies,
+    keywordResults: state.keywordSearch.results,
     loading: state.keywordSearch.loading
   };
 };
@@ -67,7 +67,7 @@ const mapDispatch = (dispatch) => {
       dispatch(fetchState());
     },
     loadResults(currListLength) {
-      dispatch(fetchScreeningResultsThunk({count: currListLength}));
+      dispatch(fetchKeywordResultsThunk({count: currListLength}));
     },
     submitSpreadsheet(event) {
       event.preventDefault();
@@ -75,7 +75,7 @@ const mapDispatch = (dispatch) => {
       let spreadsheet = e.spreadsheet.value;
       spreadsheet = spreadsheet.replace("C:\\fakepath\\", "");
       //debugger;
-      dispatch(submitScreeningListThunk({spreadsheet}));
+      dispatch(submitKeywordListThunk({spreadsheet}));
     }
   };
 };

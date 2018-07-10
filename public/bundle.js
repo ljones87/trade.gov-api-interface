@@ -34951,7 +34951,21 @@ Object.keys(_keywordSearch).forEach(function (key) {
   });
 });
 
+var _addressSearch = __webpack_require__(519);
+
+Object.keys(_addressSearch).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _addressSearch[key];
+    }
+  });
+});
+
 var _keywordSearch2 = _interopRequireDefault(_keywordSearch);
+
+var _addressSearch2 = _interopRequireDefault(_addressSearch);
 
 var _redux = __webpack_require__(148);
 
@@ -34964,7 +34978,8 @@ var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var reducer = (0, _redux.combineReducers)({
-  keywordSearch: _keywordSearch2.default
+  keywordSearch: _keywordSearch2.default,
+  addressSearch: _addressSearch2.default
 });
 
 var middleware = (0, _redux.applyMiddleware)(_reduxThunk2.default, (0, _reduxLogger.createLogger)({ collapsed: true }));
@@ -54951,7 +54966,7 @@ function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps, dis
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.fetchScreeningResultsThunk = exports.submitScreeningListThunk = exports.fetchState = undefined;
+exports.fetchKeywordResultsThunk = exports.submitKeywordListThunk = exports.fetchState = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 /* -----------------    IMPORTS     ------------------ */
@@ -54961,12 +54976,12 @@ exports.default = function () {
   var action = arguments[1];
 
   switch (action.type) {
-    case SUBMIT_SCREENING_LIST:
-    case GET_SCREENING_LIST_RESULT:
+    case SUBMIT_KEYWORD_LIST:
+    case GET_KEYWORD_LIST_RESULT:
       {
         return Object.assign({}, state, { loading: true });
       }
-    case SUBMIT_SCREENING_LIST_SUCCESS:
+    case SUBMIT_KEYWORD_LIST_SUCCESS:
       {
         return _extends({}, state, {
           spreadsheetReady: true,
@@ -54975,12 +54990,12 @@ exports.default = function () {
           error: null
         });
       }
-    case GET_SCREENING_LIST_RESULT_SUCCESS:
+    case GET_KEYWORD_LIST_RESULT_SUCCESS:
       {
-        return (0, _stateFunctions.success)(state, 'searchedCompanies', action.companyResults);
+        return (0, _stateFunctions.success)(state, 'results', action.companyResults);
       }
-    case GET_SCREENING_LIST_RESULT_ERROR:
-    case SUBMIT_SCREENING_LIST_ERROR:
+    case GET_KEYWORD_LIST_RESULT_ERROR:
+    case SUBMIT_KEYWORD_LIST_ERROR:
       {
         return Object.assign({}, state, { error: action.err });
       }
@@ -54998,38 +55013,38 @@ var _stateFunctions = __webpack_require__(368);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /* -----------------    ACTION TYPES     ------------------ */
-var SUBMIT_SCREENING_LIST = 'SUBMIT_SCREENING_LIST';
-var SUBMIT_SCREENING_LIST_SUCCESS = 'SUBMIT_SCREENING_LIST_SUCCESS';
-var GET_SCREENING_LIST_RESULT = 'GET_SCREENING_LIST_RESULT';
-var GET_SCREENING_LIST_RESULT_SUCCESS = 'GET_SCREENING_LIST_RESULT_SUCCESS';
-var SUBMIT_SCREENING_LIST_ERROR = 'SUBMIT_SCREENING_LIST_ERROR';
-var GET_SCREENING_LIST_RESULT_ERROR = 'GET_SCREENING_LIST_RESULT_ERROR';
+var SUBMIT_KEYWORD_LIST = 'SUBMIT_KEYWORD_LIST';
+var SUBMIT_KEYWORD_LIST_SUCCESS = 'SUBMIT_KEYWORD_LIST_SUCCESS';
+var GET_KEYWORD_LIST_RESULT = 'GET_KEYWORD_LIST_RESULT';
+var GET_KEYWORD_LIST_RESULT_SUCCESS = 'GET_KEYWORD_LIST_RESULT_SUCCESS';
+var SUBMIT_KEYWORD_LIST_ERROR = 'SUBMIT_KEYWORD_LIST_ERROR';
+var GET_KEYWORD_LIST_RESULT_ERROR = 'GET_KEYWORD_LIST_RESULT_ERROR';
 var FETCH_STATE = 'FETCH_STATE';
 
 /* ------------   ACTION CREATORS     ------------------ */
 
-var submitScreeningList = function submitScreeningList() {
-  return { type: SUBMIT_SCREENING_LIST };
+var submitKeywordList = function submitKeywordList() {
+  return { type: SUBMIT_KEYWORD_LIST };
 };
 
-var submitScreeningListSuccess = function submitScreeningListSuccess(listlength) {
-  return { type: SUBMIT_SCREENING_LIST_SUCCESS, listlength: listlength };
+var submitKeywordListSuccess = function submitKeywordListSuccess(listlength) {
+  return { type: SUBMIT_KEYWORD_LIST_SUCCESS, listlength: listlength };
 };
 
-var submitScreeningListError = function submitScreeningListError(err) {
-  return { type: SUBMIT_SCREENING_LIST_ERROR, err: err };
+var submitKeywordListError = function submitKeywordListError(err) {
+  return { type: SUBMIT_KEYWORD_LIST_ERROR, err: err };
 };
 
-var getScreeningListResult = function getScreeningListResult() {
-  return { type: GET_SCREENING_LIST_RESULT };
+var getKeywordListResult = function getKeywordListResult() {
+  return { type: GET_KEYWORD_LIST_RESULT };
 };
 
-var getScreeningListResultSuccess = function getScreeningListResultSuccess(companyResults) {
-  return { type: GET_SCREENING_LIST_RESULT_SUCCESS, companyResults: companyResults };
+var getKeywordListResultSuccess = function getKeywordListResultSuccess(companyResults) {
+  return { type: GET_KEYWORD_LIST_RESULT_SUCCESS, companyResults: companyResults };
 };
 
-var getScreeningListResultError = function getScreeningListResultError(err) {
-  return { type: GET_SCREENING_LIST_RESULT_ERROR, err: err };
+var getKeywordListResultError = function getKeywordListResultError(err) {
+  return { type: GET_KEYWORD_LIST_RESULT_ERROR, err: err };
 };
 
 var fetchState = exports.fetchState = function fetchState() {
@@ -55038,26 +55053,26 @@ var fetchState = exports.fetchState = function fetchState() {
 
 /* ------------       THUNK CREATORS     ------------------ */
 
-var submitScreeningListThunk = exports.submitScreeningListThunk = function submitScreeningListThunk(spreadsheet) {
+var submitKeywordListThunk = exports.submitKeywordListThunk = function submitKeywordListThunk(spreadsheet) {
 
   return function (dispatch) {
-    dispatch(submitScreeningList());
+    dispatch(submitKeywordList());
     _axios2.default.post('/api/keyword/spreadsheet', spreadsheet).then(function (res) {
-      dispatch(submitScreeningListSuccess(res.data.listlength));
+      dispatch(submitKeywordListSuccess(res.data.listlength));
     }).catch(function (err) {
-      return submitScreeningListError(err);
+      return submitKeywordListError(err);
     });
   };
 };
 
-var fetchScreeningResultsThunk = exports.fetchScreeningResultsThunk = function fetchScreeningResultsThunk(currListLength) {
+var fetchKeywordResultsThunk = exports.fetchKeywordResultsThunk = function fetchKeywordResultsThunk(currListLength) {
   return function (dispatch) {
-    dispatch(getScreeningListResult());
+    dispatch(getKeywordListResult());
     console.log('===============', currListLength);
     _axios2.default.post('/api/keyword', currListLength).then(function (res) {
-      return dispatch(getScreeningListResultSuccess(res.data));
+      return dispatch(getKeywordListResultSuccess(res.data));
     }).catch(function (err) {
-      return getScreeningListResultError(err);
+      return getKeywordListResultError(err);
     });
   };
 };
@@ -55067,7 +55082,7 @@ var initialState = {
   spreadsheetReady: false,
   spreadsheetEntries: null,
   loading: false,
-  searchedCompanies: [],
+  results: [],
   error: null
 };
 
@@ -77469,14 +77484,14 @@ var KeywordSearch = function (_React$Component) {
     key: 'render',
     value: function render() {
       var _props = this.props,
-          companyResults = _props.companyResults,
+          keywordResults = _props.keywordResults,
           spreadsheetReady = _props.spreadsheetReady,
           spreadsheetEntries = _props.spreadsheetEntries,
           loading = _props.loading,
           loadResults = _props.loadResults,
           submitSpreadsheet = _props.submitSpreadsheet;
 
-      // console.log('===============',companyResults)
+      // console.log('===============',keywordResults)
       // console.log('===============',spreadsheetEntries)
 
       return _react2.default.createElement(
@@ -77492,7 +77507,7 @@ var KeywordSearch = function (_React$Component) {
           _react2.default.createElement(
             'h1',
             null,
-            'Keyword Query Results'
+            'Keyword Query'
           ),
           !spreadsheetReady ? _react2.default.createElement(_SpreadsheetEntry2.default, {
             submitSpreadsheet: submitSpreadsheet
@@ -77501,7 +77516,7 @@ var KeywordSearch = function (_React$Component) {
             'button',
             {
               onClick: function onClick() {
-                return loadResults(companyResults.length);
+                return loadResults(keywordResults.length);
               },
               disabled: !spreadsheetReady
             },
@@ -77510,10 +77525,10 @@ var KeywordSearch = function (_React$Component) {
           _react2.default.createElement(
             'h3',
             null,
-            'Current list length: ' + companyResults.length + ' out of: ' + spreadsheetEntries
+            'Current list length: ' + keywordResults.length + ' out of: ' + spreadsheetEntries
           ),
           _react2.default.createElement(_ExcelExport2.default, {
-            companyResults: companyResults
+            keywordResults: keywordResults
           })
         )
       );
@@ -77527,7 +77542,7 @@ var mapState = function mapState(state) {
   return {
     spreadsheetReady: state.keywordSearch.spreadsheetReady,
     spreadsheetEntries: state.keywordSearch.spreadsheetEntries,
-    companyResults: state.keywordSearch.searchedCompanies,
+    keywordResults: state.keywordSearch.results,
     loading: state.keywordSearch.loading
   };
 };
@@ -77538,7 +77553,7 @@ var mapDispatch = function mapDispatch(dispatch) {
       dispatch((0, _store.fetchState)());
     },
     loadResults: function loadResults(currListLength) {
-      dispatch((0, _store.fetchScreeningResultsThunk)({ count: currListLength }));
+      dispatch((0, _store.fetchKeywordResultsThunk)({ count: currListLength }));
     },
     submitSpreadsheet: function submitSpreadsheet(event) {
       event.preventDefault();
@@ -77546,7 +77561,7 @@ var mapDispatch = function mapDispatch(dispatch) {
       var spreadsheet = e.spreadsheet.value;
       spreadsheet = spreadsheet.replace("C:\\fakepath\\", "");
       //debugger;
-      dispatch((0, _store.submitScreeningListThunk)({ spreadsheet: spreadsheet }));
+      dispatch((0, _store.submitKeywordListThunk)({ spreadsheet: spreadsheet }));
     }
   };
 };
@@ -77564,21 +77579,123 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _react = __webpack_require__(7);
 
 var _react2 = _interopRequireDefault(_react);
 
+var _reactRedux = __webpack_require__(144);
+
+var _store = __webpack_require__(155);
+
+var _ExcelExport = __webpack_require__(396);
+
+var _ExcelExport2 = _interopRequireDefault(_ExcelExport);
+
+var _SpreadsheetEntry = __webpack_require__(513);
+
+var _SpreadsheetEntry2 = _interopRequireDefault(_SpreadsheetEntry);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var AddressSearch = function AddressSearch() {
-  return _react2.default.createElement(
-    'div',
-    null,
-    'Placeholder'
-  );
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var AddressSearch = function (_React$Component) {
+  _inherits(AddressSearch, _React$Component);
+
+  function AddressSearch() {
+    _classCallCheck(this, AddressSearch);
+
+    return _possibleConstructorReturn(this, (AddressSearch.__proto__ || Object.getPrototypeOf(AddressSearch)).apply(this, arguments));
+  }
+
+  _createClass(AddressSearch, [{
+    key: 'render',
+    value: function render() {
+      var _props = this.props,
+          addressResults = _props.addressResults,
+          spreadsheetReady = _props.spreadsheetReady,
+          spreadsheetEntries = _props.spreadsheetEntries,
+          loading = _props.loading,
+          loadResults = _props.loadResults,
+          submitSpreadsheet = _props.submitSpreadsheet;
+
+
+      return _react2.default.createElement(
+        'div',
+        { className: 'excel-container' },
+        loading ? _react2.default.createElement(
+          'h1',
+          null,
+          'Loading results'
+        ) : _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'h1',
+            null,
+            'Address Query'
+          ),
+          !spreadsheetReady ? _react2.default.createElement(_SpreadsheetEntry2.default, {
+            submitSpreadsheet: submitSpreadsheet
+          }) : null,
+          _react2.default.createElement(
+            'button',
+            {
+              onClick: function onClick() {
+                return loadResults(addressResults.length);
+              },
+              disabled: !spreadsheetReady
+            },
+            'Run list'
+          ),
+          _react2.default.createElement(
+            'h3',
+            null,
+            'Current list length: ' + addressResults.length + ' out of: ' + spreadsheetEntries
+          ),
+          _react2.default.createElement(_ExcelExport2.default, {
+            addressResults: addressResults
+          })
+        )
+      );
+    }
+  }]);
+
+  return AddressSearch;
+}(_react2.default.Component);
+
+var mapState = function mapState(state) {
+  return {
+    spreadsheetReady: state.addressSearch.spreadsheetReady,
+    spreadsheetEntries: state.addressSearch.spreadsheetEntries,
+    addressResults: state.addressSearch.results,
+    loading: state.addressSearch.loading
+  };
 };
 
-exports.default = AddressSearch;
+var mapDispatch = function mapDispatch(dispatch) {
+  return {
+    loadResults: function loadResults(currListLength) {
+      dispatch((0, _store.fetchAddressResultsThunk)({ count: currListLength }));
+    },
+    submitSpreadsheet: function submitSpreadsheet(event) {
+      event.preventDefault();
+      var e = event.target;
+      var spreadsheet = e.spreadsheet.value;
+      spreadsheet = spreadsheet.replace("C:\\fakepath\\", "");
+      //debugger;
+      dispatch((0, _store.submitAddressListThunk)({ spreadsheet: spreadsheet }));
+    }
+  };
+};
+
+exports.default = (0, _reactRedux.connect)(mapState, mapDispatch)(AddressSearch);
 
 /***/ }),
 /* 518 */
@@ -77610,6 +77727,132 @@ var Home = function Home(props) {
 };
 
 exports.default = Home;
+
+/***/ }),
+/* 519 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/* -----------------    IMPORTS     ------------------ */
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.fetchAddressResultsThunk = exports.submitAddressListThunk = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+exports.default = function () {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+  var action = arguments[1];
+
+  switch (action.type) {
+    case SUBMIT_ADDRESS_LIST:
+    case GET_ADDRESS_LIST_RESULT:
+      {
+        return Object.assign({}, state, { loading: true });
+      }
+    case SUBMIT_ADDRESS_LIST_SUCCESS:
+      {
+        return _extends({}, state, {
+          spreadsheetReady: true,
+          spreadsheetEntries: action.listlength,
+          loading: false,
+          error: null
+        });
+      }
+    case GET_ADDRESS_LIST_RESULT_SUCCESS:
+      {
+        return (0, _stateFunctions.success)(state, 'results', action.companyResults);
+      }
+    case GET_ADDRESS_LIST_RESULT_ERROR:
+    case SUBMIT_ADDRESS_LIST_ERROR:
+      {
+        return Object.assign({}, state, { error: action.err });
+      }
+    default:
+      return state;
+  }
+};
+
+var _axios = __webpack_require__(349);
+
+var _axios2 = _interopRequireDefault(_axios);
+
+var _stateFunctions = __webpack_require__(368);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/* -----------------    ACTION TYPES     ------------------ */
+var SUBMIT_ADDRESS_LIST = 'SUBMIT_ADDRESS_LIST';
+var SUBMIT_ADDRESS_LIST_SUCCESS = 'SUBMIT_ADDRESS_LIST_SUCCESS';
+var GET_ADDRESS_LIST_RESULT = 'GET_ADDRESS_LIST_RESULT';
+var GET_ADDRESS_LIST_RESULT_SUCCESS = 'GET_ADDRESS_LIST_RESULT_SUCCESS';
+var SUBMIT_ADDRESS_LIST_ERROR = 'SUBMIT_ADDRESS_LIST_ERROR';
+var GET_ADDRESS_LIST_RESULT_ERROR = 'GET_ADDRESS_LIST_RESULT_ERROR';
+
+/* ------------   ACTION CREATORS     ------------------ */
+
+var submitAddressList = function submitAddressList() {
+  return { type: SUBMIT_ADDRESS_LIST };
+};
+
+var submitAddressListSuccess = function submitAddressListSuccess(listlength) {
+  return { type: SUBMIT_ADDRESS_LIST_SUCCESS, listlength: listlength };
+};
+
+var submitAddressListError = function submitAddressListError(err) {
+  return { type: SUBMIT_ADDRESS_LIST_ERROR, err: err };
+};
+
+var getAddressListResult = function getAddressListResult() {
+  return { type: GET_ADDRESS_LIST_RESULT };
+};
+
+var getAddressListResultSuccess = function getAddressListResultSuccess(companyResults) {
+  return { type: GET_ADDRESS_LIST_RESULT_SUCCESS, companyResults: companyResults };
+};
+
+var getAddressListResultError = function getAddressListResultError(err) {
+  return { type: GET_ADDRESS_LIST_RESULT_ERROR, err: err };
+};
+
+/* ------------       THUNK CREATORS     ------------------ */
+
+var submitAddressListThunk = exports.submitAddressListThunk = function submitAddressListThunk(spreadsheet) {
+
+  return function (dispatch) {
+    dispatch(submitAddressList());
+    _axios2.default.post('/api/address/spreadsheet', spreadsheet).then(function (res) {
+      dispatch(submitAddressListSuccess(res.data.listlength));
+    }).catch(function (err) {
+      return submitAddressListError(err);
+    });
+  };
+};
+
+var fetchAddressResultsThunk = exports.fetchAddressResultsThunk = function fetchAddressResultsThunk(currListLength) {
+  return function (dispatch) {
+    dispatch(getAddressListResult());
+    console.log('===============', currListLength);
+    _axios2.default.post('/api/address', currListLength).then(function (res) {
+      return dispatch(getAddressListResultSuccess(res.data));
+    }).catch(function (err) {
+      return getAddressListResultError(err);
+    });
+  };
+};
+
+/* ------------       REDUCERS     ------------------ */
+var initialState = {
+  spreadsheetReady: false,
+  spreadsheetEntries: null,
+  loading: false,
+  results: [],
+  error: null
+};
 
 /***/ })
 /******/ ]);

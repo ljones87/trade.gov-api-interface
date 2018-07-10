@@ -5,38 +5,38 @@ import axios from 'axios';
 import { success } from './stateFunctions';
 
 /* -----------------    ACTION TYPES     ------------------ */
-const SUBMIT_SCREENING_LIST = 'SUBMIT_SCREENING_LIST';
-const SUBMIT_SCREENING_LIST_SUCCESS = 'SUBMIT_SCREENING_LIST_SUCCESS';
-const GET_SCREENING_LIST_RESULT = 'GET_SCREENING_LIST_RESULT';
-const GET_SCREENING_LIST_RESULT_SUCCESS = 'GET_SCREENING_LIST_RESULT_SUCCESS';
-const SUBMIT_SCREENING_LIST_ERROR = 'SUBMIT_SCREENING_LIST_ERROR';
-const GET_SCREENING_LIST_RESULT_ERROR = 'GET_SCREENING_LIST_RESULT_ERROR';
+const SUBMIT_KEYWORD_LIST = 'SUBMIT_KEYWORD_LIST';
+const SUBMIT_KEYWORD_LIST_SUCCESS = 'SUBMIT_KEYWORD_LIST_SUCCESS';
+const GET_KEYWORD_LIST_RESULT = 'GET_KEYWORD_LIST_RESULT';
+const GET_KEYWORD_LIST_RESULT_SUCCESS = 'GET_KEYWORD_LIST_RESULT_SUCCESS';
+const SUBMIT_KEYWORD_LIST_ERROR = 'SUBMIT_KEYWORD_LIST_ERROR';
+const GET_KEYWORD_LIST_RESULT_ERROR = 'GET_KEYWORD_LIST_RESULT_ERROR';
 const FETCH_STATE = 'FETCH_STATE';
 
 /* ------------   ACTION CREATORS     ------------------ */
 
-const submitScreeningList = () => (
-  { type: SUBMIT_SCREENING_LIST }
+const submitKeywordList = () => (
+  { type: SUBMIT_KEYWORD_LIST }
 );
 
-const submitScreeningListSuccess = (listlength) => (
-  { type: SUBMIT_SCREENING_LIST_SUCCESS, listlength }
+const submitKeywordListSuccess = (listlength) => (
+  { type: SUBMIT_KEYWORD_LIST_SUCCESS, listlength }
 );
 
-const submitScreeningListError = (err) => (
-  { type: SUBMIT_SCREENING_LIST_ERROR, err }
+const submitKeywordListError = (err) => (
+  { type: SUBMIT_KEYWORD_LIST_ERROR, err }
 );
 
-const getScreeningListResult = () => (
-  { type: GET_SCREENING_LIST_RESULT }
+const getKeywordListResult = () => (
+  { type: GET_KEYWORD_LIST_RESULT }
 );
 
-const getScreeningListResultSuccess = (companyResults) => (
-  { type: GET_SCREENING_LIST_RESULT_SUCCESS, companyResults }
+const getKeywordListResultSuccess = (companyResults) => (
+  { type: GET_KEYWORD_LIST_RESULT_SUCCESS, companyResults }
 );
 
-const getScreeningListResultError = (err) => (
-  { type: GET_SCREENING_LIST_RESULT_ERROR, err}
+const getKeywordListResultError = (err) => (
+  { type: GET_KEYWORD_LIST_RESULT_ERROR, err}
 );
 
 export const fetchState = () => (
@@ -45,27 +45,27 @@ export const fetchState = () => (
 
 /* ------------       THUNK CREATORS     ------------------ */
 
-export const submitScreeningListThunk = (spreadsheet) => {
+export const submitKeywordListThunk = (spreadsheet) => {
 
   return dispatch => {
-    dispatch(submitScreeningList());
+    dispatch(submitKeywordList());
     axios.post('/api/keyword/spreadsheet', spreadsheet)
       .then(res => {
-        dispatch(submitScreeningListSuccess(res.data.listlength));
+        dispatch(submitKeywordListSuccess(res.data.listlength));
       })
-      .catch(err => submitScreeningListError(err));
+      .catch(err => submitKeywordListError(err));
   };
 };
 
-export const fetchScreeningResultsThunk = (currListLength) => {
+export const fetchKeywordResultsThunk = (currListLength) => {
    return dispatch => {
-    dispatch(getScreeningListResult());
+    dispatch(getKeywordListResult());
     console.log('===============',currListLength)
     axios.post('/api/keyword', currListLength)
       .then(res => (
-        dispatch(getScreeningListResultSuccess(res.data))
+        dispatch(getKeywordListResultSuccess(res.data))
       ))
-      .catch(err => getScreeningListResultError(err));
+      .catch(err => getKeywordListResultError(err));
      };
 };
 
@@ -74,16 +74,16 @@ const initialState = {
   spreadsheetReady: false,
   spreadsheetEntries: null,
   loading: false,
-  searchedCompanies: [],
+  results: [],
   error: null
 };
 export default function (state = initialState, action) {
   switch (action.type) {
-    case SUBMIT_SCREENING_LIST:
-    case GET_SCREENING_LIST_RESULT: {
+    case SUBMIT_KEYWORD_LIST:
+    case GET_KEYWORD_LIST_RESULT: {
        return Object.assign({}, state, {loading: true});
     }
-    case SUBMIT_SCREENING_LIST_SUCCESS: {
+    case SUBMIT_KEYWORD_LIST_SUCCESS: {
       return {
         ...state,
         spreadsheetReady: true,
@@ -92,11 +92,11 @@ export default function (state = initialState, action) {
         error: null
       };
     }
-    case GET_SCREENING_LIST_RESULT_SUCCESS:{
-      return success(state, 'searchedCompanies', action.companyResults)
+    case GET_KEYWORD_LIST_RESULT_SUCCESS:{
+      return success(state, 'results', action.companyResults)
   }
-    case GET_SCREENING_LIST_RESULT_ERROR:
-    case SUBMIT_SCREENING_LIST_ERROR: {
+    case GET_KEYWORD_LIST_RESULT_ERROR:
+    case SUBMIT_KEYWORD_LIST_ERROR: {
       return  Object.assign({}, state, {error: action.err});
     }
     default:
