@@ -54,10 +54,10 @@ class KeywordSearch extends React.Component {
 
 const mapState = (state) => {
   return {
-    spreadsheetReady: state.screeningListResults.spreadsheetReady,
-    spreadsheetEntries: state.screeningListResults.spreadsheetEntries,
-    companyResults: state.screeningListResults.searchedCompanies,
-    loading: state.screeningListResults.loading
+    spreadsheetReady: state.keywordSearch.spreadsheetReady,
+    spreadsheetEntries: state.keywordSearch.spreadsheetEntries,
+    companyResults: state.keywordSearch.searchedCompanies,
+    loading: state.keywordSearch.loading
   };
 };
 

@@ -21,12 +21,6 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 
 app.use('/api', require('./routes'));
 
-app.use((req, res, next) => {
-  const error = new Error('Not Found')
-  error.status = 404
-  next(error)
-})
-
 app.get('/*', function (req, res, next) {
   res.sendFile(path.join(__dirname, '..', '/public/index.html'));
 });

@@ -77353,7 +77353,6 @@ var Sidebar = function Sidebar() {
         'Keyword'
       )
     ),
-    _react2.default.createElement('hr', null),
     _react2.default.createElement(
       'div',
       null,
@@ -77404,7 +77403,6 @@ var _AddressSearch2 = _interopRequireDefault(_AddressSearch);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Routes = function Routes() {
-  var routeData = years.concat(states);
   return _react2.default.createElement(
     'div',
     { className: 'container' },
@@ -77527,10 +77525,10 @@ var KeywordSearch = function (_React$Component) {
 
 var mapState = function mapState(state) {
   return {
-    spreadsheetReady: state.screeningListResults.spreadsheetReady,
-    spreadsheetEntries: state.screeningListResults.spreadsheetEntries,
-    companyResults: state.screeningListResults.searchedCompanies,
-    loading: state.screeningListResults.loading
+    spreadsheetReady: state.keywordSearch.spreadsheetReady,
+    spreadsheetEntries: state.keywordSearch.spreadsheetEntries,
+    companyResults: state.keywordSearch.searchedCompanies,
+    loading: state.keywordSearch.loading
   };
 };
 
@@ -77562,6 +77560,26 @@ exports.default = (0, _reactRedux.connect)(mapState, mapDispatch)(KeywordSearch)
 "use strict";
 
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(7);
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var AddressSearch = function AddressSearch() {
+  return _react2.default.createElement(
+    'div',
+    null,
+    'Placeholder'
+  );
+};
+
+exports.default = AddressSearch;
+
 /***/ }),
 /* 518 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -77586,17 +77604,7 @@ var Home = function Home(props) {
     _react2.default.createElement(
       'h2',
       null,
-      'Hello! Welcome to my Data Visualizations hackathon project.'
-    ),
-    _react2.default.createElement(
-      'p',
-      null,
-      'I originally built this in about 18 hours so is not my best work, but I\'ll slowly be adding styling and features (like maybe all the states!) for fun in my free time. '
-    ),
-    _react2.default.createElement(
-      'p',
-      null,
-      'Feel free to click around until then! If you have a project in mind let me know, I love working in react and react native and would love to collaborate: lina.jones630@gmail.com'
+      'Trade.gov Consolodated Screening List Search'
     )
   );
 };

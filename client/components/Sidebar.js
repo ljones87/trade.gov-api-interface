@@ -8,7 +8,6 @@ const Sidebar = () => {
         <div className="link">
           <Link to={'/keyword'}>Keyword</Link>
         </div>
-      <hr />
         <div>
           <Link to={'/address'}>Address</Link>
         </div>

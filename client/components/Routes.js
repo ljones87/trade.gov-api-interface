@@ -6,7 +6,6 @@ import KeywordSearch from './KeywordSearch';
 import AddressSearch from './AddressSearch';
 
 const Routes = () => {
-  const routeData = years.concat(states);
   return (
     <div className="container">
 
