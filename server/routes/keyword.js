@@ -43,8 +43,8 @@ router.post('/', (req, res, next) => {
          final.push(formattedReturn);
        })
        .catch(err => (
-         console.log('++++ orig response', err.response)
-       console.log('===============SERVER ERROR RESPONSE', err.response.request.res.responseURL || '800'),
+         console.log('++++ orig response', err.response.request.res),
+      //  console.log('===============SERVER ERROR RESPONSE', err.response.request.res || '800'),
            final.push({
            keywordSearched: keyword,
            error: {
