@@ -27,6 +27,7 @@ router.post('/spreadsheet', (req, res, next) => {
 router.post('/', (req, res, next) => {
  let i = Number(req.body.count);
  let j = i + 100;
+ console.log('===============req.body',req.body)
  apiInput = data.slice(i, j);
  while (i < data.length) {
    return Promise.all(apiInput.map(query => {
@@ -43,7 +44,7 @@ router.post('/', (req, res, next) => {
          final.push(formattedReturn);
        })
        .catch(err => (
-         console.log('++++ orig response', err.response.request.res),
+         console.log('++++ orig response', err.response),
       //  console.log('===============SERVER ERROR RESPONSE', err.response.request.res || '800'),
            final.push({
            keywordSearched: keyword,

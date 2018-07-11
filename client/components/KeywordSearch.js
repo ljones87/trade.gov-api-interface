@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchKeywordResultsThunk, submitKeywordListThunk, fetchState } from '../store';
+import { fetchKeywordResultsThunk, submitKeywordListThunk, resetKeywordSearch } from '../store';
 import ExcelExport from './ExcelExport';
 import SpreadsheetEntry from './SpreadsheetEntry';
 
@@ -23,17 +23,13 @@ class KeywordSearch extends React.Component {
       spreadsheetEntries,
       loading,
       loadResults,
-      submitSpreadsheet
+      submitSpreadsheet,
+      resetSearch
     } = this.props;
-
-    // console.log('===============',keywordResults)
-    // console.log('===============',spreadsheetEntries)
+    console.log('===============keyword results', keywordResults)
     return (
       <div className="excel-container">
-        {
-          loading ?
-            <h1>Loading results</h1>
-            :
+
             <div>
               <h1>Keyword Query</h1>
               <h3> Searches for a match within the name, alt_names, remarks, and title fields from all eleven lists.</h3>
@@ -47,18 +43,29 @@ class KeywordSearch extends React.Component {
               <button
                 className="btn-run-list"
                 onClick={
-                  () => loadResults(keywordResults.length)
+                  () => {
+                    loadResults(keywordResults.length)
+                  }
                 }
                 disabled={!spreadsheetReady}
               >Run list
               </button>
+              <button
+                onClick={resetSearch}
+              >
+                Reset Search
+              </button>
               <h3>{`Current list length: ${keywordResults.length} out of: ${spreadsheetEntries}`}
               </h3>
-             <ExcelExport
-              keywordResults={keywordResults}
-             />
+              {
+                loading ?
+                <h1>Loading results</h1>
+                :
+                <ExcelExport
+                  keywordResults={keywordResults}
+                />
+              }
             </div>
-        }
       </div>
 
     );
@@ -76,8 +83,8 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    fetchState() {
-      dispatch(fetchState());
+    resetSearch() {
+      dispatch(resetKeywordSearch())
     },
     loadResults(currListLength) {
       dispatch(fetchKeywordResultsThunk({count: currListLength}));

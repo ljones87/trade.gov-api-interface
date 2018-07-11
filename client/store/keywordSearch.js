@@ -11,7 +11,7 @@ const GET_KEYWORD_LIST_RESULT = 'GET_KEYWORD_LIST_RESULT';
 const GET_KEYWORD_LIST_RESULT_SUCCESS = 'GET_KEYWORD_LIST_RESULT_SUCCESS';
 const SUBMIT_KEYWORD_LIST_ERROR = 'SUBMIT_KEYWORD_LIST_ERROR';
 const GET_KEYWORD_LIST_RESULT_ERROR = 'GET_KEYWORD_LIST_RESULT_ERROR';
-const FETCH_STATE = 'FETCH_STATE';
+const RESET_KEYWORD_SEARCH = 'RESET_KEYWORD_SEARCH';
 
 /* ------------   ACTION CREATORS     ------------------ */
 
@@ -36,11 +36,11 @@ const getKeywordListResultSuccess = (companyResults) => (
 );
 
 const getKeywordListResultError = (err) => (
-  { type: GET_KEYWORD_LIST_RESULT_ERROR, err}
+  { type: GET_KEYWORD_LIST_RESULT_ERROR, err }
 );
 
-export const fetchState = () => (
-  { type: FETCH_STATE }
+export const resetKeywordSearch = () => (
+  { type: RESET_KEYWORD_SEARCH }
 );
 
 /* ------------       THUNK CREATORS     ------------------ */
@@ -58,7 +58,7 @@ export const submitKeywordListThunk = (spreadsheet) => {
 };
 
 export const fetchKeywordResultsThunk = (currListLength) => {
-   return dispatch => {
+  return dispatch => {
     dispatch(getKeywordListResult());
     //console.log('===============',currListLength)
     axios.post('/api/keyword', currListLength)
@@ -66,7 +66,7 @@ export const fetchKeywordResultsThunk = (currListLength) => {
         dispatch(getKeywordListResultSuccess(res.data))
       ))
       .catch(err => getKeywordListResultError(err));
-     };
+  };
 };
 
 /* ------------       REDUCERS     ------------------ */
@@ -77,11 +77,12 @@ const initialState = {
   results: [],
   error: null
 };
+
 export default function (state = initialState, action) {
   switch (action.type) {
     case SUBMIT_KEYWORD_LIST:
     case GET_KEYWORD_LIST_RESULT: {
-       return Object.assign({}, state, {loading: true});
+      return Object.assign({}, state, { loading: true });
     }
     case SUBMIT_KEYWORD_LIST_SUCCESS: {
       return {
@@ -92,12 +93,15 @@ export default function (state = initialState, action) {
         error: null
       };
     }
-    case GET_KEYWORD_LIST_RESULT_SUCCESS:{
+    case GET_KEYWORD_LIST_RESULT_SUCCESS: {
       return success(state, 'results', action.companyResults)
-  }
+    }
     case GET_KEYWORD_LIST_RESULT_ERROR:
     case SUBMIT_KEYWORD_LIST_ERROR: {
-      return  Object.assign({}, state, {error: action.err});
+      return Object.assign({}, state, { error: action.err });
+    }
+    case RESET_KEYWORD_SEARCH: {
+      return initialState
     }
     default:
       return state;
