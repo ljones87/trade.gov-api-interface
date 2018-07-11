@@ -7,7 +7,9 @@ import SpreadsheetEntry from './SpreadsheetEntry';
 class KeywordSearch extends React.Component {
 
    componentDidUpdate(){
-    const listNotComplete = this.props.keywordResults.length !== this.props.spreadsheetEntries
+     const numRun = this.props.keywordResults.length
+     const total = this.props.spreadsheetEntries
+    const listNotComplete = numRun !== total
     const runListButton = document.querySelector('.btn-run-list')
     if(this.props.spreadsheetReady && listNotComplete) {
       setTimeout(() => (

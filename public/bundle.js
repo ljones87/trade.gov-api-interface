@@ -58324,7 +58324,9 @@ var KeywordSearch = function (_React$Component) {
   _createClass(KeywordSearch, [{
     key: 'componentDidUpdate',
     value: function componentDidUpdate() {
-      var listNotComplete = this.props.keywordResults.length !== this.props.spreadsheetEntries;
+      var numRun = this.props.keywordResults.length;
+      var total = this.props.spreadsheetEntries;
+      var listNotComplete = numRun !== total;
       var runListButton = document.querySelector('.btn-run-list');
       if (this.props.spreadsheetReady && listNotComplete) {
         setTimeout(function () {
