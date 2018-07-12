@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchKeywordResultsThunk, submitKeywordListThunk, fetchState } from '../store';
+import { fetchKeywordResultsThunk, submitKeywordListThunk } from '../store';
 import ExcelExport from './ExcelExport';
 import SpreadsheetEntry from './SpreadsheetEntry';
 
@@ -12,7 +12,7 @@ class KeywordSearch extends React.Component {
     if(this.props.spreadsheetReady && listNotComplete) {
       setTimeout(() => (
         runListButton.click()
-      ), 500)
+      ), 0)
     } else return;
   }
 
@@ -26,13 +26,16 @@ class KeywordSearch extends React.Component {
       submitSpreadsheet
     } = this.props;
 
-    // console.log('===============',keywordResults)
+    //console.log('===============',keywordResults)
     // console.log('===============',spreadsheetEntries)
     return (
       <div className="excel-container">
         {
           loading ?
+          <div>
             <h1>Loading results</h1>
+            <h3>{`Current list length: ${keywordResults.length} out of: ${spreadsheetEntries}`}</h3>
+          </div>
             :
             <div>
               <h1>Keyword Query</h1>
@@ -76,9 +79,6 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
-    fetchState() {
-      dispatch(fetchState());
-    },
     loadResults(currListLength) {
       dispatch(fetchKeywordResultsThunk({count: currListLength}));
     },
