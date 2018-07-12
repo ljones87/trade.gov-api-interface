@@ -6,15 +6,15 @@ import SpreadsheetEntry from './SpreadsheetEntry';
 
 class KeywordSearch extends React.Component {
 
-   componentDidUpdate(){
-     const numRun = this.props.keywordResults.length
-     const total = this.props.spreadsheetEntries
-    const listNotComplete = numRun !== total
+  componentDidUpdate() {
+    const numRun = this.props.keywordResults.length
+    const total = this.props.spreadsheetEntries
+    const listNotComplete = numRun < total
     const runListButton = document.querySelector('.btn-run-list')
-    if(this.props.spreadsheetReady && listNotComplete) {
+    if (this.props.spreadsheetReady && listNotComplete) {
       setTimeout(() => (
         runListButton.click()
-      ), 500)
+      ), 0)
     } else return;
   }
 
@@ -28,10 +28,18 @@ class KeywordSearch extends React.Component {
       submitSpreadsheet,
       resetSearch
     } = this.props;
-    console.log('===============keyword results', keywordResults)
+
+    //console.log('===============',keywordResults)
+    // console.log('===============',spreadsheetEntries)
     return (
       <div className="excel-container">
-
+        {
+          loading ?
+            <div>
+              <h1>Loading results</h1>
+              <h3>{`Current list length: ${keywordResults.length} out of: ${spreadsheetEntries}`}</h3>
+            </div>
+            :
             <div>
               <h1>Keyword Query</h1>
               <h3> Searches for a match within the name, alt_names, remarks, and title fields from all eleven lists.</h3>
@@ -40,36 +48,30 @@ class KeywordSearch extends React.Component {
                   <SpreadsheetEntry
                     submitSpreadsheet={submitSpreadsheet}
                   />
-                : null
+                  : null
               }
               <button
                 className="btn-run-list"
                 onClick={
-                  () => {
-                    loadResults(keywordResults.length)
-                  }
+                  () => loadResults(keywordResults.length)
                 }
                 disabled={!spreadsheetReady}
               >Run list
               </button>
               <button
                 onClick={resetSearch}
+                disabled={!spreadsheetReady}
               >
                 Reset Search
               </button>
               <h3>{`Current list length: ${keywordResults.length} out of: ${spreadsheetEntries}`}
               </h3>
-              {
-                loading ?
-                <h1>Loading results</h1>
-                :
-                <ExcelExport
-                  keywordResults={keywordResults}
-                />
-              }
+              <ExcelExport
+                keywordResults={keywordResults}
+              />
             </div>
+        }
       </div>
-
     );
   }
 }
@@ -89,7 +91,7 @@ const mapDispatch = (dispatch) => {
       dispatch(resetKeywordSearch())
     },
     loadResults(currListLength) {
-      dispatch(fetchKeywordResultsThunk({count: currListLength}));
+      dispatch(fetchKeywordResultsThunk({ count: currListLength }));
     },
     submitSpreadsheet(event) {
       event.preventDefault();
@@ -97,7 +99,7 @@ const mapDispatch = (dispatch) => {
       let spreadsheet = e.spreadsheet.value;
       spreadsheet = spreadsheet.replace("C:\\fakepath\\", "");
       //debugger;
-      dispatch(submitKeywordListThunk({spreadsheet}));
+      dispatch(submitKeywordListThunk({ spreadsheet }));
     }
   };
 };

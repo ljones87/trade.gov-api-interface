@@ -32,9 +32,7 @@ router.post('/', (req, res, next) => {
  while (i < data.length) {
    return Promise.all(apiInput.map(query => {
      const keyword = query[0];
-     return axios.get(
-       keywordlinkGenerator(apiKey, keyword)
-     )
+     return axios.get(keywordlinkGenerator(apiKey, keyword))
        .then(result => {
          const formattedReturn = {
            keywordSearched: keyword,
@@ -44,18 +42,16 @@ router.post('/', (req, res, next) => {
          final.push(formattedReturn);
        })
        .catch(err => (
-         console.log('++++ orig response', err.response),
-      //  console.log('===============SERVER ERROR RESPONSE', err.response.request.res || '800'),
-           final.push({
-           keywordSearched: keyword,
-           error: {
-             message: err.response ?
-             `${err.response.status}, ${err.response.satusText}`
-             :
-             `error response malformed`,
-             url: keywordlinkGenerator(apiKey, query[0])
-           }
-         })
+          final.push({
+          keywordSearched: keyword,
+          error: {
+            message: err.response ?
+            `${err.response.status}, ${err.response.satusText}`
+            :
+            `error response malformed`,
+            url: err.response.request.res.responseUrl || keywordlinkGenerator(apiKey, query[0])
+          }
+        })
        ));
    }))
    .then(() => (
