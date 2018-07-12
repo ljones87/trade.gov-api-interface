@@ -34,7 +34,6 @@ router.delete('/spreadsheet/reset', (req, res, next) => {
 router.post('/', (req, res, next) => {
  let i = Number(req.body.count);
  let j = i + 100;
- console.log('===============',req.body)
  apiInput = data.slice(i, j);
  while (i < data.length) {
    return Promise.all(apiInput.map(query => {
