@@ -12,7 +12,7 @@ const keywordlinkGenerator = (key, name) => {
  return `https://api.trade.gov/consolidated_screening_list/search?api_key=${key}&q=${name}`;
 };
 
-let finalResults = [];
+let finalKeywordResults = [];
 
 router.post('/spreadsheet', (req, res, next) => {
  spreadsheet = req.body.spreadsheet;
@@ -27,7 +27,7 @@ router.post('/spreadsheet', (req, res, next) => {
 
 router.delete('/spreadsheet/reset', (req, res, next) => {
   spreadsheet = null;
-  finalResults = [];
+  finalKeywordResults = [];
   res.send({listlength: 0});
 })
 
@@ -45,10 +45,10 @@ router.post('/', (req, res, next) => {
            data: result.data,
            api: keywordlinkGenerator(apiKey, keyword)
          };
-         finalResults.push(formattedReturn);
+         finalKeywordResults.push(formattedReturn);
        })
        .catch(err => (
-          finalResults.push({
+          finalKeywordResults.push({
           keywordSearched: keyword,
           error: {
             message: err.response ?
@@ -62,7 +62,7 @@ router.post('/', (req, res, next) => {
    }))
    .then(() => (
      j = i + 100,
-     res.send(finalResults)
+     res.send(finalKeywordResults)
    ))
    .catch(err => {
      res.sendStatus(500);

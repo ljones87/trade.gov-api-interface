@@ -29,8 +29,6 @@ class KeywordSearch extends React.Component {
       resetSearch
     } = this.props;
 
-    console.log('===============',keywordResults)
-    // console.log('===============',spreadsheetEntries)
     return (
       <div className="excel-container">
         {
@@ -98,7 +96,6 @@ const mapDispatch = (dispatch) => {
       const e = event.target;
       let spreadsheet = e.spreadsheet.value;
       spreadsheet = spreadsheet.replace("C:\\fakepath\\", "");
-      //debugger;
       dispatch(submitKeywordListThunk({ spreadsheet }));
     }
   };

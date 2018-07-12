@@ -56083,7 +56083,7 @@ module.exports = function spread(callback) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.fetchAddressResultsThunk = exports.submitAddressListThunk = undefined;
+exports.fetchAddressResultsThunk = exports.resetAddressSearchThunk = exports.submitAddressListThunk = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -56093,6 +56093,7 @@ exports.default = function () {
 
   switch (action.type) {
     case SUBMIT_ADDRESS_LIST:
+    case RESET_ADDRESS_SEARCH:
     case GET_ADDRESS_LIST_RESULT:
       {
         return Object.assign({}, state, { loading: true });
@@ -56106,12 +56107,17 @@ exports.default = function () {
           error: null
         });
       }
+    case RESET_ADDRESS_SEARCH_SUCESS:
+      {
+        return initialState;
+      }
     case GET_ADDRESS_LIST_RESULT_SUCCESS:
       {
         return (0, _stateFunctions.success)(state, 'results', action.companyResults);
       }
-    case GET_ADDRESS_LIST_RESULT_ERROR:
     case SUBMIT_ADDRESS_LIST_ERROR:
+    case RESET_ADDRESS_SEARCH_ERROR:
+    case GET_ADDRESS_LIST_RESULT_ERROR:
       {
         return Object.assign({}, state, { error: action.err });
       }
@@ -56135,6 +56141,9 @@ var GET_ADDRESS_LIST_RESULT = 'GET_ADDRESS_LIST_RESULT';
 var GET_ADDRESS_LIST_RESULT_SUCCESS = 'GET_ADDRESS_LIST_RESULT_SUCCESS';
 var SUBMIT_ADDRESS_LIST_ERROR = 'SUBMIT_ADDRESS_LIST_ERROR';
 var GET_ADDRESS_LIST_RESULT_ERROR = 'GET_ADDRESS_LIST_RESULT_ERROR';
+var RESET_ADDRESS_SEARCH = 'RESET_ADDRESS_SEARCH';
+var RESET_ADDRESS_SEARCH_SUCESS = 'RESET_ADDRESS_SEARCH_SUCCESS';
+var RESET_ADDRESS_SEARCH_ERROR = 'RESET_ADDRESS_SEARCH_ERROR';
 
 /* ------------   ACTION CREATORS     ------------------ */
 
@@ -56162,6 +56171,18 @@ var getAddressListResultError = function getAddressListResultError(err) {
   return { type: GET_ADDRESS_LIST_RESULT_ERROR, err: err };
 };
 
+var resetAddressSearch = function resetAddressSearch() {
+  return { type: RESET_ADDRESS_SEARCH };
+};
+
+var resetAddressSearchSuccess = function resetAddressSearchSuccess() {
+  return { type: RESET_ADDRESS_SEARCH_SUCESS };
+};
+
+var resetAddressSearchError = function resetAddressSearchError() {
+  return { type: RESET_ADDRESS_SEARCH_ERROR };
+};
+
 /* ------------       THUNK CREATORS     ------------------ */
 
 var submitAddressListThunk = exports.submitAddressListThunk = function submitAddressListThunk(spreadsheet) {
@@ -56172,6 +56193,17 @@ var submitAddressListThunk = exports.submitAddressListThunk = function submitAdd
       dispatch(submitAddressListSuccess(res.data.listlength));
     }).catch(function (err) {
       return submitAddressListError(err);
+    });
+  };
+};
+
+var resetAddressSearchThunk = exports.resetAddressSearchThunk = function resetAddressSearchThunk() {
+  return function (dispatch) {
+    dispatch(resetAddressSearch());
+    _axios2.default.delete('/api/address/spreadsheet/reset').then(function (res) {
+      dispatch(resetAddressSearchSuccess());
+    }).catch(function (err) {
+      return resetAddressSearchError(err);
     });
   };
 };
@@ -58257,8 +58289,6 @@ var KeywordSearch = function (_React$Component) {
           resetSearch = _props.resetSearch;
 
 
-      console.log('===============', keywordResults);
-      // console.log('===============',spreadsheetEntries)
       return _react2.default.createElement(
         'div',
         { className: 'excel-container' },
@@ -58348,7 +58378,6 @@ var mapDispatch = function mapDispatch(dispatch) {
       var e = event.target;
       var spreadsheet = e.spreadsheet.value;
       spreadsheet = spreadsheet.replace("C:\\fakepath\\", "");
-      //debugger;
       dispatch((0, _store.submitKeywordListThunk)({ spreadsheet: spreadsheet }));
     }
   };
@@ -58403,6 +58432,19 @@ var AddressSearch = function (_React$Component) {
   }
 
   _createClass(AddressSearch, [{
+    key: 'componentDidUpdate',
+    value: function componentDidUpdate() {
+      var numRun = this.props.addressResults.length;
+      var total = this.props.spreadsheetEntries;
+      var listNotComplete = numRun < total;
+      var runListButton = document.querySelector('.btn-run-list');
+      if (this.props.spreadsheetReady && listNotComplete) {
+        setTimeout(function () {
+          return runListButton.click();
+        }, 0);
+      } else return;
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _props = this.props,
@@ -58411,6 +58453,7 @@ var AddressSearch = function (_React$Component) {
           spreadsheetEntries = _props.spreadsheetEntries,
           loading = _props.loading,
           loadResults = _props.loadResults,
+          resetSearch = _props.resetSearch,
           submitSpreadsheet = _props.submitSpreadsheet;
 
 
@@ -58418,9 +58461,19 @@ var AddressSearch = function (_React$Component) {
         'div',
         { className: 'excel-container' },
         loading ? _react2.default.createElement(
-          'h1',
+          'div',
           null,
-          'Loading results'
+          _react2.default.createElement(
+            'h1',
+            null,
+            'Loading results'
+          ),
+          _react2.default.createElement(
+            'h3',
+            null,
+            ' ',
+            'Current list length: ' + addressResults.length + ' out of: ' + spreadsheetEntries
+          )
         ) : _react2.default.createElement(
           'div',
           null,
@@ -58440,12 +58493,21 @@ var AddressSearch = function (_React$Component) {
           _react2.default.createElement(
             'button',
             {
+              className: 'btn-run-list',
               onClick: function onClick() {
                 return loadResults(addressResults.length);
               },
               disabled: !spreadsheetReady
             },
             'Run list'
+          ),
+          _react2.default.createElement(
+            'button',
+            {
+              onClick: resetSearch,
+              disabled: !spreadsheetReady
+            },
+            'Reset Search'
           ),
           _react2.default.createElement(
             'h3',
@@ -58474,6 +58536,9 @@ var mapState = function mapState(state) {
 
 var mapDispatch = function mapDispatch(dispatch) {
   return {
+    resetSearch: function resetSearch() {
+      dispatch((0, _store.resetAddressSearchThunk)());
+    },
     loadResults: function loadResults(currListLength) {
       dispatch((0, _store.fetchAddressResultsThunk)({ count: currListLength }));
     },
@@ -58482,7 +58547,6 @@ var mapDispatch = function mapDispatch(dispatch) {
       var e = event.target;
       var spreadsheet = e.spreadsheet.value;
       spreadsheet = spreadsheet.replace("C:\\fakepath\\", "");
-      //debugger;
       dispatch((0, _store.submitAddressListThunk)({ spreadsheet: spreadsheet }));
     }
   };

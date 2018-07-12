@@ -1,10 +1,23 @@
 import React from 'react'
 import { connect } from 'react-redux';
-import { fetchAddressResultsThunk, submitAddressListThunk } from '../store';
+import { fetchAddressResultsThunk, submitAddressListThunk, resetAddressSearchThunk } from '../store';
 import ExcelExport from './ExcelExport';
 import SpreadsheetEntry from './SpreadsheetEntry';
 
 class AddressSearch extends React.Component {
+
+  componentDidUpdate() {
+    const numRun = this.props.addressResults.length
+    const total = this.props.spreadsheetEntries
+    const listNotComplete = numRun < total
+    const runListButton = document.querySelector('.btn-run-list')
+    if (this.props.spreadsheetReady && listNotComplete) {
+      setTimeout(() => (
+        runListButton.click()
+      ), 0)
+    } else return;
+  }
+
   render() {
     const {
       addressResults,
@@ -12,6 +25,7 @@ class AddressSearch extends React.Component {
       spreadsheetEntries,
       loading,
       loadResults,
+      resetSearch,
       submitSpreadsheet
     } = this.props;
 
@@ -19,7 +33,10 @@ class AddressSearch extends React.Component {
       <div className="excel-container">
         {
           loading ?
-            <h1>Loading results</h1>
+            <div>
+              <h1>Loading results</h1>
+              <h3> {`Current list length: ${addressResults.length} out of: ${spreadsheetEntries}`}</h3>
+            </div>
             :
             <div>
               <h1>Address Query</h1>
@@ -32,11 +49,18 @@ class AddressSearch extends React.Component {
                   : null
               }
               <button
+                className="btn-run-list"
                 onClick={
                   () => loadResults(addressResults.length)
                 }
                 disabled={!spreadsheetReady}
               >Run list
+              </button>
+              <button
+                onClick={resetSearch}
+                disabled={!spreadsheetReady}
+              >
+                Reset Search
               </button>
               <h3>
                 {`Current list length: ${addressResults.length} out of: ${spreadsheetEntries}`}
@@ -62,6 +86,9 @@ const mapState = (state) => {
 
 const mapDispatch = (dispatch) => {
   return {
+    resetSearch() {
+      dispatch(resetAddressSearchThunk())
+    },
     loadResults(currListLength) {
       dispatch(fetchAddressResultsThunk({ count: currListLength }));
     },
@@ -70,7 +97,6 @@ const mapDispatch = (dispatch) => {
       const e = event.target;
       let spreadsheet = e.spreadsheet.value;
       spreadsheet = spreadsheet.replace("C:\\fakepath\\", "");
-      //debugger;
       dispatch(submitAddressListThunk({ spreadsheet }));
     }
   };

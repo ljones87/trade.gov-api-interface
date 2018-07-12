@@ -12,6 +12,9 @@ const GET_ADDRESS_LIST_RESULT = 'GET_ADDRESS_LIST_RESULT';
 const GET_ADDRESS_LIST_RESULT_SUCCESS = 'GET_ADDRESS_LIST_RESULT_SUCCESS';
 const SUBMIT_ADDRESS_LIST_ERROR = 'SUBMIT_ADDRESS_LIST_ERROR';
 const GET_ADDRESS_LIST_RESULT_ERROR = 'GET_ADDRESS_LIST_RESULT_ERROR';
+const RESET_ADDRESS_SEARCH = 'RESET_ADDRESS_SEARCH';
+const RESET_ADDRESS_SEARCH_SUCESS = 'RESET_ADDRESS_SEARCH_SUCCESS';
+const RESET_ADDRESS_SEARCH_ERROR = 'RESET_ADDRESS_SEARCH_ERROR';
 
 /* ------------   ACTION CREATORS     ------------------ */
 
@@ -39,6 +42,18 @@ const getAddressListResultError = (err) => (
   { type: GET_ADDRESS_LIST_RESULT_ERROR, err}
 );
 
+const resetAddressSearch = () => (
+  { type: RESET_ADDRESS_SEARCH }
+);
+
+const resetAddressSearchSuccess = () => (
+  { type: RESET_ADDRESS_SEARCH_SUCESS }
+);
+
+const resetAddressSearchError = () => (
+  { type: RESET_ADDRESS_SEARCH_ERROR }
+);
+
 /* ------------       THUNK CREATORS     ------------------ */
 
 export const submitAddressListThunk = (spreadsheet) => {
@@ -52,6 +67,17 @@ export const submitAddressListThunk = (spreadsheet) => {
       .catch(err => submitAddressListError(err));
   };
 };
+
+export const resetAddressSearchThunk = () => {
+  return dispatch => {
+    dispatch(resetAddressSearch())
+    axios.delete('/api/address/spreadsheet/reset')
+      .then(res => {
+        dispatch(resetAddressSearchSuccess())
+      })
+      .catch(err => resetAddressSearchError(err))
+  }
+}
 
 export const fetchAddressResultsThunk = (currListLength) => {
    return dispatch => {
@@ -75,6 +101,7 @@ const initialState = {
 export default function (state = initialState, action) {
   switch (action.type) {
     case SUBMIT_ADDRESS_LIST:
+    case RESET_ADDRESS_SEARCH:
     case GET_ADDRESS_LIST_RESULT: {
        return Object.assign({}, state, {loading: true});
     }
@@ -87,11 +114,15 @@ export default function (state = initialState, action) {
         error: null
       };
     }
+    case RESET_ADDRESS_SEARCH_SUCESS: {
+      return initialState
+    }
     case GET_ADDRESS_LIST_RESULT_SUCCESS:{
       return success(state, 'results', action.companyResults)
-  }
-    case GET_ADDRESS_LIST_RESULT_ERROR:
-    case SUBMIT_ADDRESS_LIST_ERROR: {
+    }
+    case SUBMIT_ADDRESS_LIST_ERROR:
+    case RESET_ADDRESS_SEARCH_ERROR:
+    case GET_ADDRESS_LIST_RESULT_ERROR: {
       return  Object.assign({}, state, {error: action.err});
     }
     default:
