@@ -55057,7 +55057,7 @@ function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps, dis
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.fetchKeywordResultsThunk = exports.submitKeywordListThunk = exports.resetKeywordSearch = undefined;
+exports.fetchKeywordResultsThunk = exports.resetKeywordSearchThunk = exports.submitKeywordListThunk = undefined;
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 /* -----------------    IMPORTS     ------------------ */
@@ -55068,6 +55068,7 @@ exports.default = function () {
 
   switch (action.type) {
     case SUBMIT_KEYWORD_LIST:
+    case RESET_KEYWORD_SEARCH:
     case GET_KEYWORD_LIST_RESULT:
       {
         return Object.assign({}, state, { loading: true });
@@ -55086,11 +55087,12 @@ exports.default = function () {
         return (0, _stateFunctions.success)(state, 'results', action.companyResults);
       }
     case GET_KEYWORD_LIST_RESULT_ERROR:
+    case RESET_KEYWORD_SEARCH_ERROR:
     case SUBMIT_KEYWORD_LIST_ERROR:
       {
         return Object.assign({}, state, { error: action.err });
       }
-    case RESET_KEYWORD_SEARCH:
+    case RESET_KEYWORD_SEARCH_SUCESS:
       {
         return initialState;
       }
@@ -55115,6 +55117,8 @@ var GET_KEYWORD_LIST_RESULT_SUCCESS = 'GET_KEYWORD_LIST_RESULT_SUCCESS';
 var SUBMIT_KEYWORD_LIST_ERROR = 'SUBMIT_KEYWORD_LIST_ERROR';
 var GET_KEYWORD_LIST_RESULT_ERROR = 'GET_KEYWORD_LIST_RESULT_ERROR';
 var RESET_KEYWORD_SEARCH = 'RESET_KEYWORD_SEARCH';
+var RESET_KEYWORD_SEARCH_SUCESS = 'RESET_KEYWORD_SEARCH_SUCCESS';
+var RESET_KEYWORD_SEARCH_ERROR = 'RESET_KEYWORD_SEARCH_ERROR';
 
 /* ------------   ACTION CREATORS     ------------------ */
 
@@ -55142,20 +55146,38 @@ var getKeywordListResultError = function getKeywordListResultError(err) {
   return { type: GET_KEYWORD_LIST_RESULT_ERROR, err: err };
 };
 
-var resetKeywordSearch = exports.resetKeywordSearch = function resetKeywordSearch() {
+var resetKeywordSearch = function resetKeywordSearch() {
   return { type: RESET_KEYWORD_SEARCH };
+};
+
+var resetKeywordSearchSuccess = function resetKeywordSearchSuccess() {
+  return { type: RESET_KEYWORD_SEARCH_SUCESS };
+};
+
+var resetKeywordSearchError = function resetKeywordSearchError() {
+  return { type: RESET_KEYWORD_SEARCH_ERROR };
 };
 
 /* ------------       THUNK CREATORS     ------------------ */
 
 var submitKeywordListThunk = exports.submitKeywordListThunk = function submitKeywordListThunk(spreadsheet) {
-
   return function (dispatch) {
     dispatch(submitKeywordList());
     _axios2.default.post('/api/keyword/spreadsheet', spreadsheet).then(function (res) {
       dispatch(submitKeywordListSuccess(res.data.listlength));
     }).catch(function (err) {
       return submitKeywordListError(err);
+    });
+  };
+};
+
+var resetKeywordSearchThunk = exports.resetKeywordSearchThunk = function resetKeywordSearchThunk() {
+  return function (dispatch) {
+    dispatch(resetKeywordSearch());
+    _axios2.default.delete('/api/keyword/spreadsheet/reset').then(function (res) {
+      dispatch(resetKeywordSearchSuccess());
+    }).catch(function (err) {
+      return resetKeywordSearchError(err);
     });
   };
 };
@@ -58234,9 +58256,9 @@ var KeywordSearch = function (_React$Component) {
           submitSpreadsheet = _props.submitSpreadsheet,
           resetSearch = _props.resetSearch;
 
-      //console.log('===============',keywordResults)
-      // console.log('===============',spreadsheetEntries)
 
+      console.log('===============', keywordResults);
+      // console.log('===============',spreadsheetEntries)
       return _react2.default.createElement(
         'div',
         { className: 'excel-container' },
@@ -58316,7 +58338,7 @@ var mapState = function mapState(state) {
 var mapDispatch = function mapDispatch(dispatch) {
   return {
     resetSearch: function resetSearch() {
-      dispatch((0, _store.resetKeywordSearch)());
+      dispatch((0, _store.resetKeywordSearchThunk)());
     },
     loadResults: function loadResults(currListLength) {
       dispatch((0, _store.fetchKeywordResultsThunk)({ count: currListLength }));

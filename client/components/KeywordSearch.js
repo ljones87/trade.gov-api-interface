@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { fetchKeywordResultsThunk, submitKeywordListThunk, resetKeywordSearch } from '../store';
+import { fetchKeywordResultsThunk, submitKeywordListThunk, resetKeywordSearchThunk } from '../store';
 import ExcelExport from './ExcelExport';
 import SpreadsheetEntry from './SpreadsheetEntry';
 
@@ -29,7 +29,7 @@ class KeywordSearch extends React.Component {
       resetSearch
     } = this.props;
 
-    //console.log('===============',keywordResults)
+    console.log('===============',keywordResults)
     // console.log('===============',spreadsheetEntries)
     return (
       <div className="excel-container">
@@ -88,7 +88,7 @@ const mapState = (state) => {
 const mapDispatch = (dispatch) => {
   return {
     resetSearch() {
-      dispatch(resetKeywordSearch())
+      dispatch(resetKeywordSearchThunk())
     },
     loadResults(currListLength) {
       dispatch(fetchKeywordResultsThunk({ count: currListLength }));
