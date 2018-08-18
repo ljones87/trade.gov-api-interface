@@ -14,7 +14,7 @@ class KeywordSearch extends React.Component {
     if (spreadsheetReady && listNotComplete) {
       setTimeout(() => (
         runList.click()
-      ), 5000)
+      ), 8000)
     } else return;
   }
 

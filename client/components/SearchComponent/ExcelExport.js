@@ -20,7 +20,7 @@ const ExcelExport = (props) => {
       <ExcelSheet data={results} name={` Query Results`}>
         <ExcelColumn label={firstColumn} value={firstColumnValue} />
         <ExcelColumn
-          label="Query result"
+          label={`${searchType} Query Results`}
           value={
             (col) => col.error ? col.error.message : col.data.total
           }

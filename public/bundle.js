@@ -58358,7 +58358,7 @@ var KeywordSearch = function (_React$Component) {
       if (spreadsheetReady && listNotComplete) {
         setTimeout(function () {
           return runList.click();
-        }, 5000);
+        }, 8000);
       } else return;
     }
   }, {
@@ -58465,7 +58465,7 @@ var ExcelExport = function ExcelExport(props) {
       { data: results, name: ' Query Results' },
       _react2.default.createElement(ExcelColumn, { label: firstColumn, value: firstColumnValue }),
       _react2.default.createElement(ExcelColumn, {
-        label: 'Query result',
+        label: searchType + ' Query Results',
         value: function value(col) {
           return col.error ? col.error.message : col.data.total;
         }
