@@ -1,75 +1,33 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import { fetchAddressResultsThunk, submitAddressListThunk, resetAddressSearchThunk } from '../store';
-import ExcelExport from './SearchComponent/ExcelExport';
-import SpreadsheetEntry from './SearchComponent/SpreadsheetEntry';
+import SearchComponent from './SearchComponent';
 
 class AddressSearch extends React.Component {
 
   componentDidUpdate() {
     const numRun = this.props.addressResults.length
     const total = this.props.spreadsheetEntries
+    const { spreadsheetReady } = this.props;
     const listNotComplete = numRun < total
-    const runListButton = document.querySelector('.btn-run-list')
-    if (this.props.spreadsheetReady && listNotComplete) {
+    const runList = document.querySelector('.run-list')
+    if (spreadsheetReady && listNotComplete) {
       setTimeout(() => (
-        runListButton.click()
+        runList.click()
       ), 8000)
     } else return;
   }
 
   render() {
-    const {
-      addressResults,
-      spreadsheetReady,
-      spreadsheetEntries,
-      loading,
-      loadResults,
-      resetSearch,
-      submitSpreadsheet
-    } = this.props;
 
     return (
       <div className="excel-container">
-        {
-          loading ?
-            <div>
-              <h1>Loading results</h1>
-              <h3> {`Current list length: ${addressResults.length} out of: ${spreadsheetEntries}`}</h3>
-            </div>
-            :
-            <div>
-              <h1>Address Query</h1>
-              <h3>Searches against fields in the addresses array.</h3>
-              {
-                !spreadsheetReady ?
-                  <SpreadsheetEntry
-                    submitSpreadsheet={submitSpreadsheet}
-                  />
-                  : null
-              }
-              <button
-                className="btn-run-list"
-                onClick={
-                  () => loadResults(addressResults.length)
-                }
-                disabled={!spreadsheetReady}
-              >Run list
-              </button>
-              <button
-                onClick={resetSearch}
-                disabled={!spreadsheetReady}
-              >
-                Reset Search
-              </button>
-              <h3>
-                {`Current list length: ${addressResults.length} out of: ${spreadsheetEntries}`}
-              </h3>
-              <ExcelExport
-                addressResults={addressResults}
-              />
-            </div>
-        }
+        <h1>Address Query</h1>
+        <h3>Searches against fields in the addresses array.</h3>
+        <SearchComponent
+          {...this.props}
+          searchResults={this.props.addressResults}
+        />
       </div>
     )
   }

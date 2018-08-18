@@ -1,7 +1,7 @@
 import React from 'react';
-import SearchComponent from './SearchComponent';
 import { connect } from 'react-redux';
 import { fetchKeywordResultsThunk, submitKeywordListThunk, resetKeywordSearchThunk } from '../store';
+import SearchComponent from './SearchComponent';
 
 class KeywordSearch extends React.Component {
 
@@ -19,7 +19,7 @@ class KeywordSearch extends React.Component {
   }
 
   render() {
-    const searchResults = this.props.    keywordResults;
+
     return (
       <div className="excel-container">
       <div>
@@ -28,7 +28,7 @@ class KeywordSearch extends React.Component {
       </div>
       <SearchComponent
         {...this.props}
-        searchResults={searchResults}
+        searchResults={this.props.keywordResults}
       />
       </div>
     )
