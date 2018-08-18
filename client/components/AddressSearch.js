@@ -1,8 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux';
 import { fetchAddressResultsThunk, submitAddressListThunk, resetAddressSearchThunk } from '../store';
-import ExcelExport from './ExcelExport';
-import SpreadsheetEntry from './SpreadsheetEntry';
+import ExcelExport from './SearchComponent/ExcelExport';
+import SpreadsheetEntry from './SearchComponent/SpreadsheetEntry';
 
 class AddressSearch extends React.Component {
 

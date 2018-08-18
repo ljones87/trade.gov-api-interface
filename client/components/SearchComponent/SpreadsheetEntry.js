@@ -1,8 +1,8 @@
 import React from "react";
 
 const SpreadsheetEntry = props => {
-  const { submitSpreadsheet } = props;
-  return (
+  const { submitSpreadsheet, spreadsheetReady } = props;
+  return !spreadsheetReady ? (
     <form onSubmit={submitSpreadsheet}>
       <input
         type="file"
@@ -12,7 +12,7 @@ const SpreadsheetEntry = props => {
       />
       <button type="submit">Submit Spreadsheet</button>
     </form>
-  );
+  ) : null;
 };
 
 export default SpreadsheetEntry;

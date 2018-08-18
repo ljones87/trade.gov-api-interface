@@ -1,7 +1,8 @@
 import React from 'react';
-import SearchComponent from './SearchComponent';
 import { connect } from 'react-redux';
 import { fetchKeywordResultsThunk, submitKeywordListThunk, resetKeywordSearchThunk } from '../store';
+import ExcelExport from './ExcelExport';
+import SpreadsheetEntry from './SpreadsheetEntry';
 
 class KeywordSearch extends React.Component {
 
@@ -15,23 +16,60 @@ class KeywordSearch extends React.Component {
       setTimeout(() => (
         runList.click()
       ), 5000)
-    } else return;
+    } else null;
   }
 
   render() {
-    const searchResults = this.props.    keywordResults;
+    const {
+      keywordResults,
+      spreadsheetReady,
+      spreadsheetEntries,
+      loading,
+      loadResults,
+      submitSpreadsheet,
+      resetSearch
+    } = this.props;
+    const keywordsProessed = keywordResults.length;
     return (
       <div className="excel-container">
-      <div>
-        <h1>Keyword Query</h1>
-        <h3> Searches for a match within the name, alt_names, remarks, and title fields from all eleven lists.</h3>
+        <div>
+          <h1>Keyword Query</h1>
+          <h3> Searches for a match within the name, alt_names, remarks, and title fields from all eleven lists.</h3>
+          {
+            !spreadsheetReady ?
+              <SpreadsheetEntry
+                submitSpreadsheet={submitSpreadsheet}
+              />
+              : null
+          }
+          {!loading && spreadsheetReady ?
+            <div className="run-list"
+              onClick={
+                () => loadResults(keywordsProessed)
+              } />
+            : null
+          }
+
+          <button
+            onClick={resetSearch}
+            disabled={!spreadsheetReady}
+          >Reset Search
+          </button>
+          <h3>{`Current list length: ${keywordsProessed} out of: ${spreadsheetEntries}`}
+          </h3>
+          <ExcelExport
+            keywordResults={keywordResults}
+          />
+        </div>
+        {
+          keywordsProessed < spreadsheetEntries ?
+            <div className="loading-container">
+              <h1>Loading results</h1>
+            </div>
+            : null
+        }
       </div>
-      <SearchComponent
-       {...this.props}
-       searchResults={searchResults}
-      />
-      </div>
-    )
+    );
   }
 }
 
@@ -63,4 +101,3 @@ const mapDispatch = (dispatch) => {
 };
 
 export default connect(mapState, mapDispatch)(KeywordSearch);
-
