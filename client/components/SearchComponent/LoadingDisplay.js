@@ -2,11 +2,13 @@ import React from 'react';
 
 const LoadingDisplay = (props) => {
   const {
-    keywordsProessed,
+    entriesProcessed,
     spreadsheetEntries
    } = props;
 
-  return keywordsProessed < spreadsheetEntries ?
+   const listProcessing = entriesProcessed < spreadsheetEntries
+
+  return listProcessing ?
     <div className="loading-container">
       <h1>Loading results</h1>
     </div>

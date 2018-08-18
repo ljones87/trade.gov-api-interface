@@ -5,13 +5,15 @@ const RunList = (props) => {
   const {
     loading,
     spreadsheetReady,
-    runNextBatch
+    loadResults,
+    entriesProcessed
   } = props;
+  const show = !loading && spreadsheetReady
 
-  return !loading && spreadsheetReady ?
+  return show ?
     <div
       className="run-list"
-      onClick={runNextBatch}
+      onClick={() => loadResults(entriesProcessed)}
     />
     : null
 }

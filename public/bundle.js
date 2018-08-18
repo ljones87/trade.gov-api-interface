@@ -58320,7 +58320,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var Home = function Home(props) {
   return _react2.default.createElement(
     'div',
-    { className: 'intro' },
+    { className: 'excel-container' },
     _react2.default.createElement(
       'h2',
       null,
@@ -58505,7 +58505,8 @@ var SearchComponent = function SearchComponent(props) {
     _react2.default.createElement(_RunList2.default, {
       loading: loading,
       spreadsheetReady: spreadsheetReady,
-      runNextBatch: loadResults(entriesProcessed)
+      loadResults: loadResults,
+      entriesProcessed: entriesProcessed
     }),
     _react2.default.createElement(
       'button',
@@ -77885,12 +77886,16 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var RunList = function RunList(props) {
   var loading = props.loading,
       spreadsheetReady = props.spreadsheetReady,
-      runNextBatch = props.runNextBatch;
+      loadResults = props.loadResults,
+      entriesProcessed = props.entriesProcessed;
 
+  var show = !loading && spreadsheetReady;
 
-  return !loading && spreadsheetReady ? _react2.default.createElement("div", {
+  return show ? _react2.default.createElement("div", {
     className: "run-list",
-    onClick: runNextBatch
+    onClick: function onClick() {
+      return loadResults(entriesProcessed);
+    }
   }) : null;
 };
 
@@ -77914,11 +77919,13 @@ var _react2 = _interopRequireDefault(_react);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var LoadingDisplay = function LoadingDisplay(props) {
-  var keywordsProessed = props.keywordsProessed,
+  var entriesProcessed = props.entriesProcessed,
       spreadsheetEntries = props.spreadsheetEntries;
 
 
-  return keywordsProessed < spreadsheetEntries ? _react2.default.createElement(
+  var listProcessing = entriesProcessed < spreadsheetEntries;
+
+  return listProcessing ? _react2.default.createElement(
     "div",
     { className: "loading-container" },
     _react2.default.createElement(

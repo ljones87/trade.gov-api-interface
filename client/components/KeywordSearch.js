@@ -27,8 +27,8 @@ class KeywordSearch extends React.Component {
         <h3> Searches for a match within the name, alt_names, remarks, and title fields from all eleven lists.</h3>
       </div>
       <SearchComponent
-       {...this.props}
-       searchResults={searchResults}
+        {...this.props}
+        searchResults={searchResults}
       />
       </div>
     )

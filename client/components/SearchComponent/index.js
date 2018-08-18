@@ -26,13 +26,14 @@ const SearchComponent = (props) => {
       <RunList
         loading={loading}
         spreadsheetReady={spreadsheetReady}
-        runNextBatch={loadResults(entriesProcessed)}
+        loadResults={loadResults}
+        entriesProcessed={entriesProcessed}
       />
       <button
         onClick={resetSearch}
         disabled={!spreadsheetReady}
       >Reset Search
-          </button>
+      </button>
       <h3>{`Current list length: ${entriesProcessed} out of: ${spreadsheetEntries}`}
       </h3>
       <ExcelExport
