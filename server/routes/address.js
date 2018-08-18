@@ -20,8 +20,9 @@ router.post('/spreadsheet', (req, res, next) => {
   spreadsheetForAnalysis = XLSX.readFile(spreadsheet);
   worksheet = spreadsheetForAnalysis.Sheets[spreadsheetForAnalysis.SheetNames[0]];
   data = XLSX.utils.sheet_to_json(worksheet, { header: 1 }, { raw: false });
-  data = data.filter(cellContent => cellContent.length);
+  data = data.filter(cellContent => cellContent[0].length > 1);
   data.shift();
+  console.log('===============DATA',data)
   console.log('===============', data.length);
   res.send({ listlength: data.length });
 });
