@@ -12,7 +12,8 @@ const SearchComponent = (props) => {
     loading,
     loadResults,
     submitSpreadsheet,
-    resetSearch
+    resetSearch,
+    searchType
   } = props;
 
   const entriesProcessed = searchResults.length;
@@ -38,6 +39,7 @@ const SearchComponent = (props) => {
       </h3>
       <ExcelExport
         searchResults={searchResults}
+        searchType={searchType}
       />
 
       <LoadingDisplay

@@ -27,6 +27,7 @@ class AddressSearch extends React.Component {
         <SearchComponent
           {...this.props}
           searchResults={this.props.addressResults}
+          searchType="Address"
         />
       </div>
     )

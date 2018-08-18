@@ -36213,7 +36213,8 @@ var SearchComponent = function SearchComponent(props) {
       loading = props.loading,
       loadResults = props.loadResults,
       submitSpreadsheet = props.submitSpreadsheet,
-      resetSearch = props.resetSearch;
+      resetSearch = props.resetSearch,
+      searchType = props.searchType;
 
 
   var entriesProcessed = searchResults.length;
@@ -36245,7 +36246,8 @@ var SearchComponent = function SearchComponent(props) {
       'Current list length: ' + entriesProcessed + ' out of: ' + spreadsheetEntries
     ),
     _react2.default.createElement(_ExcelExport2.default, {
-      searchResults: searchResults
+      searchResults: searchResults,
+      searchType: searchType
     }),
     _react2.default.createElement(_LoadingDisplay2.default, {
       entriesProcessed: entriesProcessed, spreadsheetEntries: spreadsheetEntries
@@ -58381,7 +58383,8 @@ var KeywordSearch = function (_React$Component) {
           )
         ),
         _react2.default.createElement(_SearchComponent2.default, _extends({}, this.props, {
-          searchResults: this.props.keywordResults
+          searchResults: this.props.keywordResults,
+          searchType: 'Keyword'
         }))
       );
     }
@@ -58445,31 +58448,21 @@ var ExcelSheet = _reactDataExport2.default.ExcelFile.ExcelSheet;
 var ExcelColumn = _reactDataExport2.default.ExcelFile.ExcelColumn;
 
 var ExcelExport = function ExcelExport(props) {
-  var keywordResults = props.keywordResults,
-      addressResults = props.addressResults;
+  var searchResults = props.searchResults,
+      searchType = props.searchType;
 
-  var results = void 0,
-      searchTerm = void 0,
-      firstColumn = void 0,
-      firstColumnValue = void 0;
-  if (keywordResults) {
-    results = keywordResults;
-    searchTerm = "Keyword";
-    firstColumn = "Keyword";
-    firstColumnValue = "keywordSearched";
-  } else if (addressResults) {
-    results = addressResults;
-    searchTerm = "Address";
-    firstColumn = "Address";
-    firstColumnValue = "addressSearched";
-  }
+  var results = searchResults;
+  var searchTerm = searchType;
+  var firstColumn = searchType;
+  var lowerCaseType = searchType.slice(0, 1).toLowerCase().concat(searchType.slice(1, searchType.length));
+  var firstColumnValue = lowerCaseType + 'Searched';
 
   return _react2.default.createElement(
     ExcelFile,
     null,
     _react2.default.createElement(
       ExcelSheet,
-      { data: results, name: searchTerm + ' Query Results' },
+      { data: results, name: ' Query Results' },
       _react2.default.createElement(ExcelColumn, { label: firstColumn, value: firstColumnValue }),
       _react2.default.createElement(ExcelColumn, {
         label: 'Query result',
@@ -78015,7 +78008,8 @@ var AddressSearch = function (_React$Component) {
           'Searches against fields in the addresses array.'
         ),
         _react2.default.createElement(_SearchComponent2.default, _extends({}, this.props, {
-          searchResults: this.props.addressResults
+          searchResults: this.props.addressResults,
+          searchType: 'Address'
         }))
       );
     }

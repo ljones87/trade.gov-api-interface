@@ -29,6 +29,7 @@ class KeywordSearch extends React.Component {
       <SearchComponent
         {...this.props}
         searchResults={this.props.keywordResults}
+        searchType="Keyword"
       />
       </div>
     )
