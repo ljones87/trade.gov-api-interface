@@ -14,7 +14,7 @@ class AddressSearch extends React.Component {
     if (this.props.spreadsheetReady && listNotComplete) {
       setTimeout(() => (
         runListButton.click()
-      ), 0)
+      ), 8000)
     } else return;
   }
 

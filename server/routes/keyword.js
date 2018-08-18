@@ -49,15 +49,15 @@ router.post('/', (req, res, next) => {
        })
        .catch(err => (
           finalKeywordResults.push({
-          keywordSearched: keyword,
-          error: {
-            message: err.response ?
-            `${err.response.status}, ${err.response.satusText}`
-            :
-            `error response malformed`,
-            url: err.response.request.res.responseUrl || keywordlinkGenerator(apiKey, query[0])
-          }
-        })
+            keywordSearched: keyword,
+            error: {
+              message: err.response ?
+              `${err.response.status}, ${err.response.satusText}`
+              :
+              `error response malformed`,
+              url: err.response.request.res.responseUrl || keywordlinkGenerator(apiKey, query[0])
+            }
+          })
        ));
    }))
    .then(() => (

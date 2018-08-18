@@ -9,13 +9,14 @@ class KeywordSearch extends React.Component {
   componentDidUpdate() {
     const numRun = this.props.keywordResults.length
     const total = this.props.spreadsheetEntries
+    const { spreadsheetReady } = this.props;
     const listNotComplete = numRun < total
-    const runListButton = document.querySelector('.btn-run-list')
-    if (this.props.spreadsheetReady && listNotComplete) {
+    const runList = document.querySelector('.run-list')
+    if (spreadsheetReady && listNotComplete) {
       setTimeout(() => (
-        runListButton.click()
-      ), 0)
-    } else return;
+        runList.click()
+      ), 5000)
+    } else null;
   }
 
   render() {
@@ -28,46 +29,44 @@ class KeywordSearch extends React.Component {
       submitSpreadsheet,
       resetSearch
     } = this.props;
-
+    const keywordsProessed = keywordResults.length;
     return (
       <div className="excel-container">
-        {
-          loading ?
-            <div>
-              <h1>Loading results</h1>
-              <h3>{`Current list length: ${keywordResults.length} out of: ${spreadsheetEntries}`}</h3>
-            </div>
-            :
-            <div>
-              <h1>Keyword Query</h1>
-              <h3> Searches for a match within the name, alt_names, remarks, and title fields from all eleven lists.</h3>
-              {
-                !spreadsheetReady ?
-                  <SpreadsheetEntry
-                    submitSpreadsheet={submitSpreadsheet}
-                  />
-                  : null
-              }
-              <button
-                className="btn-run-list"
-                onClick={
-                  () => loadResults(keywordResults.length)
-                }
-                disabled={!spreadsheetReady}
-              >Run list
-              </button>
-              <button
-                onClick={resetSearch}
-                disabled={!spreadsheetReady}
-              >
-                Reset Search
-              </button>
-              <h3>{`Current list length: ${keywordResults.length} out of: ${spreadsheetEntries}`}
-              </h3>
-              <ExcelExport
-                keywordResults={keywordResults}
+        <div>
+          <h1>Keyword Query</h1>
+          <h3> Searches for a match within the name, alt_names, remarks, and title fields from all eleven lists.</h3>
+          {
+            !spreadsheetReady ?
+              <SpreadsheetEntry
+                submitSpreadsheet={submitSpreadsheet}
               />
+              : null
+          }
+          {!loading && spreadsheetReady ?
+            <div className="run-list"
+              onClick={
+                () => loadResults(keywordsProessed)
+              } />
+            : null
+          }
+
+          <button
+            onClick={resetSearch}
+            disabled={!spreadsheetReady}
+          >Reset Search
+          </button>
+          <h3>{`Current list length: ${keywordsProessed} out of: ${spreadsheetEntries}`}
+          </h3>
+          <ExcelExport
+            keywordResults={keywordResults}
+          />
+        </div>
+        {
+          keywordsProessed < spreadsheetEntries ?
+            <div className="loading-container">
+              <h1>Loading results</h1>
             </div>
+            : null
         }
       </div>
     );
