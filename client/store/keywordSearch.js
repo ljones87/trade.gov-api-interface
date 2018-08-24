@@ -78,8 +78,6 @@ export const resetKeywordSearchThunk = () => {
 }
 
 export const fetchKeywordResultsThunk = (currListLength) => {
-  console.log('===============Thunk hit')
-  console.log('===============',currListLength)
   return dispatch => {
     dispatch(getKeywordListResult());
     axios.post('/api/keyword', currListLength)

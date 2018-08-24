@@ -19,6 +19,11 @@ const SearchComponent = (props) => {
   const entriesProcessed = searchResults.length;
   const listProcessing = entriesProcessed < spreadsheetEntries
   const buttonText = listProcessing ? 'Cancel Search' : 'Reset Search'
+  const entriesRemaining = spreadsheetEntries - searchResults.length;
+  const minRemaining = Math.floor((entriesRemaining / 100) * 8) / 60;
+  const roundMin = minRemaining.toFixed(2)
+  console.log('===============time',roundMin)
+
 
   return (
     <div>

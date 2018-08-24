@@ -36220,6 +36220,10 @@ var SearchComponent = function SearchComponent(props) {
   var entriesProcessed = searchResults.length;
   var listProcessing = entriesProcessed < spreadsheetEntries;
   var buttonText = listProcessing ? 'Cancel Search' : 'Reset Search';
+  var entriesRemaining = spreadsheetEntries - searchResults.length;
+  var minRemaining = Math.floor(entriesRemaining / 100 * 8) / 60;
+  var roundMin = minRemaining.toFixed(2);
+  console.log('===============time', roundMin);
 
   return _react2.default.createElement(
     'div',
@@ -55270,8 +55274,6 @@ var resetKeywordSearchThunk = exports.resetKeywordSearchThunk = function resetKe
 };
 
 var fetchKeywordResultsThunk = exports.fetchKeywordResultsThunk = function fetchKeywordResultsThunk(currListLength) {
-  console.log('===============Thunk hit');
-  console.log('===============', currListLength);
   return function (dispatch) {
     dispatch(getKeywordListResult());
     _axios2.default.post('/api/keyword', currListLength).then(function (res) {
