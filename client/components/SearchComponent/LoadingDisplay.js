@@ -2,11 +2,9 @@ import React from 'react';
 
 const LoadingDisplay = (props) => {
   const {
-    entriesProcessed,
-    spreadsheetEntries
+    listProcessing
    } = props;
 
-   const listProcessing = entriesProcessed < spreadsheetEntries
 
   return listProcessing ?
     <div className="loading-container">

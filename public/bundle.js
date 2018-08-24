@@ -36218,6 +36218,8 @@ var SearchComponent = function SearchComponent(props) {
 
 
   var entriesProcessed = searchResults.length;
+  var listProcessing = entriesProcessed < spreadsheetEntries;
+  var buttonText = listProcessing ? 'Cancel Search' : 'Reset Search';
 
   return _react2.default.createElement(
     'div',
@@ -36238,7 +36240,7 @@ var SearchComponent = function SearchComponent(props) {
         onClick: resetSearch,
         disabled: !spreadsheetReady
       },
-      'Reset Search'
+      buttonText
     ),
     _react2.default.createElement(
       'h3',
@@ -36247,10 +36249,11 @@ var SearchComponent = function SearchComponent(props) {
     ),
     _react2.default.createElement(_ExcelExport2.default, {
       searchResults: searchResults,
-      searchType: searchType
+      searchType: searchType,
+      listProcessing: listProcessing
     }),
     _react2.default.createElement(_LoadingDisplay2.default, {
-      entriesProcessed: entriesProcessed, spreadsheetEntries: spreadsheetEntries
+      listProcessing: listProcessing
     })
   );
 };
@@ -41220,7 +41223,7 @@ exports = module.exports = __webpack_require__(223)(false);
 
 
 // module
-exports.push([module.i, ".excel-container {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  text-align: center; }\n\n.hidden {\n  visibility: hidden; }\n", ""]);
+exports.push([module.i, "*, .body {\n  font-family: 'Raleway', sans-serif; }\n\n.excel-container {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  text-align: center; }\n\n.hidden {\n  visibility: hidden; }\n", ""]);
 
 // exports
 
@@ -58448,24 +58451,30 @@ var ExcelSheet = _reactDataExport2.default.ExcelFile.ExcelSheet;
 var ExcelColumn = _reactDataExport2.default.ExcelFile.ExcelColumn;
 
 var ExcelExport = function ExcelExport(props) {
-  var searchResults = props.searchResults,
+  var listProcessing = props.listProcessing,
+      searchResults = props.searchResults,
       searchType = props.searchType;
 
-  var results = searchResults;
-  var searchTerm = searchType;
   var firstColumn = searchType;
   var lowerCaseType = searchType.slice(0, 1).toLowerCase().concat(searchType.slice(1, searchType.length));
+
   var firstColumnValue = lowerCaseType + 'Searched';
 
-  return _react2.default.createElement(
+  return listProcessing ? null : _react2.default.createElement(
     ExcelFile,
     null,
     _react2.default.createElement(
       ExcelSheet,
-      { data: results, name: ' Query Results' },
-      _react2.default.createElement(ExcelColumn, { label: firstColumn, value: firstColumnValue }),
+      {
+        data: searchResults,
+        name: searchType + ' Query Results'
+      },
       _react2.default.createElement(ExcelColumn, {
-        label: searchType + ' Query Results',
+        label: firstColumn,
+        value: firstColumnValue
+      }),
+      _react2.default.createElement(ExcelColumn, {
+        label: 'Results',
         value: function value(col) {
           return col.error ? col.error.message : col.data.total;
         }
@@ -58476,9 +58485,12 @@ var ExcelExport = function ExcelExport(props) {
           return col.error ? col.error.url : null;
         }
       }),
-      _react2.default.createElement(ExcelColumn, { label: 'Results Api', value: function value(col) {
+      _react2.default.createElement(ExcelColumn, {
+        label: 'Positive Result url',
+        value: function value(col) {
           return col.data && col.data.total > 0 ? col.api : null;
-        } })
+        }
+      })
     )
   );
 };
@@ -77852,7 +77864,7 @@ var SpreadsheetEntry = function SpreadsheetEntry(props) {
     _react2.default.createElement(
       "button",
       { type: "submit" },
-      "Submit Spreadsheet"
+      "Submit & Run"
     )
   ) : null;
 };
@@ -77912,11 +77924,8 @@ var _react2 = _interopRequireDefault(_react);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var LoadingDisplay = function LoadingDisplay(props) {
-  var entriesProcessed = props.entriesProcessed,
-      spreadsheetEntries = props.spreadsheetEntries;
+  var listProcessing = props.listProcessing;
 
-
-  var listProcessing = entriesProcessed < spreadsheetEntries;
 
   return listProcessing ? _react2.default.createElement(
     "div",

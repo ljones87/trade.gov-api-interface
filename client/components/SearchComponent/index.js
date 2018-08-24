@@ -17,6 +17,8 @@ const SearchComponent = (props) => {
   } = props;
 
   const entriesProcessed = searchResults.length;
+  const listProcessing = entriesProcessed < spreadsheetEntries
+  const buttonText = listProcessing ? 'Cancel Search' : 'Reset Search'
 
   return (
     <div>
@@ -33,17 +35,18 @@ const SearchComponent = (props) => {
       <button
         onClick={resetSearch}
         disabled={!spreadsheetReady}
-      >Reset Search
+      >{buttonText}
       </button>
-      <h3>{`Current list length: ${entriesProcessed} out of: ${spreadsheetEntries}`}
+      <h3>
+        {`Current list length: ${entriesProcessed} out of: ${spreadsheetEntries}`}
       </h3>
       <ExcelExport
         searchResults={searchResults}
         searchType={searchType}
+        listProcessing={listProcessing}
       />
-
       <LoadingDisplay
-        entriesProcessed={entriesProcessed} spreadsheetEntries={spreadsheetEntries}
+        listProcessing={listProcessing}
       />
     </div>
   );

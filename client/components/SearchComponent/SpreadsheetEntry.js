@@ -10,7 +10,7 @@ const SpreadsheetEntry = props => {
         name="spreadsheet"
         multiple="false"
       />
-      <button type="submit">Submit Spreadsheet</button>
+      <button type="submit">Submit & Run</button>
     </form>
   ) : null;
 };
