@@ -7,6 +7,7 @@ const ExcelColumn = ReactExport.ExcelFile.ExcelColumn;
 
 const ExcelExport = (props) => {
   const {
+    spreadsheetReady,
     listProcessing,
     searchResults,
     searchType
@@ -18,7 +19,7 @@ const ExcelExport = (props) => {
 
   const firstColumnValue = `${lowerCaseType}Searched`
 
-  return listProcessing ?
+  return listProcessing || !spreadsheetReady?
     null
     : (
     <ExcelFile>
