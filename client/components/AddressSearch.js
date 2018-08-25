@@ -21,7 +21,8 @@ class AddressSearch extends React.Component {
   render() {
 
     return (
-      <div className="excel-container">
+      <div className="query__container">
+      <div className="background"/>
         <h1>Address Query</h1>
         <h3>Searches against fields in the addresses array.</h3>
         <SearchComponent

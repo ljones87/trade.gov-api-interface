@@ -21,7 +21,8 @@ class KeywordSearch extends React.Component {
   render() {
 
     return (
-      <div className="excel-container">
+      <div className="query__container">
+      <div className="background"/>
       <div>
         <h1>Keyword Query</h1>
         <h3> Searches for a match within the name, alt_names, remarks, and title fields from all eleven lists.</h3>

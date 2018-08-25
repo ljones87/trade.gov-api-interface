@@ -27,7 +27,10 @@ module.exports = {
           'css-loader',
           'sass-loader'
         ]
-      }
+      },
+      {test: /\.(gif|png|jpe?g|svg|pdf)$/i,
+        loader: 'url-loader?limit=10000&fallback=file-loader&name=[name].[ext]'
+      },
     ]
   },
 };
