@@ -27014,7 +27014,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var formatMin = function formatMin(minutes) {
   var min = Math.floor(Math.abs(minutes));
-  var sec = Math.floor(Math.abs(minutes) * 60 % 60) + 8;
+  var sec = Math.floor((Math.abs(minutes) * 60 + 8) % 60);
   return min + ' minutes ' + sec + ' seconds';
 };
 
@@ -27034,7 +27034,6 @@ var SearchComponent = function SearchComponent(props) {
   var buttonText = listProcessing ? 'Cancel Search' : 'Reset Search';
   var entriesRemaining = spreadsheetEntries - searchResults.length;
   var minRemaining = Math.floor(entriesRemaining / 100 * 8) / 60;
-  //const roundMin = minRemaining.toFixed(2)
   var timeRemaining = formatMin(minRemaining);
 
   return _react2.default.createElement(
@@ -32041,7 +32040,7 @@ exports = module.exports = __webpack_require__(155)(false);
 
 
 // module
-exports.push([module.i, "*, .body {\n  font-family: 'Raleway', sans-serif; }\n\n.query__container {\n  display: block;\n  display: block;\n  width: 57%;\n  padding: 5%;\n  position: absolute;\n  right: 0; }\n\n.query__contents {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  text-align: center;\n  padding-top: 5%; }\n\n#spreadsheet-input {\n  font-family: sans-serif;\n  font-size: 14px; }\n\n#btn--submit {\n  margin: 10px 0 5px 0; }\n\n.logo {\n  background-image: url(" + escape(__webpack_require__(156)) + ");\n  height: 10%;\n  width: 77%;\n  z-index: 5;\n  position: absolute;\n  top: 3%;\n  left: 6%;\n  background-size: contain;\n  background-repeat: no-repeat; }\n\n.sidebar {\n  position: absolute;\n  display: block;\n  top: 0;\n  left: 0;\n  height: 100vh;\n  width: 25%;\n  background-color: #3f5096;\n  padding: 10% 4%;\n  color: whitesmoke; }\n\n.link__box {\n  margin: 15% 0; }\n\n.link {\n  color: whitesmoke;\n  text-decoration: none; }\n  .link:hover {\n    color: #f3dd41; }\n\n.hidden {\n  visibility: hidden; }\n", ""]);
+exports.push([module.i, "*, .body {\n  font-family: 'Raleway', sans-serif; }\n\n@keyframes fadeInOut {\n  0% {\n    opacity: 1; }\n  45% {\n    opacity: 0; }\n  100% {\n    opacity: 1; } }\n\n.heading--processing {\n  opacity: 1;\n  animation-name: fadeInOut;\n  animation-duration: 5s;\n  animation-iteration-count: infinite; }\n\n.query__container {\n  display: block;\n  display: block;\n  width: 57%;\n  padding: 5%;\n  position: absolute;\n  right: 0; }\n\n.query__contents {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  text-align: center;\n  padding-top: 5%; }\n\n/* ----- spreadsheet materialize components ---- */\n#spreadsheet-input {\n  font-family: sans-serif;\n  font-size: 14px; }\n\n#btn--submit {\n  margin: 10px 0 5px 0; }\n\n/*----------- Sidebar component --------- */\n.sidebar {\n  position: absolute;\n  display: block;\n  top: 0;\n  left: 0;\n  height: 100vh;\n  width: 25%;\n  background-color: #3f5096;\n  padding: 10% 4%;\n  color: whitesmoke; }\n\n.logo {\n  background-image: url(" + escape(__webpack_require__(156)) + ");\n  height: 10%;\n  width: 77%;\n  z-index: 5;\n  position: absolute;\n  top: 3%;\n  left: 6%;\n  background-size: contain;\n  background-repeat: no-repeat; }\n\n.link__box {\n  margin: 15% 0; }\n\n.link {\n  color: whitesmoke;\n  text-decoration: none; }\n  .link:hover {\n    color: #f3dd41; }\n\n.hidden {\n  visibility: hidden; }\n", ""]);
 
 // exports
 
@@ -76775,10 +76774,10 @@ var LoadingDisplay = function LoadingDisplay(props) {
   //
   return listProcessing ? _react2.default.createElement(
     'div',
-    { className: 'loading-container' },
+    null,
     _react2.default.createElement(
       'h3',
-      null,
+      { className: 'heading--processing' },
       'Processed: ' + entriesProcessed + ' out of: ' + spreadsheetEntries
     ),
     _react2.default.createElement('br', null),

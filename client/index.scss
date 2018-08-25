@@ -2,6 +2,26 @@
   font-family: 'Raleway', sans-serif;
 }
 
+@keyframes fadeInOut {
+  0% {
+    opacity: 1;
+  }
+  45% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.heading--processing {
+  opacity: 1;
+  animation-name: fadeInOut;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+}
+
+
 .query__container {
   display: block;
   display: block;
@@ -19,6 +39,8 @@
   padding-top: 5%;
 }
 
+/* ----- spreadsheet materialize components ---- */
+
 #spreadsheet-input {
   font-family: sans-serif;
   font-size: 14px;
@@ -26,6 +48,20 @@
 
 #btn--submit {
   margin: 10px 0 5px 0;
+}
+
+/*----------- Sidebar component --------- */
+
+.sidebar {
+  position: absolute;
+  display: block;
+  top: 0;
+  left:0;
+  height: 100vh;
+  width: 25%;
+  background-color: rgb(63, 80, 150);
+  padding: 10% 4%;
+  color: whitesmoke;
 }
 
 .logo {
@@ -38,19 +74,6 @@
   left: 6%;
   background-size: contain;
   background-repeat: no-repeat;
-
-}
-
-.sidebar {
-  position: absolute;
-  display: block;
-  top: 0;
-  left:0;
-  height: 100vh;
-  width: 25%;
-  background-color: rgb(63, 80, 150);
-  padding: 10% 4%;
-  color: whitesmoke;
 }
 
 .link__box {

@@ -13,8 +13,8 @@ const LoadingDisplay = (props) => {
   const value = (entriesProcessed / spreadsheetEntries) * 100;
   //
   return listProcessing ? (
-    <div className="loading-container">
-      <h3>
+    <div>
+      <h3 className="heading--processing">
         {`Processed: ${entriesProcessed} out of: ${spreadsheetEntries}`}
       </h3>
       <br />

@@ -7,7 +7,7 @@ import LoadingDisplay from './LoadingDisplay';
 
 const formatMin = (minutes) => {
   var min = Math.floor(Math.abs(minutes));
-  var sec = Math.floor((Math.abs(minutes) * 60) % 60) + 8;
+  var sec = Math.floor(((Math.abs(minutes) * 60) + 8) % 60) ;
   return `${min} minutes ${sec} seconds`;
  }
 
@@ -28,7 +28,6 @@ const SearchComponent = (props) => {
   const buttonText = listProcessing ? 'Cancel Search' : 'Reset Search'
   const entriesRemaining = spreadsheetEntries - searchResults.length;
   const minRemaining = Math.floor((entriesRemaining / 100) * 8) / 60;
-  //const roundMin = minRemaining.toFixed(2)
   const timeRemaining = formatMin(minRemaining)
 
   return (
