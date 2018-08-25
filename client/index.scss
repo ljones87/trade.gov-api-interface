@@ -3,15 +3,21 @@
 }
 
 .query__container {
+  display: block;
+  display: block;
+  width: 57%;
+  padding: 5%;
+  position: absolute;
+  right: 0;
+}
+
+.query__contents {
   display: flex;
-  width: 70%;
-  float:right;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding-top: 10%;
+  padding-top: 5%;
 }
-
 // .background {
 //   background-image: url('./assets/red.png');
 //   position: absolute;
@@ -40,6 +46,7 @@
 
 .sidebar {
   position: absolute;
+  display: block;
   top: 0;
   left:0;
   height: 100vh;

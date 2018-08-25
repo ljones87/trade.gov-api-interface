@@ -22,14 +22,15 @@ class AddressSearch extends React.Component {
 
     return (
       <div className="query__container">
-      <div className="background"/>
-        <h1>Address Query</h1>
-        <h3>Searches against fields in the addresses array.</h3>
-        <SearchComponent
-          {...this.props}
-          searchResults={this.props.addressResults}
-          searchType="Address"
-        />
+        <div className="query__contents">
+          <h1>Address Query</h1>
+          <h3>Searches against fields in the addresses array.</h3>
+          <SearchComponent
+            {...this.props}
+            searchResults={this.props.addressResults}
+            searchType="Address"
+          />
+        </div>
       </div>
     )
   }

@@ -32030,7 +32030,7 @@ exports = module.exports = __webpack_require__(155)(false);
 
 
 // module
-exports.push([module.i, "*, .body {\n  font-family: 'Raleway', sans-serif; }\n\n.query__container {\n  display: flex;\n  width: 70%;\n  float: right;\n  flex-direction: column;\n  align-items: center;\n  text-align: center;\n  padding-top: 10%; }\n\n.logo {\n  background-image: url(" + escape(__webpack_require__(156)) + ");\n  height: 70px;\n  width: 200px;\n  z-index: 5;\n  position: absolute;\n  top: 30px;\n  left: 6%;\n  background-size: cover;\n  background-repeat: no-repeat; }\n\n.sidebar {\n  position: absolute;\n  top: 0;\n  left: 0;\n  height: 100vh;\n  width: 25%;\n  background-color: #2a3871;\n  padding: 10% 4%;\n  color: whitesmoke; }\n\n.link__box {\n  margin: 15% 0; }\n\n.link {\n  color: whitesmoke;\n  text-decoration: none; }\n  .link:hover {\n    color: #f3dd41; }\n\n.hidden {\n  visibility: hidden; }\n", ""]);
+exports.push([module.i, "*, .body {\n  font-family: 'Raleway', sans-serif; }\n\n.query__container {\n  display: block;\n  display: block;\n  width: 57%;\n  padding: 5%;\n  position: absolute;\n  right: 0; }\n\n.query__contents {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  text-align: center;\n  padding-top: 5%; }\n\n.logo {\n  background-image: url(" + escape(__webpack_require__(156)) + ");\n  height: 70px;\n  width: 200px;\n  z-index: 5;\n  position: absolute;\n  top: 30px;\n  left: 6%;\n  background-size: cover;\n  background-repeat: no-repeat; }\n\n.sidebar {\n  position: absolute;\n  display: block;\n  top: 0;\n  left: 0;\n  height: 100vh;\n  width: 25%;\n  background-color: #2a3871;\n  padding: 10% 4%;\n  color: whitesmoke; }\n\n.link__box {\n  margin: 15% 0; }\n\n.link {\n  color: whitesmoke;\n  text-decoration: none; }\n  .link:hover {\n    color: #f3dd41; }\n\n.hidden {\n  visibility: hidden; }\n", ""]);
 
 // exports
 
@@ -57176,10 +57176,9 @@ var KeywordSearch = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         { className: 'query__container' },
-        _react2.default.createElement('div', { className: 'background' }),
         _react2.default.createElement(
           'div',
-          null,
+          { className: 'query__contents' },
           _react2.default.createElement(
             'h1',
             null,
@@ -57189,12 +57188,12 @@ var KeywordSearch = function (_React$Component) {
             'h3',
             null,
             ' Searches for a match within the name, alt_names, remarks, and title fields from all eleven lists.'
-          )
-        ),
-        _react2.default.createElement(_SearchComponent2.default, _extends({}, this.props, {
-          searchResults: this.props.keywordResults,
-          searchType: 'Keyword'
-        }))
+          ),
+          _react2.default.createElement(_SearchComponent2.default, _extends({}, this.props, {
+            searchResults: this.props.keywordResults,
+            searchType: 'Keyword'
+          }))
+        )
       );
     }
   }]);
@@ -76812,21 +76811,24 @@ var AddressSearch = function (_React$Component) {
       return _react2.default.createElement(
         'div',
         { className: 'query__container' },
-        _react2.default.createElement('div', { className: 'background' }),
         _react2.default.createElement(
-          'h1',
-          null,
-          'Address Query'
-        ),
-        _react2.default.createElement(
-          'h3',
-          null,
-          'Searches against fields in the addresses array.'
-        ),
-        _react2.default.createElement(_SearchComponent2.default, _extends({}, this.props, {
-          searchResults: this.props.addressResults,
-          searchType: 'Address'
-        }))
+          'div',
+          { className: 'query__contents' },
+          _react2.default.createElement(
+            'h1',
+            null,
+            'Address Query'
+          ),
+          _react2.default.createElement(
+            'h3',
+            null,
+            'Searches against fields in the addresses array.'
+          ),
+          _react2.default.createElement(_SearchComponent2.default, _extends({}, this.props, {
+            searchResults: this.props.addressResults,
+            searchType: 'Address'
+          }))
+        )
       );
     }
   }]);
