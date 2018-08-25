@@ -4,7 +4,9 @@ import { Link } from 'react-router-dom';
 const Sidebar = () => {
   return (
     <div className="sidebar">
-    <div className="logo" />
+      <Link to={'/'} >
+        <div className="logo" />
+      </Link>
       <h4>
         Search Consolodated Screening List By: </h4>
         <div className="link__box">

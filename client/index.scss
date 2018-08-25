@@ -1,5 +1,5 @@
 *, .body {
-  font-family: 'Raleway', sans-serif;
+  font-family: 'Raleway', serif;;
 }
 
 @keyframes fadeInOut {
@@ -21,9 +21,13 @@
   animation-iteration-count: infinite;
 }
 
+.heading__container {
+ @extend .query__container;
+ text-align: center;
+ margin-top: 15%;
+}
 
 .query__container {
-  display: block;
   display: block;
   width: 57%;
   padding: 5%;
