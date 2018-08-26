@@ -32,6 +32,4 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500).send(err.message || 'Internal server error.');
 });
 
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
-
-
+app.listen(PORT, () => console.log(`App running on port ${PORT}: http://localhost:2000/`));

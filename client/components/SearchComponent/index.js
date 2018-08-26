@@ -5,11 +5,11 @@ import SpreadsheetEntry from './SpreadsheetEntry';
 import RunList from './RunList';
 import LoadingDisplay from './LoadingDisplay';
 
-const formatMin = (minutes) => {
-  var min = Math.floor(Math.abs(minutes));
-  var sec = Math.floor(((Math.abs(minutes) * 60) + 8) % 60) ;
+const formatTime = (decimaltime) => {
+  var min = Math.floor(Math.abs(decimaltime));
+  var sec = Math.floor(((Math.abs(decimaltime) * 60)) % 60);
   return `${min} minutes ${sec} seconds`;
- }
+}
 
 const SearchComponent = (props) => {
   const {
@@ -27,8 +27,8 @@ const SearchComponent = (props) => {
   const listProcessing = entriesProcessed < spreadsheetEntries
   const buttonText = listProcessing ? 'Cancel Search' : 'Reset Search'
   const entriesRemaining = spreadsheetEntries - searchResults.length;
-  const minRemaining = Math.floor((entriesRemaining / 100) * 8) / 60;
-  const timeRemaining = formatMin(minRemaining)
+  const decimalTime = Math.floor((entriesRemaining / 100) * 8) / 60;
+  const timeRemaining = formatTime(decimalTime)
 
   return (
     <div>
@@ -42,19 +42,21 @@ const SearchComponent = (props) => {
         loadResults={loadResults}
         entriesProcessed={entriesProcessed}
       />
-      <Button
-        size="small"
-        color="secondary"
-        onClick={resetSearch}
-        disabled={!spreadsheetReady}
-      >{buttonText}
-      </Button>
-      <ExcelExport
-        searchResults={searchResults}
-        searchType={searchType}
-        listProcessing={listProcessing}
-        spreadsheetReady={spreadsheetReady}
-      />
+      <div className="btn__container">
+        <ExcelExport
+          searchResults={searchResults}
+          searchType={searchType}
+          listProcessing={listProcessing}
+          spreadsheetReady={spreadsheetReady}
+        />
+        <Button
+          size="small"
+          color="secondary"
+          onClick={resetSearch}
+          disabled={!spreadsheetReady}
+        >{buttonText}
+        </Button>
+      </div>
       <LoadingDisplay
         entriesProcessed={entriesProcessed}
         listProcessing={listProcessing}

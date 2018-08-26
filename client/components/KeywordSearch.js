@@ -23,46 +23,51 @@ class KeywordSearch extends React.Component {
     return (
       <div className="query__container">
         <div className="query__contents">
-            <h1>Keyword Query</h1>
-            <h3> Searches for a match within the name, alt_names, remarks, and title fields from all eleven lists.</h3>
-
+          <h1>Keyword Query</h1>
+          <h3> Searches for a match within the name, alt_names, remarks, and
+           title fields from all eleven lists.
+          </h3>
+          <p className="reminder">
+            To improve search performance, replace any ampersands (&) in spreadsheet
+            query column with 'and'
+         </p>
           <SearchComponent
             {...this.props}
             searchResults={this.props.keywordResults}
             searchType="Keyword"
           />
-          </div>
         </div>
-        )
-      }
-    }
+      </div>
+    )
+  }
+}
 
 const mapState = (state) => {
   return {
-          spreadsheetReady: state.keywordSearch.spreadsheetReady,
-        spreadsheetEntries: state.keywordSearch.spreadsheetEntries,
-        keywordResults: state.keywordSearch.results,
-        loading: state.keywordSearch.loading
-      };
-    };
+    spreadsheetReady: state.keywordSearch.spreadsheetReady,
+    spreadsheetEntries: state.keywordSearch.spreadsheetEntries,
+    keywordResults: state.keywordSearch.results,
+    loading: state.keywordSearch.loading
+  };
+};
 
 const mapDispatch = (dispatch) => {
   return {
-          resetSearch() {
-        dispatch(resetKeywordSearchThunk())
-      },
+    resetSearch() {
+      dispatch(resetKeywordSearchThunk())
+    },
     loadResults(currListLength) {
-          dispatch(fetchKeywordResultsThunk({ count: currListLength }));
-        },
+      dispatch(fetchKeywordResultsThunk({ count: currListLength }));
+    },
     submitSpreadsheet(event) {
-          event.preventDefault();
-        const e = event.target;
-        let spreadsheet = e.spreadsheet.value;
-        spreadsheet = spreadsheet.replace("C:\\fakepath\\", "");
-      dispatch(submitKeywordListThunk({spreadsheet}));
-      }
-    };
+      event.preventDefault();
+      const e = event.target;
+      let spreadsheet = e.spreadsheet.value;
+      spreadsheet = spreadsheet.replace("C:\\fakepath\\", "");
+      dispatch(submitKeywordListThunk({ spreadsheet }));
+    }
   };
+};
 
-  export default connect(mapState, mapDispatch)(KeywordSearch);
+export default connect(mapState, mapDispatch)(KeywordSearch);
 

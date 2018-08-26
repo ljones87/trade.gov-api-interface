@@ -43,6 +43,21 @@
   padding-top: 5%;
 }
 
+.btn__container {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  button {
+    margin: 15px;
+  }
+}
+
+.reminder {
+  width: 75%;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
 /* ----- spreadsheet materialize components ---- */
 
 #spreadsheet-input {
@@ -63,7 +78,7 @@
   left:0;
   height: 100vh;
   width: 25%;
-  background-color: rgb(63, 80, 150);
+  background-color: rgb(83, 127, 206);
   padding: 10% 4%;
   color: whitesmoke;
 }

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactExport from 'react-data-export';
+import Button from '@material-ui/core/Button'
 
 const ExcelFile = ReactExport.ExcelFile;
 const ExcelSheet = ReactExport.ExcelFile.ExcelSheet;
@@ -12,17 +13,18 @@ const ExcelExport = (props) => {
     searchResults,
     searchType
   } = props;
+
   const firstColumn = searchType;
   const lowerCaseType = searchType.slice(0, 1)
     .toLowerCase()
     .concat(searchType.slice(1, searchType.length));
-
   const firstColumnValue = `${lowerCaseType}Searched`
 
-  return listProcessing || !spreadsheetReady?
+  return listProcessing || !spreadsheetReady ?
     null
-    : (
-    <ExcelFile>
+    : <ExcelFile element={
+      <Button variant="outlined" size="small">Download Results</Button>
+    }>
       <ExcelSheet
         data={searchResults}
         name={`${searchType} Query Results`}
@@ -46,7 +48,6 @@ const ExcelExport = (props) => {
         />
       </ExcelSheet>
     </ExcelFile>
-  );
 };
 
 export default ExcelExport;
