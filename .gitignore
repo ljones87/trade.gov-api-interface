@@ -1,2 +1,9 @@
 *secrets.js
 *.xlsx
+
+# Compiled JS
+public/bundle.js
+
+# Ignore all node_modules
+node_modules/*
+
