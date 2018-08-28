@@ -9,12 +9,13 @@ class KeywordSearch extends React.Component {
     const numRun = this.props.keywordResults.length
     const total = this.props.spreadsheetEntries
     const { spreadsheetReady } = this.props;
-    const listNotComplete = numRun < total
+    const listNotComplete = numRun < total;
+    const timeout = numRun < 100 ? 0 : 8000;
     const runList = document.querySelector('.run-list')
     if (spreadsheetReady && listNotComplete) {
       setTimeout(() => (
         runList.click()
-      ), 8000)
+      ), timeout)
     } else return;
   }
 

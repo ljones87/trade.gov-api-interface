@@ -10,7 +10,7 @@ const LoadingDisplay = (props) => {
   } = props;
 
   const value = (entriesProcessed / spreadsheetEntries) * 100;
-  //
+
   return listProcessing ? (
     <div>
       <h3 className="heading--processing">

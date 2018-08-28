@@ -30,7 +30,7 @@ const Sidebar = () => {
           className="link"
           target="_blank"
           rel="noopener noreferrer"
-        >To export.gov gui
+        >To export.gov GUI
         </a>
       </div>
     </div>
