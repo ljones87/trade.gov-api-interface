@@ -8,7 +8,7 @@ import LoadingDisplay from './LoadingDisplay';
 const formatTime = (decimaltime) => {
   var min = Math.floor(Math.abs(decimaltime));
   var sec = Math.floor(((Math.abs(decimaltime) * 60)) % 60);
-  return `${min} minutes ${sec} seconds`;
+  return `${min} min ${sec} sec`;
 }
 
 const SearchComponent = (props) => {

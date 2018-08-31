@@ -50,7 +50,6 @@ router.post('/', (req, res, next) => {
           finalAddressResults.push(formattedReturn);
         })
         .catch(err => (
-          //  console.log('===============SERVER ERROR RESPONSE', err.response || '800'),
           finalAddressResults.push({
             addressSearched: address,
             error: {

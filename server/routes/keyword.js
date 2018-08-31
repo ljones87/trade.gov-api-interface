@@ -66,7 +66,6 @@ router.post('/', (req, res, next) => {
    .catch(err => {
      res.sendStatus(500);
      console.log('=============== fetch data error', err);
-
    });
  }
 });
