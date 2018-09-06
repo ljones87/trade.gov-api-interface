@@ -1,0 +1,57 @@
+/*----------- Sidebar component --------- */
+
+.sidebar {
+  position: absolute;
+  display: block;
+  top: 0;
+  left:0;
+  height: 100vh;
+  width: 25%;
+  background-color: rgba(37, 41, 52, .95);
+  padding: 10% 4%;
+  color: whitesmoke;
+  box-shadow: 0px 0px 20px 0px rgba(37, 41, 52, 0.8)
+}
+.heading--sidebar {
+  margin-top: 40px;
+}
+
+.logo {
+  background-image: url('../assets/red_white_text.png');
+  height: 10%;
+  width: 77%;
+  z-index: 5;
+  position: absolute;
+  top: 3%;
+  left: 6%;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.link__box {
+  margin: 15% 0;
+  width: fit-content;
+}
+
+.link {
+  color: whitesmoke;
+  text-decoration: none;
+  transition: all 2s linear;
+  &:after {
+    content: '';
+    width: 0px;
+    height: 1px;
+    display: block;
+    background: rgb(240, 240, 240);
+    transition: 200ms;
+  }
+  &:hover {
+    &:after {
+      width: 110%;
+    }
+  }
+}
+
+.hidden {
+  visibility: hidden;
+}

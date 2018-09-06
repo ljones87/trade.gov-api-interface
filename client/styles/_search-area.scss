@@ -1,0 +1,50 @@
+.heading__container {
+  @extend .query__container;
+  text-align: center;
+  margin-top: 15%;
+ }
+
+ .query__container {
+   display: block;
+   width: 57%;
+   padding: 5%;
+   position: absolute;
+   right: 0;
+ }
+
+ .query__contents {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   text-align: center;
+   padding-top: 5%;
+ }
+
+ .btn__container {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  button {
+    margin: 15px;
+  }
+}
+
+/* ----- spreadsheet materialize components ---- */
+
+#spreadsheet-input {
+  font-family: sans-serif;
+  font-size: 14px;
+}
+
+#btn--submit {
+  margin: 10px 0 5px 0;
+}
+
+/* loading component */
+
+.heading--processing {
+  opacity: 1;
+  animation-name: fadeInOut;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+}

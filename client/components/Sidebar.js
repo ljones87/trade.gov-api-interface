@@ -7,7 +7,7 @@ const Sidebar = () => {
       <Link to={'/'} >
         <div className="logo" />
       </Link>
-      <h4>
+      <h4 className="heading--sidebar">
         Search Consolidated Screening List By: </h4>
         <div className="link__box">
           <Link

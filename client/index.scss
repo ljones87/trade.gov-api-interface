@@ -1,112 +1,15 @@
-*, .body {
-  font-family: 'Raleway', serif;;
-}
 
-@keyframes fadeInOut {
-  0% {
-    opacity: 1;
-  }
-  45% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
 
-.heading--processing {
-  opacity: 1;
-  animation-name: fadeInOut;
-  animation-duration: 5s;
-  animation-iteration-count: infinite;
-}
 
-.heading__container {
- @extend .query__container;
- text-align: center;
- margin-top: 15%;
-}
 
-.query__container {
-  display: block;
-  width: 57%;
-  padding: 5%;
-  position: absolute;
-  right: 0;
-}
 
-.query__contents {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding-top: 5%;
-}
 
-.btn__container {
-  display: flex;
-  flex-direction: column;
-  align-content: center;
-  button {
-    margin: 15px;
-  }
-}
 
-.reminder {
-  width: 75%;
-  margin-bottom: 15px;
-  font-size: 14px;
-}
 
-/* ----- spreadsheet materialize components ---- */
 
-#spreadsheet-input {
-  font-family: sans-serif;
-  font-size: 14px;
-}
 
-#btn--submit {
-  margin: 10px 0 5px 0;
-}
 
-/*----------- Sidebar component --------- */
 
-.sidebar {
-  position: absolute;
-  display: block;
-  top: 0;
-  left:0;
-  height: 100vh;
-  width: 25%;
-  background-color: rgb(83, 127, 206);
-  padding: 10% 4%;
-  color: whitesmoke;
-}
 
-.logo {
-  background-image: url('./assets/red.png');
-  height: 10%;
-  width: 77%;
-  z-index: 5;
-  position: absolute;
-  top: 3%;
-  left: 6%;
-  background-size: contain;
-  background-repeat: no-repeat;
-}
 
-.link__box {
-  margin: 15% 0;
-}
 
-.link {
-  color: whitesmoke;
-  text-decoration: none;
-  &:hover {
-    color: #f3dd41;
-  }
-}
-
-.hidden {
-  visibility: hidden;
-}
