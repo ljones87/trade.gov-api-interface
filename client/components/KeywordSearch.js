@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { fetchKeywordResultsThunk, submitKeywordListThunk, resetKeywordSearchThunk } from '../store';
 import SearchComponent from './SearchComponent';
+import XLSX from 'xlsx';
 
 class KeywordSearch extends React.Component {
 
@@ -60,12 +61,24 @@ const mapDispatch = (dispatch) => {
     loadResults(currListLength) {
       dispatch(fetchKeywordResultsThunk({ count: currListLength }));
     },
-    submitSpreadsheet(event) {
-      event.preventDefault();
-      const e = event.target;
-      let spreadsheet = e.spreadsheet.value;
+    submitSpreadsheet(e) {
+      e.preventDefault();
+      let reader = new FileReader()
+      reader.onload = (e) => {
+        console.log('=============== onload',e.target.result)
+        let sheet = e.target.result
+        dispatch(submitKeywordListThunk(sheet));
+      }
+      let spreadsheet = e.target.spreadsheet.value;
       spreadsheet = spreadsheet.replace("C:\\fakepath\\", "");
-      dispatch(submitKeywordListThunk({ spreadsheet }));
+       let file = document.querySelector('input').files[0];
+       console.log('===============',file)
+
+      // spreadsheet = XLSX.write(XLSX.readFile(file,{type: "buffer"}))
+
+      const writtenFile = XLSX.readFile(file.name)
+      console.log('===============written file', writtenFile)
+
     }
   };
 };

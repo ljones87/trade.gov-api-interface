@@ -16,6 +16,7 @@ let finalKeywordResults = [];
 
 router.post('/spreadsheet', (req, res, next) => {
  spreadsheet = req.body.spreadsheet;
+ console.log('===============',req.body)
  spreadsheetForAnalysis = XLSX.readFile(spreadsheet);
  worksheet = spreadsheetForAnalysis.Sheets[spreadsheetForAnalysis.SheetNames[0]];
  data = XLSX.utils.sheet_to_json(worksheet, { header: 1 }, {raw: false});

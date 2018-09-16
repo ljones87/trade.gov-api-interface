@@ -56,10 +56,17 @@ const resetKeywordSearchError = () => (
 /* ------------       THUNK CREATORS     ------------------ */
 
 export const submitKeywordListThunk = (spreadsheet) => {
+  console.log('===============thunk spreadst', spreadsheet)
+
   return dispatch => {
     dispatch(submitKeywordList());
-    axios.post('/api/keyword/spreadsheet', spreadsheet)
+    axios.post('/api/keyword/spreadsheet', spreadsheet, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
       .then(res => {
+        console.log('===============res data', res.data)
         dispatch(submitKeywordListSuccess(res.data.listlength));
       })
       .catch(err => submitKeywordListError(err));
