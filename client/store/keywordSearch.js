@@ -60,11 +60,7 @@ export const submitKeywordListThunk = (spreadsheet) => {
 
   return dispatch => {
     dispatch(submitKeywordList());
-    axios.post('/api/keyword/spreadsheet', spreadsheet, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
+    axios.post('/api/keyword/spreadsheet', spreadsheet)
       .then(res => {
         console.log('===============res data', res.data)
         dispatch(submitKeywordListSuccess(res.data.listlength));

@@ -63,22 +63,13 @@ const mapDispatch = (dispatch) => {
     },
     submitSpreadsheet(e) {
       e.preventDefault();
-      let reader = new FileReader()
-      reader.onload = (e) => {
-        console.log('=============== onload',e.target.result)
-        let sheet = e.target.result
-        dispatch(submitKeywordListThunk(sheet));
-      }
+
       let spreadsheet = e.target.spreadsheet.value;
+      console.log('===============',spreadsheet)
       spreadsheet = spreadsheet.replace("C:\\fakepath\\", "");
        let file = document.querySelector('input').files[0];
        console.log('===============',file)
-
-      // spreadsheet = XLSX.write(XLSX.readFile(file,{type: "buffer"}))
-
-      const writtenFile = XLSX.readFile(file.name)
-      console.log('===============written file', writtenFile)
-
+      dispatch(submitKeywordListThunk({spreadsheet}));
     }
   };
 };

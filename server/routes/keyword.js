@@ -4,8 +4,13 @@ const axios = require('axios');
 if (process.env.NODE_ENV !== 'production') require('../../secrets');
 const apiKey = process.env.API_KEY;
 const XLSX = require('xlsx');
+const multer = require("multer");
+const upload = multer({ dest: '/' });
+
+
 let spreadsheet, spreadsheetForAnalysis, data, worksheet;
 let apiInput = [];
+
 
 //formats api call
 const keywordlinkGenerator = (key, name) => {
@@ -14,7 +19,7 @@ const keywordlinkGenerator = (key, name) => {
 
 let finalKeywordResults = [];
 
-router.post('/spreadsheet', (req, res, next) => {
+router.post('/spreadsheet',  (req, res, next) => {
  spreadsheet = req.body.spreadsheet;
  console.log('===============',req.body)
  spreadsheetForAnalysis = XLSX.readFile(spreadsheet);
