@@ -67,7 +67,7 @@ router.post('/', (req, res, next) => {
                 `${err.response.status}, ${err.response.satusText}`
                 :
                 `error response malformed`,
-              url: err.response.request.res.responseUrl || keywordlinkGenerator(apiKey, query[0])
+              url: keywordlinkGenerator(apiKey, query[0])
             }
           })
         ));
@@ -77,7 +77,7 @@ router.post('/', (req, res, next) => {
         res.send(finalKeywordResults)
       ))
       .catch(err => {
-        res.sendStatus(500);
+        res.status(500).send(err);
         console.log('=============== fetch data error', err);
       });
   }

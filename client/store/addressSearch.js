@@ -50,8 +50,8 @@ const resetAddressSearchSuccess = () => (
   { type: RESET_ADDRESS_SEARCH_SUCESS }
 );
 
-const resetAddressSearchError = () => (
-  { type: RESET_ADDRESS_SEARCH_ERROR }
+const resetAddressSearchError = (err) => (
+  { type: RESET_ADDRESS_SEARCH_ERROR, err }
 );
 
 /* ------------       THUNK CREATORS     ------------------ */

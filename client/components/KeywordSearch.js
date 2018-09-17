@@ -13,7 +13,7 @@ class KeywordSearch extends React.Component {
     const listNotComplete = numRun < total;
     const timeout = numRun < 100 ? 0 : 8000;
     const runList = document.querySelector('.run-list')
-    if (spreadsheetReady && listNotComplete) {
+    if (spreadsheetReady && listNotComplete && runList) {
       setTimeout(() => (
         runList.click()
       ), timeout)
@@ -21,18 +21,29 @@ class KeywordSearch extends React.Component {
   }
 
   render() {
+    const { error } = this.props
 
     return (
       <div className="query__container">
         <div className="query__contents">
-          <h1>Keyword Query</h1>
-          <h3> Searches for a match within the name, alt_names, remarks, and
-           title fields from all eleven lists.
-          </h3>
-          <p className="reminder">
-            To improve search performance, replace any ampersands (&) in spreadsheet
-            query column with 'and'
-         </p>
+          {error ?
+            <React.Fragment>
+              <h1>Keyword Query</h1>
+              <h3 style={{ color: 'red' }}> Sorry, there was an error processing the list, please refresh and try again.
+            </h3>
+            </React.Fragment>
+            :
+            <React.Fragment>
+              <h1>Keyword Query</h1>
+              <h3> Searches for a match within the name, alt_names, remarks, and
+               title fields from all eleven lists.
+              </h3>
+              <p className="reminder">
+                To improve search performance, replace any ampersands (&) in spreadsheet
+                query column with 'and'
+              </p>
+            </React.Fragment>
+          }
           <SearchComponent
             {...this.props}
             searchResults={this.props.keywordResults}
@@ -49,7 +60,8 @@ const mapState = (state) => {
     spreadsheetReady: state.keywordSearch.spreadsheetReady,
     spreadsheetEntries: state.keywordSearch.spreadsheetEntries,
     keywordResults: state.keywordSearch.results,
-    loading: state.keywordSearch.loading
+    loading: state.keywordSearch.loading,
+    error: state.keywordSearch.error
   };
 };
 
@@ -70,23 +82,3 @@ const mapDispatch = (dispatch) => {
 };
 
 export default connect(mapState, mapDispatch)(KeywordSearch);
-
-/*attempts 1 and 2
-
-const reader  = new FileReader()
-      console.log('===============FIL',file)
-      const loadedFile = reader.onload = ((f) => {
-        // const data = new FormData(f);
-        // data.append('f', f, f.name);
-        var data = new Uint8Array(f);
-
-        const blob = new Blob([f], {type: f.type} )
-
-        return [data, blob]
-      })(file)
-      console.log('===============loadedfile', loadedFile)
-      reader.readAsArrayBuffer(loadedFile[1])
-      spreadsheet = loadedFile[0]
-      console.log('===============sheet',spreadsheet)
-
-      */

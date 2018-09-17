@@ -49,8 +49,8 @@ const resetKeywordSearchSuccess = () => (
   { type: RESET_KEYWORD_SEARCH_SUCESS }
 );
 
-const resetKeywordSearchError = () => (
-  { type: RESET_KEYWORD_SEARCH_ERROR }
+const resetKeywordSearchError = (err) => (
+  { type: RESET_KEYWORD_SEARCH_ERROR, err }
 );
 
 /* ------------       THUNK CREATORS     ------------------ */
@@ -89,7 +89,9 @@ export const fetchKeywordResultsThunk = (currListLength) => {
     dispatch(getKeywordListResult());
     axios.post('/api/keyword', currListLength)
       .then(res => (
+        res.data.length ?
         dispatch(getKeywordListResultSuccess(res.data))
+        : dispatch(getKeywordListResultError(res.data))
       ))
       .catch(err => getKeywordListResultError(err));
   };

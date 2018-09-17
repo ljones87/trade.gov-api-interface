@@ -20,12 +20,21 @@ class AddressSearch extends React.Component {
   }
 
   render() {
-
+    const { error } = this.props
     return (
       <div className="query__container">
         <div className="query__contents">
-          <h1>Address Query</h1>
-          <h3>Searches against fields in the addresses array.</h3>
+          {error ?
+            <React.Fragment>
+              <h1>Address Query</h1>
+              <h3>Sorry, there was an error processing the list, please refresh and try again.</h3>
+            </React.Fragment>
+            :
+            <React.Fragment>
+              <h1>Address Query</h1>
+              <h3>Searches against fields in the addresses array.</h3>
+            </React.Fragment>
+          }
           <SearchComponent
             {...this.props}
             searchResults={this.props.addressResults}
@@ -39,6 +48,7 @@ class AddressSearch extends React.Component {
 
 const mapState = (state) => {
   return {
+    error: state.addressSearch.error,
     spreadsheetReady: state.addressSearch.spreadsheetReady,
     spreadsheetEntries: state.addressSearch.spreadsheetEntries,
     addressResults: state.addressSearch.results,

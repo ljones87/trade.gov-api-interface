@@ -3,6 +3,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 
 const LoadingDisplay = (props) => {
   const {
+    error,
     spreadsheetEntries,
     entriesProcessed,
     listProcessing,
@@ -11,7 +12,7 @@ const LoadingDisplay = (props) => {
 
   const value = (entriesProcessed / spreadsheetEntries) * 100;
 
-  return listProcessing ? (
+  return listProcessing && !error ? (
     <div>
       <h3 className="heading--processing">
         {`Processed: ${entriesProcessed} out of: ${spreadsheetEntries}`}
