@@ -12,7 +12,7 @@ const SpreadsheetEntry = props => {
     <form onSubmit={submitSpreadsheet} encType="multipart/form-data">
       <Input
         type="file"
-        accept=".xls,.xlsx,.ods"
+        accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
         name="spreadsheet"
         multiple="false"
         id="spreadsheet"

@@ -27,17 +27,20 @@ let finalAddressResults = [];
 
 router.post("/spreadsheet", upload.single("file"), (req, res, next) => {
   const file = req.file; // file passed from client
-  spreadsheetForAnalysis = XLSX.readFile(file.path);
-  worksheet =
-    spreadsheetForAnalysis.Sheets[spreadsheetForAnalysis.SheetNames[0]];
-  data = XLSX.utils.sheet_to_json(worksheet, { header: 1 }, { raw: false });
 
-  data = data.filter(
-    cellContent => cellContent[0] && cellContent[0].length > 1
-  );
-  data.shift();
-  res.send({ listlength: data.length });
-});
+  if (file.mimetype.includes('sheet') || file.mimetype.includes('excel')) {
+    spreadsheetForAnalysis = XLSX.readFile(file.path);
+    worksheet = spreadsheetForAnalysis.Sheets[spreadsheetForAnalysis.SheetNames[0]];
+    data = XLSX.utils.sheet_to_json(worksheet, { header: 1 }, { raw: false });
+    data = data.filter(
+      cellContent => cellContent[0] && cellContent[0].length > 1);
+    data.shift();
+    res.send({ listlength: data.length })
+  } else {
+      res.send('Only excel file inputs allowed')
+  }
+    next()
+  });
 
 router.delete("/spreadsheet/reset", (req, res, next) => {
   spreadsheet = null;

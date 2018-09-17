@@ -27,7 +27,7 @@ class AddressSearch extends React.Component {
           {error ?
             <React.Fragment>
               <h1>Address Query</h1>
-              <h3>Sorry, there was an error processing the list, please refresh and try again.</h3>
+              <h3 style={{ color: 'red' }}>{`Sorry, there was an errorprocessing the list : ${error}, please refresh and try again.`}</h3>
             </React.Fragment>
             :
             <React.Fragment>

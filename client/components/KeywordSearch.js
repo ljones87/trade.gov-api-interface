@@ -29,13 +29,13 @@ class KeywordSearch extends React.Component {
           {error ?
             <React.Fragment>
               <h1>Keyword Query</h1>
-              <h3 style={{ color: 'red' }}> Sorry, there was an error processing the list, please refresh and try again.
+              <h3 style={{ color: 'red' }}> {`Sorry, there was an errorprocessing the list : ${error}, please refresh and try again.`}
             </h3>
             </React.Fragment>
             :
             <React.Fragment>
               <h1>Keyword Query</h1>
-              <h3> Searches for a match within the name, alt_names, remarks, and
+              <h3>Searches for a match within the name, alt_names, remarks, and
                title fields from all eleven lists.
               </h3>
               <p className="reminder">

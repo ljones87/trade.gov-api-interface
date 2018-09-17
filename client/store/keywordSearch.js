@@ -67,7 +67,10 @@ export const submitKeywordListThunk = (spreadsheet) => {
     var config = { headers: { 'Content-Type': undefined } };
     axios.post('/api/keyword/spreadsheet', data, config)
       .then(res => {
-        dispatch(submitKeywordListSuccess(res.data.listlength));
+        res.data.listlength ?
+          dispatch(submitKeywordListSuccess(res.data.listlength))
+        :
+          dispatch(submitKeywordListError(res.data))
       })
       .catch(err => submitKeywordListError(err));
   };

@@ -68,7 +68,10 @@ export const submitAddressListThunk = (spreadsheet) => {
     var config = { headers: { 'Content-Type': undefined } };
     axios.post('/api/address/spreadsheet', data, config)
       .then(res => {
-        dispatch(submitAddressListSuccess(res.data.listlength));
+        res.data.listlength ?
+          dispatch(submitAddressListSuccess(res.data.listlength))
+        :
+          dispatch(submitAddressListError(res.data))
       })
       .catch(err => submitAddressListError(err));
   };

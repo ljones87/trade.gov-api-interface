@@ -7,10 +7,10 @@
     "node": ">= 7.0.0"
   },
   "scripts": {
-    "start": "node server/index.js",
+    "start": "npm run build-client-watch & npm run start-server",
+    "start-node": "node server/index.js",
     "build-client": "webpack",
     "build-client-watch": "webpack -w",
-    "start-dev": "npm run build-client-watch & npm run start-server",
     "start-server": "nodemon server/index.js"
   },
   "author": "ljones",
