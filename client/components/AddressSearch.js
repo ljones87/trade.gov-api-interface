@@ -9,12 +9,13 @@ class AddressSearch extends React.Component {
     const numRun = this.props.addressResults.length
     const total = this.props.spreadsheetEntries
     const { spreadsheetReady } = this.props;
-    const listNotComplete = numRun < total
+    const listNotComplete = numRun < total;
+    const timeout = numRun < 100 ? 0 : 8000;
     const runList = document.querySelector('.run-list')
-    if (spreadsheetReady && listNotComplete) {
+    if (spreadsheetReady && listNotComplete && runList) {
       setTimeout(() => (
         runList.click()
-      ), 8000)
+      ), timeout)
     } else return;
   }
 
@@ -56,7 +57,7 @@ const mapDispatch = (dispatch) => {
     submitSpreadsheet(e) {
       e.preventDefault();
       let file = document.querySelector('input').files[0];
-      dispatch(submitAddressListThunk({ spreadsheet }));
+      dispatch(submitAddressListThunk(file));
     }
   };
 };

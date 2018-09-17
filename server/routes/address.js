@@ -21,22 +21,17 @@ const addresslinkGenerator = (key, address) => {
   return `https://api.trade.gov/consolidated_screening_list/search?api_key=${key}&address=${address}`;
 }
 
-
-
-
 let spreadsheet, spreadsheetForAnalysis, data, worksheet;
 let apiInput = [];
-
-
 let finalAddressResults = [];
 
 router.post('/spreadsheet', upload.single('file'), (req, res, next) => {
   const file = req.file; // file passed from client
-
   spreadsheetForAnalysis = XLSX.readFile(file.path);
   worksheet = spreadsheetForAnalysis.Sheets[spreadsheetForAnalysis.SheetNames[0]];
   data = XLSX.utils.sheet_to_json(worksheet, { header: 1 }, { raw: false });
-  data = data.filter(cellContent => cellContent[0].length > 1);
+
+  data = data.filter(cellContent => cellContent[0] && cellContent[0].length > 1 );
   data.shift();
   res.send({ listlength: data.length });
 });
@@ -73,7 +68,7 @@ router.post('/', (req, res, next) => {
                 `${err.response.status}, ${err.response.satusText}`
                 :
                 `error response malformed`,
-              url: err.response.request.res.responseUrl || addresslinkGenerator(apiKey, query[0])
+              url: addresslinkGenerator(apiKey, query[0])
             }
           })
         ));

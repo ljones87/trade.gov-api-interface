@@ -23,10 +23,6 @@ const keywordlinkGenerator = (key, name) => {
 
 let spreadsheet, spreadsheetForAnalysis, data, worksheet;
 let apiInput = [];
-
-
-
-
 let finalKeywordResults = [];
 
 router.post('/spreadsheet', upload.single('file'), (req, res, next) => {
