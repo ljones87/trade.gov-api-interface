@@ -58,9 +58,15 @@ const resetAddressSearchError = () => (
 
 export const submitAddressListThunk = (spreadsheet) => {
 
+  let data = new FormData();
+  data.append('file', spreadsheet);
+  data.append('name', spreadsheet.name);
+
+  var config = { headers: { 'Content-Type': undefined } };
+
   return dispatch => {
     dispatch(submitAddressList());
-    axios.post('/api/address/spreadsheet', spreadsheet)
+    axios.post('/api/address/spreadsheet', data, config)
       .then(res => {
         dispatch(submitAddressListSuccess(res.data.listlength));
       })

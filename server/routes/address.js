@@ -3,21 +3,37 @@ module.exports = router;
 const axios = require('axios');
 if (process.env.NODE_ENV !== 'production') require('../../secrets');
 const apiKey = process.env.API_KEY;
-
 const XLSX = require('xlsx');
-let spreadsheet, spreadsheetForAnalysis, data, worksheet;
-let apiInput = [];
+const multer = require('multer');
+
+//saves file locally for processing
+const storage = multer.diskStorage({
+  destination: './uploads',
+  filename(req, file, cb) {
+    cb(null, `${new Date()}-${file.originalname}`);
+  },
+});
+
+const upload = multer({ storage });
 
 //formats api call
 const addresslinkGenerator = (key, address) => {
   return `https://api.trade.gov/consolidated_screening_list/search?api_key=${key}&address=${address}`;
 }
 
+
+
+
+let spreadsheet, spreadsheetForAnalysis, data, worksheet;
+let apiInput = [];
+
+
 let finalAddressResults = [];
 
-router.post('/spreadsheet', (req, res, next) => {
-  spreadsheet = req.body.spreadsheet;
-  spreadsheetForAnalysis = XLSX.readFile(spreadsheet);
+router.post('/spreadsheet', upload.single('file'), (req, res, next) => {
+  const file = req.file; // file passed from client
+
+  spreadsheetForAnalysis = XLSX.readFile(file.path);
   worksheet = spreadsheetForAnalysis.Sheets[spreadsheetForAnalysis.SheetNames[0]];
   data = XLSX.utils.sheet_to_json(worksheet, { header: 1 }, { raw: false });
   data = data.filter(cellContent => cellContent[0].length > 1);

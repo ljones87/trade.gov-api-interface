@@ -3,9 +3,13 @@ import Button from '@material-ui/core/Button';
 import Input from '@material-ui/core/Input';
 
 const SpreadsheetEntry = props => {
-  const { submitSpreadsheet, spreadsheetReady } = props;
+  const {
+    submitSpreadsheet,
+    spreadsheetReady,
+  } = props;
+
   return !spreadsheetReady ? (
-    <form onSubmit={submitSpreadsheet} method="post" encType="multipart/form-data">
+    <form onSubmit={submitSpreadsheet} encType="multipart/form-data">
       <Input
         type="file"
         accept=".xls,.xlsx,.ods"

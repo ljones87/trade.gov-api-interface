@@ -63,16 +63,30 @@ const mapDispatch = (dispatch) => {
     },
     submitSpreadsheet(e) {
       e.preventDefault();
-
-      let spreadsheet = e.target.spreadsheet.value;
-      console.log('===============',spreadsheet)
-      spreadsheet = spreadsheet.replace("C:\\fakepath\\", "");
-       let file = document.querySelector('input').files[0];
-       console.log('===============',file)
-      dispatch(submitKeywordListThunk({spreadsheet}));
+      let file = document.querySelector('input').files[0];
+      dispatch(submitKeywordListThunk(file));
     }
   };
 };
 
 export default connect(mapState, mapDispatch)(KeywordSearch);
 
+/*attempts 1 and 2
+
+const reader  = new FileReader()
+      console.log('===============FIL',file)
+      const loadedFile = reader.onload = ((f) => {
+        // const data = new FormData(f);
+        // data.append('f', f, f.name);
+        var data = new Uint8Array(f);
+
+        const blob = new Blob([f], {type: f.type} )
+
+        return [data, blob]
+      })(file)
+      console.log('===============loadedfile', loadedFile)
+      reader.readAsArrayBuffer(loadedFile[1])
+      spreadsheet = loadedFile[0]
+      console.log('===============sheet',spreadsheet)
+
+      */

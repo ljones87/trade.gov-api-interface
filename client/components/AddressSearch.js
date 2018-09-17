@@ -53,11 +53,9 @@ const mapDispatch = (dispatch) => {
     loadResults(currListLength) {
       dispatch(fetchAddressResultsThunk({ count: currListLength }));
     },
-    submitSpreadsheet(event) {
-      event.preventDefault();
-      const e = event.target;
-      let spreadsheet = e.spreadsheet.value;
-      spreadsheet = spreadsheet.replace("C:\\fakepath\\", "");
+    submitSpreadsheet(e) {
+      e.preventDefault();
+      let file = document.querySelector('input').files[0];
       dispatch(submitAddressListThunk({ spreadsheet }));
     }
   };

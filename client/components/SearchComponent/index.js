@@ -20,6 +20,7 @@ const SearchComponent = (props) => {
     loadResults,
     submitSpreadsheet,
     resetSearch,
+
     searchType
   } = props;
 
@@ -35,6 +36,7 @@ const SearchComponent = (props) => {
       <SpreadsheetEntry
         submitSpreadsheet={submitSpreadsheet}
         spreadsheetReady={spreadsheetReady}
+
       />
       <RunList
         loading={loading}
