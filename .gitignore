@@ -7,3 +7,4 @@ public/bundle.js
 # Ignore all node_modules
 node_modules/*
 
+uploads/*

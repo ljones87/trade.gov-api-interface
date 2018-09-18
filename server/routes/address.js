@@ -14,7 +14,7 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage });
+const upload = multer({ storage }).single("file");
 
 //formats api call
 const addresslinkGenerator = (key, address) => {
@@ -25,7 +25,7 @@ let spreadsheet, spreadsheetForAnalysis, data, worksheet;
 let apiInput = [];
 let finalAddressResults = [];
 
-router.post("/spreadsheet", upload.single("file"), (req, res, next) => {
+router.post("/spreadsheet", upload, (req, res, next) => {
   const file = req.file; // file passed from client
 
   if (file.mimetype.includes('sheet') || file.mimetype.includes('excel')) {
