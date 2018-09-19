@@ -15,10 +15,7 @@ const ExcelExport = (props) => {
   } = props;
 
   const firstColumn = searchType;
-  const lowerCaseType = searchType.slice(0, 1)
-    .toLowerCase()
-    .concat(searchType.slice(1, searchType.length));
-  const firstColumnValue = `${lowerCaseType}Searched`
+  const firstColumnValue = `searchedFor`
 
   return listProcessing || !spreadsheetReady ?
     null
