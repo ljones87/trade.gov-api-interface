@@ -35,7 +35,7 @@ router.post("/spreadsheet", upload, (req, res, next) => {
     worksheet =
       spreadsheetForAnalysis.Sheets[spreadsheetForAnalysis.SheetNames[0]];
     data = XLSX.utils.sheet_to_json(worksheet, { header: 1 }, { raw: false });
-    data = data.filter(cellContent => cellContent[0].length);
+    data = data.filter(cellContent => cellContent[0] && cellContent[0].length > 1);
     //this removes the column label row
     data.shift();
     res.send({ listlength: data.length });
