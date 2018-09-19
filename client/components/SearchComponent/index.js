@@ -23,14 +23,14 @@ class SearchComponent extends React.Component {
 
   fileAdded(e) {
     e.preventDefault();
-    const fileChosen = document.querySelectorAll('.MuiInput-underline-5');
-    if(fileChosen.length) this.setState({spreadsheetUploaded: true});
+    const input = document.querySelector('input');
+    if(input.value) this.setState({spreadsheetUploaded: true});
   }
 
   fileCleared() {
     this.setState({spreadsheetUploaded: false});
     const form = document.querySelector('[name="spreadsheet-input"]');
-    form.reset();
+    if(form !==null) form.reset();
   }
 
   render() {
