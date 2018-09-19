@@ -1,27 +1,28 @@
-const router = require("express").Router();
-module.exports = router;
-const axios = require("axios");
-if (process.env.NODE_ENV !== "production") require("../../secrets");
-const apiKey = process.env.API_KEY;
-const XLSX = require("xlsx");
-const multer = require("multer");
+const router = require('express').Router();
+const axios = require('axios');
+const XLSX = require('xlsx');
 const rimraf = require('rimraf');
+const multer = require('multer');
+const {
+  apiLinkGenerator,
+  queryResult,
+  errorWithResponse,
+  errorWithoutResponse,
+} = require('../utils');
+module.exports = router;
 
 const storage = multer.diskStorage({
   destination: "./uploads",
   filename(req, file, cb) {
-    cb(null, `${new Date()}-${file.originalname}`);
+    cb(null, `${new Date().getTime()}-${file.originalname}`);
   }
 });
 
 const upload = multer({ storage }).single("file");
 
-//formats api call
-const keywordlinkGenerator = (key, name) => {
-  return `https://api.trade.gov/consolidated_screening_list/search?api_key=${key}&q=${name}`;
-};
-
-let spreadsheetForAnalysis, data, worksheet;
+let spreadsheetForAnalysis,
+  data,
+  worksheet;
 let apiInput = [];
 let finalKeywordResults = [];
 
@@ -31,65 +32,57 @@ router.post("/spreadsheet", upload, (req, res, next) => {
   if (file.mimetype.includes('sheet') || file.mimetype.includes('excel')) {
     spreadsheetForAnalysis = XLSX.readFile(file.path);
     worksheet =
-    spreadsheetForAnalysis.Sheets[spreadsheetForAnalysis.SheetNames[0]];
+      spreadsheetForAnalysis.Sheets[spreadsheetForAnalysis.SheetNames[0]];
     data = XLSX.utils.sheet_to_json(worksheet, { header: 1 }, { raw: false });
     data = data.filter(cellContent => cellContent[0].length);
+    //this removes the column label row
     data.shift();
     res.send({ listlength: data.length });
     next()
   } else {
     res.send('Only Excel file inputs allowed'),
-    rimraf('uploads', () => console.log(' uploads removed'))  
+    rimraf('uploads', (err) => console.log('temp upload removed'));
   }
   next();
-});
-
-router.delete("/spreadsheet/reset", (req, res, next) => {
-  spreadsheet = null;
-  finalKeywordResults = [];
-  res.send({ listlength: 0 });
-  next(error)
 });
 
 router.post("/", (req, res, next) => {
   let i = Number(req.body.count);
   let j = i + 100;
   apiInput = data.slice(i, j);
+  //remove temp upload directory since file is now processed under 'data'
+  if (i < 100) rimraf('uploads', (err) => console.log('temp upload removed'));
+
   while (i < data.length) {
     return Promise.all(
       apiInput.map(query => {
         const keyword = query[0];
-        return axios
-          .get(keywordlinkGenerator(apiKey, keyword))
+        return axios.get(apiLinkGenerator(`q`, keyword))
           .then(result => {
-            const formattedReturn = {
-              keywordSearched: keyword,
-              data: result.data,
-              api: keywordlinkGenerator(apiKey, keyword)
-            };
-            finalKeywordResults.push(formattedReturn);
+            finalKeywordResults.push(queryResult(`q`, keyword, result));
           })
-          .catch(err =>
-            finalKeywordResults.push({
-              keywordSearched: keyword,
-              error: {
-                message: err.response
-                  ? `${err.response.status}, ${err.response.satusText}`
-                  : `error response malformed`,
-                url: keywordlinkGenerator(apiKey, query[0])
-              }
-            })
-          );
+          .catch(err => (
+            err.response ?
+              finalKeywordResults.push(errorWithResponse(keyword, err))
+              :
+              finalKeywordResults.push(errorWithoutResponse(`q`, keyword))
+          ));
       })
     )
-      .then(() => (
-        (j = i + 100), 
-        res.send(finalKeywordResults),
-        rimraf('uploads', () => console.log(' uploads removed'))
-        ))
-      .catch(err => {
-        res.status(500).send(err);
-        console.log("=============== fetch data error", err);
-      });
+    .then(() => (
+      (j = i + 100),
+      res.send(finalKeywordResults)
+    ))
+    .catch(err => {
+      res.status(500).send(err);
+      console.log("=============== fetch data error", err);
+    });
   }
+});
+
+router.delete("/spreadsheet/reset", (req, res, next) => {
+  finalKeywordResults = [];
+  res.send({ listlength: 0 });
+  rimraf('uploads', (err) => console.log('ready for new list'))
+  next()
 });

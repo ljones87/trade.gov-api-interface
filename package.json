@@ -7,7 +7,7 @@
     "node": ">= 7.0.0"
   },
   "scripts": {
-    "start": "npm run build-client-watch & npm run start-server",
+    "start": "npm run start-server & npm run build-client-watch",
     "start-node": "node server/index.js",
     "build-client": "webpack",
     "build-client-watch": "webpack -w",
