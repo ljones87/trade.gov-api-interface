@@ -5,6 +5,7 @@ if (process.env.NODE_ENV !== "production") require("../../secrets");
 const apiKey = process.env.API_KEY;
 const XLSX = require("xlsx");
 const multer = require("multer");
+const rimraf = require("rimraf");
 
 //saves file locally for processing
 const storage = multer.diskStorage({
@@ -21,7 +22,7 @@ const addresslinkGenerator = (key, address) => {
   return `https://api.trade.gov/consolidated_screening_list/search?api_key=${key}&address=${address}`;
 };
 
-let spreadsheet, spreadsheetForAnalysis, data, worksheet;
+let spreadsheetForAnalysis, data, worksheet;
 let apiInput = [];
 let finalAddressResults = [];
 
@@ -37,13 +38,14 @@ router.post("/spreadsheet", upload, (req, res, next) => {
     data.shift();
     res.send({ listlength: data.length })
   } else {
-      res.send('Only excel file inputs allowed')
+      res.send('Only excel file inputs allowed'),
+      rimraf('uploads', () => console.log(' uploads removed'))
   }
     next()
   });
 
 router.delete("/spreadsheet/reset", (req, res, next) => {
-  spreadsheet = null;
+  rimraf('uploads', () => console.log(' uploads removed'))  
   finalAddressResults = [];
   res.send({ listlength: 0 });
 });
@@ -79,7 +81,11 @@ router.post("/", (req, res, next) => {
           );
       })
     )
-      .then(() => ((j = i + 100), res.send(finalAddressResults)))
+      .then(() => (
+        (j = i + 100), 
+        res.send(finalAddressResults),
+        rimraf('uploads', () => console.log(' uploads removed'))  
+        ))
       .catch(err => {
         res.status(500).send(err);
         console.log("=============== fetch data error", err);

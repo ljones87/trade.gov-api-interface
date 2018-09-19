@@ -5,6 +5,7 @@ if (process.env.NODE_ENV !== "production") require("../../secrets");
 const apiKey = process.env.API_KEY;
 const XLSX = require("xlsx");
 const multer = require("multer");
+const rimraf = require('rimraf');
 
 const storage = multer.diskStorage({
   destination: "./uploads",
@@ -13,18 +14,18 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage });
+const upload = multer({ storage }).single("file");
 
 //formats api call
 const keywordlinkGenerator = (key, name) => {
   return `https://api.trade.gov/consolidated_screening_list/search?api_key=${key}&q=${name}`;
 };
 
-let spreadsheet, spreadsheetForAnalysis, data, worksheet;
+let spreadsheetForAnalysis, data, worksheet;
 let apiInput = [];
 let finalKeywordResults = [];
 
-router.post("/spreadsheet", upload.single("file"), (req, res, next) => {
+router.post("/spreadsheet", upload, (req, res, next) => {
   const file = req.file; // file passed from client
 
   if (file.mimetype.includes('sheet') || file.mimetype.includes('excel')) {
@@ -37,7 +38,8 @@ router.post("/spreadsheet", upload.single("file"), (req, res, next) => {
     res.send({ listlength: data.length });
     next()
   } else {
-    res.send('Only Excel file inputs allowed')
+    res.send('Only Excel file inputs allowed'),
+    rimraf('uploads', () => console.log(' uploads removed'))  
   }
   next();
 });
@@ -80,7 +82,11 @@ router.post("/", (req, res, next) => {
           );
       })
     )
-      .then(() => ((j = i + 100), res.send(finalKeywordResults)))
+      .then(() => (
+        (j = i + 100), 
+        res.send(finalKeywordResults),
+        rimraf('uploads', () => console.log(' uploads removed'))
+        ))
       .catch(err => {
         res.status(500).send(err);
         console.log("=============== fetch data error", err);
