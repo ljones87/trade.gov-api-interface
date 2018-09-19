@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { fetchKeywordResultsThunk, submitKeywordListThunk, resetKeywordSearchThunk } from '../store';
 import SearchComponent from './SearchComponent';
-import XLSX from 'xlsx';
 
 class KeywordSearch extends React.Component {
 

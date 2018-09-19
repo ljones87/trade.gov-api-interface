@@ -11,62 +11,90 @@ const formatTime = (decimaltime) => {
   return `${min} min ${sec} sec`;
 }
 
-const SearchComponent = (props) => {
-  const {
-    searchResults,
-    spreadsheetReady,
-    spreadsheetEntries,
-    loading,
-    loadResults,
-    submitSpreadsheet,
-    resetSearch,
-    error,
-    searchType
-  } = props;
+class SearchComponent extends React.Component {
+  constructor() {
+    super()
+    this.state ={
+      spreadsheetUploaded: false
+    }
+    this.fileAdded = this.fileAdded.bind(this);
+    this.fileCleared = this.fileCleared.bind(this);
+  }
 
-  const entriesProcessed = searchResults.length;
-  const listProcessing = entriesProcessed < spreadsheetEntries
-  const buttonText = listProcessing ? 'Cancel Search' : 'Reset Search'
-  const entriesRemaining = spreadsheetEntries - searchResults.length;
-  const decimalTime = Math.floor((entriesRemaining / 100) * 8) / 60;
-  const timeRemaining = formatTime(decimalTime)
+  fileAdded(e) {
+    e.preventDefault();
+    const fileChosen = document.querySelectorAll('.MuiInput-underline-5');
+    if(fileChosen.length) this.setState({spreadsheetUploaded: true});
+  }
 
-  return (
-    <div>
-      <SpreadsheetEntry
-        submitSpreadsheet={submitSpreadsheet}
-        spreadsheetReady={spreadsheetReady}
-      />
-      <RunList
-        loading={loading}
-        spreadsheetReady={spreadsheetReady}
-        loadResults={loadResults}
-        entriesProcessed={entriesProcessed}
-      />
-      <div className="btn__container">
-        <ExcelExport
-          searchResults={searchResults}
-          searchType={searchType}
-          listProcessing={listProcessing}
+  fileCleared() {
+    this.setState({spreadsheetUploaded: false});
+    const form = document.querySelector('[name="spreadsheet-input"]');
+    form.reset();
+  }
+
+  render() {
+    const {
+      searchResults,
+      spreadsheetReady,
+      spreadsheetEntries,
+      loading,
+      loadResults,
+      submitSpreadsheet,
+      resetSearch,
+      error,
+      searchType,
+    } = this.props;
+
+    const entriesProcessed = searchResults.length;
+    const listProcessing = entriesProcessed < spreadsheetEntries
+    const buttonText = listProcessing ? 'Cancel Search' : 'Reset Search'
+    const entriesRemaining = spreadsheetEntries - searchResults.length;
+    const decimalTime = Math.floor((entriesRemaining / 100) * 8) / 60;
+    const timeRemaining = formatTime(decimalTime)
+
+    return (
+      <div>
+        <SpreadsheetEntry
+          fileAdded={this.fileAdded}
+          spreadsheetUploaded={this.state.spreadsheetUploaded}
+          submitSpreadsheet={submitSpreadsheet}
           spreadsheetReady={spreadsheetReady}
         />
-        <Button
-          size="small"
-          color="secondary"
-          onClick={resetSearch}
-          disabled={!spreadsheetReady}
-        >{buttonText}
-        </Button>
+        <RunList
+          loading={loading}
+          spreadsheetReady={spreadsheetReady}
+          loadResults={loadResults}
+          entriesProcessed={entriesProcessed}
+        />
+        <div className="btn__container">
+          <ExcelExport
+            searchResults={searchResults}
+            searchType={searchType}
+            listProcessing={listProcessing}
+            spreadsheetReady={spreadsheetReady}
+          />
+          <Button
+            size="small"
+            color="secondary"
+            onClick={() => {
+              resetSearch(),
+              this.fileCleared()
+            }}
+            disabled={!spreadsheetReady && !error}
+          >{buttonText}
+          </Button>
+        </div>
+        <LoadingDisplay
+          error={error}
+          entriesProcessed={entriesProcessed}
+          listProcessing={listProcessing}
+          spreadsheetEntries={spreadsheetEntries}
+          timeRemaining={timeRemaining}
+        />
       </div>
-      <LoadingDisplay
-        error={error}
-        entriesProcessed={entriesProcessed}
-        listProcessing={listProcessing}
-        spreadsheetEntries={spreadsheetEntries}
-        timeRemaining={timeRemaining}
-      />
-    </div>
-  );
+    )
+  }
 }
 
 export default SearchComponent;
