@@ -12,7 +12,7 @@ const {
 module.exports = router;
 
 const storage = multer.diskStorage({
-  destination: "./uploads",
+  destination: "./temp",
   filename(req, file, cb) {
     cb(null, `${new Date().getTime()}-${file.originalname}`);
   }
@@ -37,15 +37,8 @@ router.post("/spreadsheet", upload, (req, res, next) => {
     res.send({ listlength: data.length })
   } else {
     res.send('Only excel file inputs allowed'),
-    rimraf('uploads', () => console.log(' uploads removed'))
+    rimraf('temp/*', (err) => console.log('temp upload removed'));
   }
-  next()
-});
-
-router.delete("/spreadsheet/reset", (req, res, next) => {
-  finalAddressResults = [];
-  res.send({ listlength: 0 });
-  rimraf('uploads', (err) => console.log('ready for new list'));
   next()
 });
 
@@ -54,7 +47,7 @@ router.post("/", (req, res, next) => {
   let j = i + 100;
   apiInput = data.slice(i, j);
   //remove temp upload directory since file is now processed under 'data'
-  if (i < 100) rimraf('uploads', () => console.log(' uploads removed'))
+  if (i < 100) rimraf('temp/*', (err) => console.log('temp upload removed'));
 
   while (i < data.length) {
     return Promise.all(
@@ -82,4 +75,11 @@ router.post("/", (req, res, next) => {
       console.log("=============== fetch data error", err);
     });
   }
+});
+
+router.delete("/spreadsheet/reset", (req, res, next) => {
+  finalAddressResults = [];
+  res.send({ listlength: 0 });
+  rimraf('temp/*', (err) => console.log('ready for new list'));
+  next()
 });

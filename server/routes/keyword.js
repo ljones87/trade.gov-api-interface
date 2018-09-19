@@ -3,6 +3,7 @@ const axios = require('axios');
 const XLSX = require('xlsx');
 const rimraf = require('rimraf');
 const multer = require('multer');
+const fs = require('fs');
 const {
   apiLinkGenerator,
   queryResult,
@@ -12,7 +13,7 @@ const {
 module.exports = router;
 
 const storage = multer.diskStorage({
-  destination: "./uploads",
+  destination: "./temp",
   filename(req, file, cb) {
     cb(null, `${new Date().getTime()}-${file.originalname}`);
   }
@@ -41,7 +42,7 @@ router.post("/spreadsheet", upload, (req, res, next) => {
     next()
   } else {
     res.send('Only Excel file inputs allowed'),
-    rimraf('uploads', (err) => console.log('temp upload removed'));
+    rimraf('temp/*', (err) => console.log('temp upload removed'));
   }
   next();
 });
@@ -51,7 +52,7 @@ router.post("/", (req, res, next) => {
   let j = i + 100;
   apiInput = data.slice(i, j);
   //remove temp upload directory since file is now processed under 'data'
-  if (i < 100) rimraf('uploads', (err) => console.log('temp upload removed'));
+  if (i < 100) rimraf('temp/*', (err) => console.log('temp upload removed'));
 
   while (i < data.length) {
     return Promise.all(
@@ -83,6 +84,6 @@ router.post("/", (req, res, next) => {
 router.delete("/spreadsheet/reset", (req, res, next) => {
   finalKeywordResults = [];
   res.send({ listlength: 0 });
-  rimraf('uploads', (err) => console.log('ready for new list'))
+  rimraf('temp/*', (err) => console.log('ready for new list'));
   next()
 });
