@@ -15,7 +15,7 @@ const queryResult = (queryType, queryTerm, result) => ({
 const errorWithResponse = (queryTerm, err) => ({
   searchedFor: queryTerm,
    error: {
-    message: `${err.response.status}, ${err.response.satusText}`,
+    message: `${err.response.status}, ${err.response.statusText}`,
     url: err.response.request.res.responseUrl
   }
 });
